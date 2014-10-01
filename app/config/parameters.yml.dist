@@ -1,0 +1,28 @@
+parameters:
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
+
+    locale: jp
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    database_driver: pdo_mysql
+
+    database_host_log: localhost
+    database_port_log: 3306
+    database_name_log: sof_log
+    database_user_log: root
+    database_password_log: null
+
+    database_host: 127.0.0.1
+    database_port: 3306
+    database_name: sof_master
+    database_user: root
+    database_password: null
+
+    database_host_slave1: localhost
+    database_port_slave1: 3306
+    database_name_slave1: sof_slave
+    database_user_slave1: root
+    database_password_slave1: null

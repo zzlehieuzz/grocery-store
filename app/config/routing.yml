@@ -1,0 +1,9 @@
+sof_api:
+    resource: "@SofApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+homepage:
+    pattern:   /
+    defaults:  { _controller: SofApiBundle:Login:Index }
+
