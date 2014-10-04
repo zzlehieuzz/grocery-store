@@ -1,0 +1,10 @@
+imports:
+    - { resource: services.yml }
+
+services:
+# Listener
+  filter_controller_listener:
+    class: Sof\ApiBundle\EventListener\FilterControllerListener
+    tags:
+        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+        - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

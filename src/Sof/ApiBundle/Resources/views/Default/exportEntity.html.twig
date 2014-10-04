@@ -1,0 +1,48 @@
+<?php
+namespace Sof\ApiBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Sof\ApiBundle\Entity\ValueConst\{{ fileName }}Const;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Sof\ApiBundle\Entity{{ fileName }}
+ *
+ * @ORM\Table(name="{{ tableName }}", options={"comment" = "{{ japanName }}"})
+ * @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\{{ fileName }}Repository")
+ */
+class {{ fileName }} extends {{ fileName }}Const
+{
+{% for arr in fields %}
+    /**
+{% if arr['pk'] %}
+     * @ORM\Id
+{% endif %}
+{% if arr['relation'] is defined %}
+     * @ORM\{{ arr['relation'] }}(targetEntity="{{ arr['refTable'] }}")
+     * @ORM\JoinColumn(name="{{ arr['db_name'] }}", referencedColumnName="id", nullable={{ arr['null_able'] }}, options={"comment" = "{{ arr['comment'] }}"})
+{% else %}
+     * @ORM\Column(name="{{ arr['db_name'] }}", type="{{ arr['type']|default('XXXX') }}"{{ (arr['type']|default('XXXX') == 'decimal') ? ', precision=' ~ arr['precision'] ~ ', scale=' ~ arr['scale'] : '' }}{{ arr['type']|default('XXXX') == 'string' and arr['length']|default > 0 ? ', length=' ~ arr['length'] : '' }}, nullable={{ arr['null_able'] }}, options={"comment" = "{{ arr['comment'] }}"})
+{% endif %}
+{% if false %}
+{% if arr['validator'] is defined %}
+     * @Assert\{{ arr['validator'] }}
+{% endif %}
+{% if arr['null_able']|lower == 'false' %}
+     * @Assert\NotBlank()
+{% endif %}
+     * @Assert\Type(type="{{ arr['type'] }}")
+{% if arr['length']|default > 0 and (arr['type']|default('XXXX') == 'string' or arr['type']|default('XXXX') == 'integer' or arr['type']|default('XXXX') == 'bigint' or arr['type']|default('XXXX') == 'smallint')  %}
+     * @Assert\Length(max = "{{ arr['length'] }}")
+{% endif %}
+{% endif %}
+     */
+     private ${{ arr['fieldName'] }};
+
+{% endfor %}
+    public function __construct()
+    {
+{% for field, defaultValue  in defaultValues %}
+        $this->{{ field }} = {{ defaultValue|raw }};
+{% endfor %}
+    }
+}

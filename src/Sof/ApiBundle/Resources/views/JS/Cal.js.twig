@@ -1,0 +1,125 @@
+var CONST_VAL = {};
+
+Cal = {
+  formatNumber: function(nStr, round) {
+    if (isNaN(nStr) || nStr === '' || nStr === null) {
+      return nStr ? nStr : '';
+    }
+
+    nStr = Number(nStr);
+    if (round != undefined && !isNaN(round)) {
+      nStr = nStr.toFixed(parseInt(round));
+    }
+    nStr = nStr.toString();
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+  },
+
+  percent: function(amount, total) {
+    total = this.toNumber(total);
+    amount = this.toNumber(amount);
+
+    if (total) {
+      return this.round(amount * 100 / total, 1);
+    }
+
+    return '';
+  },
+
+  multi: function(firstArg, secondArg) {
+    return this.toNumber(firstArg) * this.toNumber(secondArg);
+  },
+
+  sum: function(amountArray) {
+    var sum = '';
+
+    $.each(amountArray, function(i, amount) {
+      if (amount && !$.isNumeric(amount)) {
+        amount = parseFloat(amount.replace(/,/g,""));
+      }
+
+      if($.isNumeric(amount)) {
+        sum = sum != '' ? sum : 0;
+        sum += parseFloat(amount);
+      }
+    });
+    return sum;
+  },
+
+  plus: function(firstArg, secondArg) {
+    return this.sum([firstArg, secondArg]);
+  },
+
+  minus: function(firstArg, secondArg) {
+    return this.toNumber(firstArg) - this.toNumber(secondArg);
+  },
+
+  rank: function(amount, rankList) {
+    if ($.isNumeric(amount)) {
+      for (rank in rankList) {
+        range = rankList[rank].split('~');
+        var start = range[0];
+        var end = range[1];
+
+        if ((!start || amount >= start) && (!end || amount <= end)) {
+          return rank;
+        }
+      }
+    }
+
+    return '';
+  },
+
+  createConsumptionTaxRate: function(amount, isSet) {
+    var taxRate = Math.round(this.toNumber(amount) * CONST_VAL.taxRate / 100);
+
+    if (isSet) {
+      var clIsSet = $('.'+isSet);
+      switch (isSet) {
+        case 'tax-input':
+          clIsSet.val(taxRate);
+          break;
+        case 'tax-text':
+          clIsSet.text(taxRate);
+          break;
+      }
+    } else {
+
+      return taxRate;
+    }
+  },
+
+  convertIntToCode: function(intNo, length) {
+    var code = intNo.toString();
+    var length = length - code.length;
+
+    for (var i=1;i<=length;i++) {
+      code = '0' + code;
+    }
+
+    return code;
+  },
+
+  round: function(number, precision) {
+
+    return number.toFixed(precision);
+  },
+
+  toNumber: function(value) {
+    if (value && !$.isNumeric(value)) {
+      value = value.replace(/,/g,"");
+    }
+
+    if (!value || !$.isNumeric(value)) {
+      return 0;
+    }
+
+    return parseFloat(value);
+  }
+};

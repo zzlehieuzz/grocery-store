@@ -1,0 +1,28 @@
+services:
+  sof.twig.sof_extension:
+    class: Sof\ApiBundle\Twig\SofTwigExtension
+    tags:
+        - { name: twig.extension }
+
+# Listener
+  filter_controller_listener:
+    class: Sof\ApiBundle\EventListener\FilterControllerListener
+    tags:
+        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+#        - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+  doctrine_event_listener:
+    class: Sof\ApiBundle\EventListener\DoctrineEventListener
+    arguments: [ @service_container ]
+    tags:
+        - { name: doctrine.event_listener, event: prePersist }
+        - { name: doctrine.event_listener, event: preUpdate }
+
+# Service
+  entity_service:
+    class: Sof\ApiBundle\Service\EntityService
+    arguments: [ @doctrine, @doctrine.orm.entity_manager ]
+
+  common_service:
+    class: Sof\ApiBundle\Controller\CommonFunc\CommonService
+    arguments: [ @entity_service]
