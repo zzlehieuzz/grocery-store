@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Admin Grocery Store{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}" />
+
+        {% set extUrl       = asset('js/ext-js') %}
+        {% set desktopUrl   = asset('js/desktop/js') %}
+        {% set utilUrl      = asset('js/desktop/util') %}
+        {% set myDesktopUrl = asset('js/desktop') %}
+        {% set srcPageUrl   = asset('js/desktop/pages') %}
+
+        <link rel="stylesheet" href="{{ asset(extUrl) ~ '/resources/ext-theme-classic/ext-theme-classic-all-debug.css' }}" />
+        <link rel="stylesheet" href="{{ asset(myDesktopUrl) ~ '/css/desktop.css' }}" />
+
+        <script src="{{ asset(extUrl) ~ '/ext-all-debug.js' }}"></script>
+        <script src="{{ asset(extUrl) ~ '/examples/shared/include-ext.js' }}"></script>
+        {#<script src="{{ asset(extUrl) ~ '/examples/shared/options-toolbar.js' }}"></script>#}
+
+        <script>
+            var url          = "{{ desktopUrl }}",
+                utilUrl      = "{{ utilUrl }}",
+                myDesktopUrl = "{{ myDesktopUrl }}",
+                srcPageUrl   = "{{ srcPageUrl }}";
+
+            Ext.Loader.setPath({
+                'Ext.ux.desktop': url,
+                MyUtil          : utilUrl,
+                MyDesktop       : myDesktopUrl,
+                SrcPageUrl      : srcPageUrl
+            });
+
+            Ext.require('MyDesktop.App');
+
+            var myDesktopApp;
+            Ext.onReady(function () {
+                myDesktopApp = new MyDesktop.App();
+            });
+        </script>
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
