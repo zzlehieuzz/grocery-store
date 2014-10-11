@@ -30,23 +30,6 @@ class LoginController extends AppController
       $user = $this->getDoctrine()
         ->getRepository('SofApiBundle:User')->find(1);
 
-//      $user = $this->get('entity_service')->process('User:findOneById', 1);
-
-//      $em = $this->getDoctrine()->getManager();
-//      $products = $em->getRepository('AcmeStoreBundle:Product')
-//        ->findAllOrderedByName();
-
-//      $em = $this->getDoctrine()->getManager();
-//      $query = $em->createQuery(
-//        'SELECT p
-//        FROM ApiBundle:User p
-//        WHERE p.id = :id '
-//      )->setParameter('id', '1');
-//
-//      $user = $query->getResult();
-
-//      var_dump($user->getName()); die;
-
         $a = array(
             'name' => $user->getName(),
         );
@@ -66,8 +49,6 @@ class LoginController extends AppController
     } else {
       $error = $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
     }
-
-//    var_dump($error); die;
 
     $errorMessage = $error ? Config::getMessage('common.ERR.login_error') : 'Not valid!';
 
