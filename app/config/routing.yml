@@ -3,7 +3,13 @@ sof_api:
     type:     annotation
     prefix:   /
 
+user_auth:
+  pattern: /authenticate
+
+user_logout:
+  pattern: /user_logout
+
 homepage:
     pattern:   /
-    defaults:  { _controller: SofApiBundle:Login:Index }
+    defaults:  { _controller: SofApiBundle:Login:index }
 
