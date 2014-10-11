@@ -21,12 +21,11 @@ class CommonController extends BaseController
      */
     public function Common_IndexAction()
     {
-        $a = array( 
+        $a = array(
             'name' => 'hieu',
         );
 
         return array('name' => 10);
-//        return $this->apiResponse(array());
     }
 
     /**
