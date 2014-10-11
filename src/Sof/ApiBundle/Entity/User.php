@@ -1,15 +1,18 @@
 <?php
 namespace Sof\ApiBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Sof\ApiBundle\User
+ * Sof\ApiBundle\Entity\User
  *
  * @ORM\Table(name="user", options={"comment" = "user"})
- * @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\UserRepository")
+* @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\UserRepository")
  */
-class User extends BaseEntity
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -105,7 +108,9 @@ class User extends BaseEntity
      */
     public function setPassword($password)
     {
-      $this->password = $password;
+      if ($password !== NULL) {
+        $this->password = md5($password);
+      }
     }
 
     /**
@@ -147,4 +152,68 @@ class User extends BaseEntity
     {
       return $this->userName;
     }
+
+  /**
+   * @see \Serializable::serialize()
+   */
+  public function serialize()
+  {
+    return serialize(array(
+      $this->id,
+    ));
+  }
+
+  /**
+   * @see \Serializable::unserialize()
+   */
+  public function unserialize($serialized)
+  {
+    list (
+      $this->id,
+      ) = unserialize($serialized);
+  }
+
+  /**
+   * Returns the roles granted to the user.
+   *
+   * <code>
+   * public function getRoles()
+   * {
+   *     return array('ROLE_USER');
+   * }
+   * </code>
+   *
+   * Alternatively, the roles might be stored on a ``roles`` property,
+   * and populated in any number of different ways when the user object
+   * is created.
+   *
+   * @return Role[] The user roles
+   */
+  public function getRoles()
+  {
+    return array();
+  }
+
+  /**
+   * Returns the salt that was originally used to encode the password.
+   *
+   * This can return null if the password was not encoded using a salt.
+   *
+   * @return string|null The salt
+   */
+  public function getSalt()
+  {
+    // TODO: Implement getSalt() method.
+  }
+
+  /**
+   * Removes sensitive data from the user.
+   *
+   * This is important if, at any given point, sensitive information like
+   * the plain-text password is stored on this object.
+   */
+  public function eraseCredentials()
+  {
+    // TODO: Implement eraseCredentials() method.
+  }
 }
