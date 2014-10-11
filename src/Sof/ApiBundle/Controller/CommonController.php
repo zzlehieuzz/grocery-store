@@ -21,7 +21,7 @@ class CommonController extends BaseController
      */
     public function Common_IndexAction()
     {
-        $ab = array(
+        $a = array(
             'name' => 'hieu',
         );
 
