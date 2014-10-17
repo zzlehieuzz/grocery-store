@@ -6,7 +6,7 @@ SETUP:
 - Apache 2.2 
 - MySQL 5.6
 (XAMPP 1.8.*)
-2. Checkout from: https://svn.vtmlab.com/gameSNS_SpiritOfFantasia/trunk/APIServer
+2. Checkout from: https://github.com/zzlehieuzz/grocery-store.git
 3. Install composer: "composer install" (MAC: "php composer.phar install")
 - Check install: php composer (MAC: php composer.phar)
 - Download composer: "curl -sS https://getcomposer.org/installer | php"
