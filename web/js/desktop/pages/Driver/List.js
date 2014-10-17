@@ -116,7 +116,6 @@ Ext.define('SrcPageUrl.Driver.List', {
                         }
                       }, {
                         text: "Name",
-//                                width: 150,
                         flex: 2,
                         dataIndex: 'name',
                         editor: {
