@@ -44,7 +44,6 @@ so that if select object with specified fields (select user.name, user.pass... f
 Select array data, not array object: ->getQuery()->getArrayResult()
 Select array object: ->getQuery()->getResult()
 
-
 Call function in repository:
 $this->get('entity_service')->process('EntityName:functionName', args,...);
 
