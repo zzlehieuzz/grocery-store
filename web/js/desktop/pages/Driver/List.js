@@ -57,7 +57,7 @@ var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
           'content-type': 'application/json'
         }
         , success: function (data) {
-          // do any thing
+          // do any task
         }
       });
 
