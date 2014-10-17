@@ -6,11 +6,6 @@
 namespace Sof\ApiBundle\Controller;
 
 use Sof\ApiBundle\Exception\InvalidRequestException;
-use Sof\ApiBundle\Lib\AccountingUtil;
-use Sof\ApiBundle\Lib\ExcelUtil;
-use Sof\ApiBundle\Lib\FileUtil;
-use Sof\ApiBundle\Entity\MailHistoryDetail;
-use Sof\ApiBundle\Entity\MailHistory;
 use Sof\ApiBundle\Lib\StringUtil;
 use Sof\ApiBundle\Service\EntityService;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +20,6 @@ use Sof\ApiBundle\Exception\ImportException;
 use Sof\ApiBundle\Exception\ExportException;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Sof\ApiBundle\Entity\Announcement;
-use PHPExcel_IOFactory;
-use PHPExcel_Worksheet_Drawing;
-use Sof\ApiBundle\Entity\BillingHistory;
 use Sof\ApiBundle\Entity\AppEntity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -208,26 +200,34 @@ abstract class AppController extends Controller implements FilterControllerInter
     $result['responseCode'] = $isError ? 204 : 200;
     $result['data'] = array();
 
-    $targets = $this->getRequest()->get('targets', array());
+//    $targets = $this->getRequest()->get('targets', array());
+//
+//    foreach ($targets as $key) {
+//      if (array_key_exists($key, $data)) {
+//        if (isset($data[$key]['options']) && is_array($data[$key]['options'])) {
+//          $options = array();
+//
+//          foreach ($data[$key]['options'] as $index => $text) {
+//            $options['#index#' . $index] = $text;
+//          }
+//
+//          $result['data'][$key]['options'] = $options;
+//        } else {
+//          $result['data'][$key] = $data[$key];
+//        }
+//      }
+//    }
 
-    foreach ($targets as $key) {
-      if (array_key_exists($key, $data)) {
-        if (isset($data[$key]['options']) && is_array($data[$key]['options'])) {
-          $options = array();
+//    if (isset($data['error']) && $data['error']) {
+//      $result['data']['error'] = $data['error'];
+//    }
 
-          foreach ($data[$key]['options'] as $index => $text) {
-            $options['#index#' . $index] = $text;
-          }
-
-          $result['data'][$key]['options'] = $options;
-        } else {
-          $result['data'][$key] = $data[$key];
-        }
-      }
+    if (isset($data['data']) && $data['data']) {
+      $result['data'] = $data['data'];
     }
 
     if (isset($data['error']) && $data['error']) {
-      $result['data']['error'] = $data['error'];
+      $result['error'] = $data['error'];
     }
 
     return new JsonResponse($result);
@@ -567,147 +567,147 @@ abstract class AppController extends Controller implements FilterControllerInter
 
   public function exportExcel($dataSheets, $formName, $extraOptions = array())
   {
-    $filename = $formName . '.xlsx';
-    $fileTemplate =  Config::uploadPath() . 'export_template_excel/' . $filename;
-
-    if (is_file($fileTemplate)) {
-      $objReader = PHPExcel_IOFactory::createReader('Excel2007');
-      $objReader->setIncludeCharts(TRUE);
-      $objPHPExcel = $objReader->load($fileTemplate);
-
-      if (isset($extraOptions['isSheetCopy']) && $extraOptions['isSheetCopy']) {
-        $arraySheetCopy = $extraOptions['isSheetCopy'];
-        foreach ($arraySheetCopy as $sheetCopy) {
-          $sheetSource = $objPHPExcel->getSheetByName($sheetCopy['sheetNameSource'])->copy();
-          $sheetDestination = clone $sheetSource;
-          $sheetDestination->setTitle($sheetCopy['sheetNameCopy']);
-          $objPHPExcel->addSheet($sheetDestination, $sheetCopy['sheetPosition']);
-        }
-      }
-
-      foreach ($dataSheets as $key => $dataOptions) {
-        $objPHPExcel->setActiveSheetIndex($key);
-        $data = $dataOptions['data'];
-        $dataFormat = $dataOptions['dataFormat'];
-
-        $activeSheet = $objPHPExcel->getActiveSheet();
-        
-        foreach ($dataFormat as $formatExcel) {
-          if (isset($formatExcel['rowFrom']) && isset($formatExcel['rowTo'])) {
-            $activeSheet->getPageSetup()->setRowsToRepeatAtTop(array($formatExcel['rowFrom'],$formatExcel['rowTo']));
-          }
-
-          if (isset($formatExcel['page']) && $formatExcel['page']) {
-            $activeSheet->getHeaderFooter()->setOddHeader('&RPage &P');
-          }
-
-          if (isset($formatExcel['numRowInsert']) && isset($formatExcel['rowToInsert'])) {
-            $activeSheet->insertNewRowBefore($formatExcel['rowToInsert'], $formatExcel['numRowInsert']);
-          }
-
-          if (isset($formatExcel['removeRow'])) {
-            $activeSheet->removeRow($formatExcel['removeRow'], 2000);
-          }
-
-          if (isset($formatExcel['breakRow']) && isset($formatExcel['breakColumn'])) {
-            $activeSheet->setBreak($formatExcel['breakRow'] , \PHPExcel_Worksheet::BREAK_ROW );
-            $activeSheet->setBreak($formatExcel['breakColumn'] , \PHPExcel_Worksheet::BREAK_COLUMN );
-          }
-
-          if (isset($formatExcel['printArea'])) {
-            $activeSheet->getPageSetup()->setPrintArea($formatExcel['printArea']);
-          }
-
-          if (isset($formatExcel['dataRange']) && isset($formatExcel['startCell'])) {
-            $dataRange = $activeSheet->rangeToArray($formatExcel['dataRange']);
-            $activeSheet->fromArray($dataRange, null, $formatExcel['startCell']);
-          }
-
-          if (isset($formatExcel['styleSource']) && $formatExcel['styleDestination']) {
-            $activeSheet->duplicateStyle($activeSheet->getStyle($formatExcel['styleSource']), $formatExcel['styleDestination'] . ':' . $formatExcel['styleDestination']);
-          }
-
-          if (isset($formatExcel['getRowHeight'])) {
-            $activeSheet->getRowDimension($formatExcel['getRowHeight'])->getRowHeight();
-          }
-
-          if (isset($formatExcel['setRowHeight']) && isset($formatExcel['rowHeight'])) {
-            $rowHeight = $formatExcel['rowHeight'];
-            if (isset($formatExcel['getRowHeight'])) {
-              $rowHeight = $activeSheet->getRowDimension($formatExcel['getRowHeight'])->getRowHeight();
-            }
-            $activeSheet->getRowDimension($formatExcel['setRowHeight'])->setRowHeight($rowHeight);
-          }
-
-          if (isset($formatExcel['mergeCells']) && isset($formatExcel['mergeCells']['start']) && isset($formatExcel['mergeCells']['end'])) {
-            $activeSheet->mergeCells($formatExcel['mergeCells']['start'] . ':' . $formatExcel['mergeCells']['end']);
-          }
-
-          if (isset($formatExcel['unMergeCells']) && isset($formatExcel['unMergeCells']['start']) && isset($formatExcel['unMergeCells']['end'])) {
-            $activeSheet->unmergeCells($formatExcel['unMergeCells']['start'] . ':' . $formatExcel['unMergeCells']['end']);
-          }
-
-          if (isset($formatExcel['setHorizontal']) && isset($formatExcel['style'])) {
-            if ($formatExcel['style'] == ExcelUtil::Horizontal_Center) {
-              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            } elseif ($formatExcel['style'] == ExcelUtil::Horizontal_Right) {
-              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            } elseif ($formatExcel['style'] == ExcelUtil::Horizontal_Left) {
-              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-            } else {
-              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_GENERAL);
-            }
-          }
-
-          if (isset($formatExcel['insertImage']) && isset($formatExcel['insertImage']['pathImage']) && isset($formatExcel['insertImage']['position'])
-                  && is_file($formatExcel['insertImage']['pathImage'])) {
-            $objDrawing = new PHPExcel_Worksheet_Drawing();
-            $objDrawing->setResizeProportional(false);
-            $objDrawing->setName('Image');
-            $objDrawing->setDescription('Image');
-            $objDrawing->setPath($formatExcel['insertImage']['pathImage']);
-            $objDrawing->setHeight($formatExcel['insertImage']['height']);
-            $objDrawing->setWidth($formatExcel['insertImage']['width']);
-            $objDrawing->setWorksheet ($activeSheet);
-            $objDrawing->setCoordinates($formatExcel['insertImage']['position']);
-            $objDrawing->setOffsetY(0.96);
-          }
-
-          if (isset($formatExcel['removeSheet'])) {
-            $objPHPExcel->removeSheetByIndex($formatExcel['removeSheet']);
-          }
-
-          if (isset($formatExcel['sheetName'])) {
-            $activeSheet->setTitle($formatExcel['sheetName']);
-          }
-
-          if (isset($formatExcel['styleArray'])) {
-            $activeSheet->getStyle($formatExcel['fromCell'].':'.$formatExcel['toCell'])->applyFromArray($formatExcel['styleArray']);
-          }
-        }
-
-        foreach ($data as $row => $dataRow) {
-          foreach ($dataRow as $column => $dataCell) {
-            $activeSheet->setCellValue($column . $row, $dataCell);
-          }
-        }
-      }
-
-      $outputRelativePath = 'tmp/' . $formName . '_' . uniqid() . '.xlsx';
-      $tempPath = Config::uploadPath() . $outputRelativePath;
-      $outputFile = $tempPath;
-      $objWriter = PHPExcel_IOFactory :: createWriter($objPHPExcel, 'Excel2007');
-      $objWriter->setIncludeCharts(TRUE);
-      $objWriter->save($tempPath);
-
-      if (file_exists($outputFile)) {
-        if (isset($extraOptions['isGetPath']) && $extraOptions['isGetPath']) {
-          return $outputRelativePath;
-        }
-
-        return FileUtil::responseDownload($outputFile, array('del_file' => TRUE, 'is_download' => TRUE, 'filename' => 'form_excel' . date('YmdHis') . '.xlsx'));
-      }
-    }
+//    $filename = $formName . '.xlsx';
+//    $fileTemplate =  Config::uploadPath() . 'export_template_excel/' . $filename;
+//
+//    if (is_file($fileTemplate)) {
+//      $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+//      $objReader->setIncludeCharts(TRUE);
+//      $objPHPExcel = $objReader->load($fileTemplate);
+//
+//      if (isset($extraOptions['isSheetCopy']) && $extraOptions['isSheetCopy']) {
+//        $arraySheetCopy = $extraOptions['isSheetCopy'];
+//        foreach ($arraySheetCopy as $sheetCopy) {
+//          $sheetSource = $objPHPExcel->getSheetByName($sheetCopy['sheetNameSource'])->copy();
+//          $sheetDestination = clone $sheetSource;
+//          $sheetDestination->setTitle($sheetCopy['sheetNameCopy']);
+//          $objPHPExcel->addSheet($sheetDestination, $sheetCopy['sheetPosition']);
+//        }
+//      }
+//
+//      foreach ($dataSheets as $key => $dataOptions) {
+//        $objPHPExcel->setActiveSheetIndex($key);
+//        $data = $dataOptions['data'];
+//        $dataFormat = $dataOptions['dataFormat'];
+//
+//        $activeSheet = $objPHPExcel->getActiveSheet();
+//
+//        foreach ($dataFormat as $formatExcel) {
+//          if (isset($formatExcel['rowFrom']) && isset($formatExcel['rowTo'])) {
+//            $activeSheet->getPageSetup()->setRowsToRepeatAtTop(array($formatExcel['rowFrom'],$formatExcel['rowTo']));
+//          }
+//
+//          if (isset($formatExcel['page']) && $formatExcel['page']) {
+//            $activeSheet->getHeaderFooter()->setOddHeader('&RPage &P');
+//          }
+//
+//          if (isset($formatExcel['numRowInsert']) && isset($formatExcel['rowToInsert'])) {
+//            $activeSheet->insertNewRowBefore($formatExcel['rowToInsert'], $formatExcel['numRowInsert']);
+//          }
+//
+//          if (isset($formatExcel['removeRow'])) {
+//            $activeSheet->removeRow($formatExcel['removeRow'], 2000);
+//          }
+//
+//          if (isset($formatExcel['breakRow']) && isset($formatExcel['breakColumn'])) {
+//            $activeSheet->setBreak($formatExcel['breakRow'] , \PHPExcel_Worksheet::BREAK_ROW );
+//            $activeSheet->setBreak($formatExcel['breakColumn'] , \PHPExcel_Worksheet::BREAK_COLUMN );
+//          }
+//
+//          if (isset($formatExcel['printArea'])) {
+//            $activeSheet->getPageSetup()->setPrintArea($formatExcel['printArea']);
+//          }
+//
+//          if (isset($formatExcel['dataRange']) && isset($formatExcel['startCell'])) {
+//            $dataRange = $activeSheet->rangeToArray($formatExcel['dataRange']);
+//            $activeSheet->fromArray($dataRange, null, $formatExcel['startCell']);
+//          }
+//
+//          if (isset($formatExcel['styleSource']) && $formatExcel['styleDestination']) {
+//            $activeSheet->duplicateStyle($activeSheet->getStyle($formatExcel['styleSource']), $formatExcel['styleDestination'] . ':' . $formatExcel['styleDestination']);
+//          }
+//
+//          if (isset($formatExcel['getRowHeight'])) {
+//            $activeSheet->getRowDimension($formatExcel['getRowHeight'])->getRowHeight();
+//          }
+//
+//          if (isset($formatExcel['setRowHeight']) && isset($formatExcel['rowHeight'])) {
+//            $rowHeight = $formatExcel['rowHeight'];
+//            if (isset($formatExcel['getRowHeight'])) {
+//              $rowHeight = $activeSheet->getRowDimension($formatExcel['getRowHeight'])->getRowHeight();
+//            }
+//            $activeSheet->getRowDimension($formatExcel['setRowHeight'])->setRowHeight($rowHeight);
+//          }
+//
+//          if (isset($formatExcel['mergeCells']) && isset($formatExcel['mergeCells']['start']) && isset($formatExcel['mergeCells']['end'])) {
+//            $activeSheet->mergeCells($formatExcel['mergeCells']['start'] . ':' . $formatExcel['mergeCells']['end']);
+//          }
+//
+//          if (isset($formatExcel['unMergeCells']) && isset($formatExcel['unMergeCells']['start']) && isset($formatExcel['unMergeCells']['end'])) {
+//            $activeSheet->unmergeCells($formatExcel['unMergeCells']['start'] . ':' . $formatExcel['unMergeCells']['end']);
+//          }
+//
+//          if (isset($formatExcel['setHorizontal']) && isset($formatExcel['style'])) {
+//            if ($formatExcel['style'] == ExcelUtil::Horizontal_Center) {
+//              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+//            } elseif ($formatExcel['style'] == ExcelUtil::Horizontal_Right) {
+//              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//            } elseif ($formatExcel['style'] == ExcelUtil::Horizontal_Left) {
+//              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+//            } else {
+//              $activeSheet->getStyle($formatExcel['setHorizontal'])->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_GENERAL);
+//            }
+//          }
+//
+//          if (isset($formatExcel['insertImage']) && isset($formatExcel['insertImage']['pathImage']) && isset($formatExcel['insertImage']['position'])
+//                  && is_file($formatExcel['insertImage']['pathImage'])) {
+//            $objDrawing = new PHPExcel_Worksheet_Drawing();
+//            $objDrawing->setResizeProportional(false);
+//            $objDrawing->setName('Image');
+//            $objDrawing->setDescription('Image');
+//            $objDrawing->setPath($formatExcel['insertImage']['pathImage']);
+//            $objDrawing->setHeight($formatExcel['insertImage']['height']);
+//            $objDrawing->setWidth($formatExcel['insertImage']['width']);
+//            $objDrawing->setWorksheet ($activeSheet);
+//            $objDrawing->setCoordinates($formatExcel['insertImage']['position']);
+//            $objDrawing->setOffsetY(0.96);
+//          }
+//
+//          if (isset($formatExcel['removeSheet'])) {
+//            $objPHPExcel->removeSheetByIndex($formatExcel['removeSheet']);
+//          }
+//
+//          if (isset($formatExcel['sheetName'])) {
+//            $activeSheet->setTitle($formatExcel['sheetName']);
+//          }
+//
+//          if (isset($formatExcel['styleArray'])) {
+//            $activeSheet->getStyle($formatExcel['fromCell'].':'.$formatExcel['toCell'])->applyFromArray($formatExcel['styleArray']);
+//          }
+//        }
+//
+//        foreach ($data as $row => $dataRow) {
+//          foreach ($dataRow as $column => $dataCell) {
+//            $activeSheet->setCellValue($column . $row, $dataCell);
+//          }
+//        }
+//      }
+//
+//      $outputRelativePath = 'tmp/' . $formName . '_' . uniqid() . '.xlsx';
+//      $tempPath = Config::uploadPath() . $outputRelativePath;
+//      $outputFile = $tempPath;
+//      $objWriter = PHPExcel_IOFactory :: createWriter($objPHPExcel, 'Excel2007');
+//      $objWriter->setIncludeCharts(TRUE);
+//      $objWriter->save($tempPath);
+//
+//      if (file_exists($outputFile)) {
+//        if (isset($extraOptions['isGetPath']) && $extraOptions['isGetPath']) {
+//          return $outputRelativePath;
+//        }
+//
+//        return FileUtil::responseDownload($outputFile, array('del_file' => TRUE, 'is_download' => TRUE, 'filename' => 'form_excel' . date('YmdHis') . '.xlsx'));
+//      }
+//    }
 
     throw new ExportException(Config::getMessage('common.ERR.can_not_export_pdf_form'));
   }
@@ -902,41 +902,6 @@ abstract class AppController extends Controller implements FilterControllerInter
   }
 
   /**
-   * checkTtsOrderToCreateNewRelation S260_7, S258_4, 257_4, 259_4
-   * @param TtsOrder $ttsOrder
-   * @author Khiemnd 2013/07/17
-   */
-  public function checkTtsOrderToCreateNewRelation($ttsOrder)
-  {
-    $orderFlag = $ttsOrder->getOrderFlag();
-    $requestSection = $ttsOrder->getRequestSection();
-
-    $REPAIR_SALES = ValueList::constToValue('common.order_flag.REPAIR_SALES');
-    $REPLACE_SALES = ValueList::constToValue('common.order_flag.REPLACE_SALES');
-    $CONSTRUCT_SALES = ValueList::constToValue('common.order_flag.CONSTRUCT_SALES');
-    $CONSTRUCT_INVESTIGATION = ValueList::constToValue('common.order_flag.CONSTRUCT_INVESTIGATION');
-    $MAINTENANCE_SALES = ValueList::constToValue('common.order_flag.MAINTENANCE_SALES');
-    $requestSectionTech     = ValueList::constToValue('S251.request_to.TECH');
-    $requestSectionPartner  = ValueList::constToValue('S251.request_to.PARTNER');
-
-    if((!$ttsOrder->getRequests()->count()
-       && (in_array($orderFlag, array($REPAIR_SALES, $CONSTRUCT_INVESTIGATION, $MAINTENANCE_SALES))
-          || ($requestSection == $requestSectionPartner && in_array($orderFlag, array($REPLACE_SALES, $CONSTRUCT_SALES)))))) {
-
-      $this->addFlashError(Config::getMessage('common.ERR.no_request_data_you_can_not_create'));
-    } elseif (!$ttsOrder->getCmConstructionRequest()
-        && $requestSection == $requestSectionTech && in_array($orderFlag, array($REPLACE_SALES, $CONSTRUCT_SALES))) {
-
-      $this->addFlashError(Config::getMessage('common.ERR.no_work_request_data_you_can_not_create'));
-    } else {
-
-      return TRUE;
-    }
-
-    return FALSE;
-  }
-
-  /**
    * sort list entity from search and edit screen
    * @param $ids
    * @param $entities
@@ -967,240 +932,6 @@ abstract class AppController extends Controller implements FilterControllerInter
 
     return array('entities' => $sortEntityList, 'params' => $sortParamList);
   }
-
-  /**
-   * getMailDownloadLink
-   * @param MailHistory $mailHistory
-   * @param $detailData
-   * @return array
-   * @author Khiemnd 2013/07/26
-   */
-  public function getMailDownloadLink(MailHistory $mailHistory, $detailData)
-  {
-    $password = StringUtil::strRand($length = 6, $output = 'alphanum');
-    $accessCode = StringUtil::strRand($length = 6, $output = 'alphanum');
-    $mailHistory->setPassword($password)
-                ->setAccessCode($accessCode)
-                ->setSendTime(new \DateTime())
-                ->setStaff($this->getUser()->getStaff());
-
-    $saveArr = array($mailHistory);
-
-    if (!is_array($detailData)) {
-      $detailData = array($detailData);
-    }
-
-    foreach ($detailData as $mailHistoryDetail) {
-      if ($mailHistoryDetail && $mailHistoryDetail->getExportFormData() && $mailHistoryDetail->getExportFormName()) {
-        $filePath = $this->exportPDF($mailHistoryDetail->getExportFormData(),
-                                      $mailHistoryDetail->getExportFormName(),
-                                      array('addCsvData' => isset($mailHistoryDetail->addCsvData)?$mailHistoryDetail->addCsvData:array(), 'isGetPath' => TRUE));
-      } else {
-        $extraOption = $mailHistoryDetail->dataExcel;
-        $filePath = $this->exportExcel($extraOption['dataSheets'], $extraOption['formName'],
-                                      array('isSheetCopy' =>  $extraOption['isSheetCopy'], 'isGetPath' => TRUE));
-      }
-
-      $mailHistoryDetail->setMailHistory($mailHistory)
-        ->setFilePath($filePath)
-        ->setSendTime(new \DateTime());
-      array_push($saveArr, $mailHistoryDetail);
-    }
-
-    $this->get('entity_service')->save($saveArr);
-
-    $url = Config::get('domain').$this->generateUrl('S275_1', array('accessCode' => $accessCode));
-
-    return array('url' => $url, 'password' => $password);
-  }
-
-  /**
-   * get list email technical
-   * @return string
-   * @author ThongTq 2013/07/29
-   */
-  public function getListMailTechnical(){
-    $listStaff = $this->get('entity_service')->process('User:getStaffByUserFlag', ValueList::constToValue('S119.user_flag.INSIDE_TECHNICAL'));
-    $emailTechArr = array();
-    $emailTechnical = "";
-
-    if ($listStaff) {
-      foreach($listStaff as $staff){
-        if ($staff->getStaff()->getEmail()) {
-          $emailTechArr[] = $staff->getStaff()->getEmail();
-        }
-
-        $emailTechnical = implode(';', $emailTechArr);
-      }
-    }
-
-    return $emailTechnical;
-  }
-
-  /**
-   * get list email SupperVisor by section
-   * @param $section
-   * @param $approveAuthority
-   * @return string
-   * @author ThongTq 2013/08/19
-   */
-  public function getListMailSupperVisorBySection($section, $approveAuthority)
-  {
-    $emailSupperVisor = '';
-    $listStaff = $this->get('entity_service')->process('Staff:getManageStaff', $section, $approveAuthority);
-
-    if ($listStaff) {
-      $listEmail = array();
-      foreach($listStaff as $staff){
-        $listEmail[] = $staff->getEmail();
-      }
-
-      $emailSupperVisor = implode(';', $listEmail);
-    }
-
-    return $emailSupperVisor;
-  }
-
-  /**
-   * get list email Supplier and Supplier staff
-   * @param $id
-   * @param $type
-   * @return string
-   * @author ThongTq 2013/07/29
-   */
-  public function getListMail($id, $type)
-  {
-    $emailSuppliers = '';
-    if ($type == 'request') {
-      $entity = $this->getEntity('Request', $id);
-    }  else {
-      $entity = $this->getEntity('Schedule', $id);
-    }
-
-    if ($entity->getSupplier()) {
-      $emailSuppliers = $entity->getSupplier()->getAllEmail();
-    }
-
-    $listEmailTo = $emailSuppliers;
-
-    $emailSupplierStaff = array();
-    if ($entity->getSupplierStaff()) {
-      $emailSupplierStaff[] = $entity->getSupplierStaff()->getEmail1();
-      $emailSupplierStaff[] = $entity->getSupplierStaff()->getEmail2();
-      $supplierStaff = implode(';', $emailSupplierStaff);
-      $listEmailTo = $listEmailTo.';'.$supplierStaff;
-    }
-
-    return $listEmailTo;
-  }
-
-  /**
-   * get update sales and create new billing history for S401, S259_4
-   * @param $arrIds
-   * @param $screen
-   * @return string
-   * @author ThongTq 2013/08/29
-   */
-  public function updateSalesWhenPressPrintButton($arrIds, $screen){
-    $arrData = array();
-    $toDate  = new \DateTime;
-    $salesStatus_FIX = ValueList::constToValue('common.sales_status.FIX');
-    $invoicePublishSection_OFFICE = ValueList::constToValue('S259.invoice_publish_section.OFFICE');
-    $sendFlag_FINISHED = ValueList::constToValue('S259.send_flag.FINISHED');
-
-    if ($screen == "S401") {
-      $arrRepublishFlags = $this->getRequest()->get('postRepublishFlags', array());
-    }
-
-    $section = $this->getUser()->getSection();
-    $staff = $this->getUser()->getStaff();
-    $sales = $this->get('entity_service')->process('Sales:findById', $arrIds);
-
-    foreach ($sales as $key => $salesItem) {
-      if ($screen == "S401") {
-        $salesItem->setRepublishFlag($arrRepublishFlags[$key]);
-      }
-
-      if ($salesItem->getSalesStatus() == $salesStatus_FIX) {
-        $publishCount = $salesItem->getPublishCount() ? $salesItem->getPublishCount() : 0;
-        $salesItem->setFinalPublishStaff($staff)
-          ->setFinalPublishDate($toDate)
-          ->setPublishCount($publishCount + 1);
-
-        if ($salesItem->getInvoicePublishSection() == $invoicePublishSection_OFFICE) {
-          $salesItem->setSendFlag($sendFlag_FINISHED);
-        }
-
-        $billingHistory = new BillingHistory();
-        $billingHistory->setSales($salesItem)
-                      ->setInvoicePublishDate($salesItem->getInvoicePublishDate())
-                      ->setIssueStaff($staff)
-                      ->setIssueSection($section)
-                      ->setPublishDate($toDate);
-
-        $republishDisplay = ValueList::constToValue('common.is_checked.NO');
-        if ($screen == "S401") {
-          $republishDisplay = $arrRepublishFlags[$key];
-        }
-        $billingHistory->setRepublishDisplay($republishDisplay);
-
-        $arrData[] = $billingHistory;
-      }
-
-      $arrData[] = $salesItem;
-    }
-
-    if ($arrData) {
-      $this->get('entity_service')->save($arrData);
-    }
-
-    return new RedirectResponse($this->getRequest()->headers->get('referer'));
-  }
-
-// Set updated common fields in case update by ajax
-  public function setUpdatedCommonFieldsForSaveAjax($entity, $user){
-    $entity->setUpdatedAt(new \DateTime());
-    $entity->setUpdatedBy($user);
-    $entity->setUpdatedSection($user->getStaff()->getSection());
-    $entity->setUpdatedStaff($user->getStaff());
-    $entity->setUpdatedDisplayName($user->getStaff()->getStaffName());
-  }
-
-
-  /**
-   * @author Datdqv
-   */
-  public function checkRolePartner($entity, $method = 'getSupplier') {
-    if ($this->get('security.context')->isGranted('ROLE_PARTNER')) {
-      $loginSupplier = TryUtil::callMethod($this, 'getUser:getSupplierStaff:getSupplier');
-
-      if ($loginSupplier) {
-        $checkObj = TryUtil::callMethod($entity, $method);
-
-        if ($checkObj != $loginSupplier) {
-          throw $this->createNotFoundException(Config::getMessage('not_found'));
-        }
-      }
-    }
-  }
-
-  /**
-   * tax rate set default #13604
-   * @author Khiemnd
-   */
-  public function setDefaultTaxRate($entity, $checkDate = null)
-  {
-      $entity->setTaxRate(AccountingUtil::getDefaultTaxRate($checkDate));
-  }
-  /**
-   * CSVデータ出力(Optionsを追加)
-   * @author toanlm
-   * @since 2014/09/19
-   */
-  public function  exportCSVExtra($entities, $formatYmlFile, $extraOptions=array())
-{
-    return FileUtil::csvExportEntitiesExtra($entities, $formatYmlFile, $extraOptions);
-}
 
   /**
    * @return EntityService

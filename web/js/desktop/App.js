@@ -24,7 +24,8 @@ Ext.define('MyDesktop.App', {
 
         'MyUtil.Path',
 
-        'SrcPageUrl.User.List'
+        'SrcPageUrl.User.List',
+        'SrcPageUrl.Driver.List'
     ],
 
     init: function() {
@@ -47,7 +48,8 @@ Ext.define('MyDesktop.App', {
             new MyDesktop.BogusMenuModule(),
             new MyDesktop.BogusModule(),
 
-            new SrcPageUrl.User.List()
+            new SrcPageUrl.User.List(),
+            new SrcPageUrl.Driver.List()
         ];
     },
 
@@ -73,6 +75,7 @@ Ext.define('MyDesktop.App', {
 
     getDataForShortcutModel: function() {
         return [{ name: 'Grid User',        iconCls: 'grid-shortcut',      module: 'user-list' },
+                { name: 'Grid Driver',      iconCls: 'grid-shortcut',      module: 'driver-list' },
                 { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
                 { name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
                 { name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}];

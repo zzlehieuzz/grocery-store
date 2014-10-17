@@ -16,6 +16,11 @@ class EntityService
     const MASTER    = 'default';
 
     /**
+     * @var boolean
+     */
+    private $autoFlush = TRUE;
+
+    /**
      * @var EntityManager
      */
     private $em;
@@ -100,6 +105,22 @@ class EntityService
         return $this->dqlProcessing = $dqlProcessing;
     }
 
+  /**
+   * @param boolean $isFlush
+   */
+  public function setAutoFlush($isFlush)
+  {
+    $this->autoFlush = $isFlush;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getAutoFlush()
+  {
+    return $this->autoFlush;
+  }
+
     /**
      * @return array
      */
@@ -114,41 +135,58 @@ class EntityService
      */
     public function save($entities, $isFlush = 'DEFAULT')
     {
-        if (!$entities) {
-            return;
-        }
+//        if (!$entities) {
+//            return;
+//        }
+//
+//        if (!is_array($entities)) {
+//            $entities = array($entities);
+//        }
+//
+//        foreach ($entities as $entity) {
+//            $this->em->persist($entity);
+//        }
+//
+//        if ($isFlush === 'DEFAULT') {
+//            $isFlush = $this->getAutoExecute();
+//        }
+//
+//        $this->needSaveExecute = true;
+//        if ($isFlush) {
+//            $this->saveExecute();
+//        }
 
-        if (!is_array($entities)) {
-            $entities = array($entities);
-        }
+      if (!$entities)
+        return;
 
-        foreach ($entities as $entity) {
-            $this->em->persist($entity);
-        }
+      if (!is_array($entities)) {
+        $entities = array($entities);
+      }
 
-        if ($isFlush === 'DEFAULT') {
-            $isFlush = $this->getAutoExecute();
-        }
+      foreach ($entities as $entity) {
+        $this->em->persist($entity);
+      }
 
-        $this->needSaveExecute = true;
-        if ($isFlush) {
-            $this->saveExecute();
-        }
+      if ($isFlush === 'DEFAULT')
+        $isFlush = $this->getAutoFlush();
+
+      if ($isFlush) {
+        // echo "FLUSHED!". PHP_EOL;
+        $this->em->flush();
+      }
     }
 
-    /**
-     * @param String $table
-     * @param Mixed $singleOrArray
-     * @param bool|string $isExecute
-     * @return int|mixed
-     */
-    public function delete($table, $singleOrArray, $isExecute = 'DEFAULT')
+  /**
+   * @param String $table
+   * @param Mixed $singleOrArray
+   * @param string $isFlush
+   */
+    public function delete($table, $singleOrArray, $isFlush = 'DEFAULT')
     {
-        if ($isExecute === 'DEFAULT') {
-            $isExecute = $this->getAutoExecute();
-        }
+      if ($isFlush === 'DEFAULT')
+        $isFlush = $this->getAutoFlush();
 
-        return $this->process($table . ':delete', $singleOrArray, $isExecute);
+      return $this->process($table . ':delete', $singleOrArray, $isFlush);
     }
 
     /**
@@ -181,18 +219,29 @@ class EntityService
      * @param string $connection
      * @return int|mixed
      */
-    private function process($callback, $params, $connection = self::MASTER)
+    public function process($callback, $params, $connection = self::MASTER)
     {
+//        list($entity, $method) = explode(':', $callback);
+//        $repositoryName = BaseRepository::ENTITY_BUNDLE . ':' . $entity;
+//        $repository = $this->doctrine->getRepository($repositoryName, $connection);
+//        $handler = array($repository, $method);
+//
+//        if (is_callable($handler)) {
+//            return call_user_func_array($handler, $params);
+//        }
+//
+//        return -1;
+
         list($entity, $method) = explode(':', $callback);
         $repositoryName = BaseRepository::ENTITY_BUNDLE . ':' . $entity;
-        $repository = $this->doctrine->getRepository($repositoryName, $connection);
+        $repository = $this->em->getRepository($repositoryName);
         $handler = array($repository, $method);
 
         if (is_callable($handler)) {
-            return call_user_func_array($handler, $params);
+          $params = func_get_args();
+          array_shift($params);
+          return call_user_func_array($handler, $params);
         }
-
-        return -1;
     }
 
     public function saveCopyData($entities, $params, $isFlush = 'DEFAULT')
