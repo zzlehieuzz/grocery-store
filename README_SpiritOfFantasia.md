@@ -72,7 +72,7 @@ php app/console doctrine:generate:entities SofApiBundle:GoodsNameInformation --n
 php app/console doctrine:generate:entities SofApiBundle:EncounterMaster --no-backup
 5. Change extend Class in repository: EntityRepository -> BaseRepository
 exp:
-class GoodsNameInformationRepository extends EntityRepository
+class InformationRepository extends EntityRepository
 -> class GoodsNameInformationRepository extends BaseRepository
 delete row: use Doctrine\ORM\EntityRepository;
 6. Update DB:
