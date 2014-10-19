@@ -4,7 +4,8 @@
 var readerJson = {
     type: 'json',
     root: 'data',
-    id  : 'id'
+    id  : 'id',
+    totalProperty: 'total'
 };
 
 var objectField = [{name: 'id',       type: 'int'},
@@ -21,16 +22,10 @@ function defineModel (modelName, objectField) {
 
 defineModel('Driver', objectField);
 
-function getPathAction (id, action) {
-    action = action || "action";
-
-    return Ext.get(id).getAttribute(action);
-}
-
-var storeAllPlayer = new Ext.data.JsonStore({
+var storeLoadDriver = new Ext.data.JsonStore({
     model: 'Driver',
     proxy: new Ext.data.HttpProxy({
-        url: getPathAction("Common_LoadDriver"),
+        url: MyUtil.Path.getPathAction("Driver_Load"),
         reader: readerJson
     }),
     autoLoad: true
@@ -50,7 +45,7 @@ var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
       console.log(context.record.data);
 
       Ext.Ajax.request({
-        url: getPathAction("updateData")
+        url: MyUtil.Path.getPathAction("Driver_Update")
         , params: context.record.data
         , method: 'POST'
         , headers: {
@@ -87,6 +82,14 @@ Ext.define('SrcPageUrl.Driver.List', {
     createWindow : function(){
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
+
+        var rowModel = Ext.create('Ext.selection.RowModel', {
+            mode : "MULTI",
+            onKeyPress: function(e, t) {
+                console.log(e);
+            }
+        });
+
         if(!win){
             win = desktop.createWindow({
                 id: 'driver-list',
@@ -102,7 +105,8 @@ Ext.define('SrcPageUrl.Driver.List', {
                     border: false,
                     id: 'MyGridPanel',
                     xtype: 'grid',
-                    store: storeAllPlayer,
+                    store: storeLoadDriver,
+                    selModel: rowModel,
                     columns: [
                       new Ext.grid.RowNumberer(),
                       {
@@ -153,7 +157,7 @@ Ext.define('SrcPageUrl.Driver.List', {
                     email: 'new@sencha-test.com'
                   });
 
-                  storeAllPlayer.insert(0, r);
+                  storeLoadDriver.insert(0, r);
                   rowEditing.startEdit(0, 0);
                 }
               }, '-', {
@@ -167,28 +171,40 @@ Ext.define('SrcPageUrl.Driver.List', {
                 handler: function() {
                   var grid = Ext.getCmp("MyGridPanel");
                   var sm = grid.getSelectionModel();
+                    var obj = (sm.getSelection());
+                    var ob = obj[0];
 
-                  console.log(sm);
-                  console.log(sm.getSelection());
+                    Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                        if(btn === 'yes'){
+                            //some code
+                            rowEditing.cancelEdit();
+                            storeLoadDriver.remove(sm.getSelection());
 
-                  rowEditing.cancelEdit();
-                  storeAllPlayer.remove(sm.getSelection());
-
-                  Ext.Ajax.request({
-                    url: getPathAction("deleteData")
-//                    , params: {id : sm.getSelection().data.id}
-                    , params: {id : sm.getSelection().id}
-                    , method: 'POST'
-                    , headers: {
-                      'content-type': 'application/json'
-                    }
-                    , success: function (data) {
-                      if (storeAllPlayer.getCount() > 0) {
-                        sm.select(0);
-                      }
-                    }
-                  });
+                            Ext.Ajax.request({
+                                url: MyUtil.Path.getPathAction("Driver_Delete")
+                                , params: {id : ob.data.id}
+                                , method: 'POST'
+                                , headers: {
+                                    'content-type': 'application/json'
+                                }
+                                , success: function (data) {
+                                    if (storeLoadDriver.getCount() > 0) {
+                                        sm.select(0);
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            //some code
+                        }
+                    });
                 }
+              }, '->', {
+                  text: 'Reload',
+                  iconCls:'reload',
+                  handler: function(){
+                      storeLoadUser.load();
+                  }
               }]
             });
         }

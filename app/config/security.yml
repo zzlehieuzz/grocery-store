@@ -34,7 +34,7 @@ security:
                 always_use_default_target_path: true
                 check_path: /authenticate
                 login_path: /login
-                default_target_path: /
+                default_target_path: /Common_Index
                 username_parameter: login_username
                 password_parameter: login_password
             logout:

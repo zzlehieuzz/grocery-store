@@ -97,13 +97,14 @@ class BaseController extends Controller implements FilterControllerInterface
         $apiInput =  $this->apiInput;
         $exception = $event->getException();
         $resultCode = $apiInput['apiNo'] . 99;
+
         if($exception instanceof SofApiException && $exception->getMessage()) {
             $resultCode = $exception->getMessage();
         }
 
-        if (isset($apiInput['userId']) && !$exception->getCode()) {
-            $this->getCommonService()->C00_9966_LogRecord($apiInput['userId'], $apiInput['apiNo'], $resultCode, LogDatabaseService::ERROR, json_encode($apiInput['requestParams']));
-        };
+//        if (isset($apiInput['userId']) && !$exception->getCode()) {
+//            $this->getCommonService()->C00_9966_LogRecord($apiInput['userId'], $apiInput['apiNo'], $resultCode, LogDatabaseService::ERROR, json_encode($apiInput['requestParams']));
+//        };
 
         $event->setResponse($this->apiResponse(array(), $resultCode, true));
     }
@@ -254,30 +255,15 @@ class BaseController extends Controller implements FilterControllerInterface
      *
      * @author HieuNLD 2014/06/13
      */
-    protected function getJsonResponse(array $data, $isError = FALSE)
+    protected function jsonResponse(array $data, $total = null, $isError = FALSE)
     {
         $result = array();
         $result['responseCode'] = $isError ? 204 : 200;
         $result['data'] = array();
 
-        $targets = $this->getRequest()->get('targets', array());
-//        echo '<pre>';
-//        print_r($data);die;
-//        foreach ($targets as $key) {
-//            if (array_key_exists($key, $data)) {
-//                if (isset($data[$key]['options']) && is_array($data[$key]['options'])) {
-//                    $options = array();
-//
-//                    foreach ($data[$key]['options'] as $index => $text) {
-//                        $options['#index#' . $index] = $text;
-//                    }
-//
-//                    $result['data'][$key]['options'] = $options;
-//                } else {
-//                    $result['data'][$key] = $data[$key];
-//                }
-//            }
-//        }
+        if ($total) {
+            $result['total'] = $total;
+        }
 
         if (isset($data['data']) && $data['data']) {
             $result['data'] = $data['data'];
@@ -288,5 +274,40 @@ class BaseController extends Controller implements FilterControllerInterface
         }
 
         return new JsonResponse($result);
+    }
+
+    /**
+     * @return JsonResponse
+     *
+     * @author HieuNLD 2014/06/13
+     */
+    protected function getPagingParams()
+    {
+        $params  = array();
+        $request = $this->get('request');
+
+        $params['limit'] = $request->get('limit');
+        $params['page']  = $request->get('page');
+        $params['start'] = $request->get('start');
+
+        return $params;
+    }
+
+    /**
+     * @param string $key
+     * @return array
+     *
+     * @author HieuNLD 2014/10/08
+     */
+    public function getJsonParams($key = 'params')
+    {
+        $params = array();
+        $content = $this->get('request')->getContent();
+        if (!empty($content)) {
+            $params = json_decode($content, true);
+            $params = $params[$key];
+        }
+
+        return $params;
     }
 }

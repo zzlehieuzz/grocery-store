@@ -4,7 +4,8 @@
 var readerJson = {
     type: 'json',
     root: 'data',
-    id  : 'id'
+    id  : 'id',
+    totalProperty: 'total'
 };
 
 var objectField = [{name: 'id',       type: 'int'},
@@ -21,24 +22,18 @@ function defineModel (modelName, objectField) {
 
 defineModel('User', objectField);
 
-function getPathAction (id, action) {
-    action = action || "action";
-
-    return Ext.get(id).getAttribute(action);
-}
-
-var storeAllPlayer = new Ext.data.JsonStore({
+var storeLoadUser = new Ext.data.JsonStore({
     model: 'User',
     proxy: new Ext.data.HttpProxy({
-        url: getPathAction("Common_LoadPlayer"),
+        url: MyUtil.Path.getPathAction("User_Load"),
         reader: readerJson
     }),
-    autoLoad: true
+    pageSize: 5,
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
 });
 
 Ext.define('SrcPageUrl.User.List', {
     extend: 'Ext.ux.desktop.Module',
-
     requires: [
         'Ext.data.ArrayStore',
         'Ext.util.Format',
@@ -56,6 +51,41 @@ Ext.define('SrcPageUrl.User.List', {
     },
 
     createWindow : function(){
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            listeners: {
+                'edit': function (editor,e) {
+                    var record = e.record.data;
+
+                    Ext.Ajax.request({
+                        url: MyUtil.Path.getPathAction("User_Update"),
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        waitTitle: 'Connecting',
+                        waitMsg: 'Sending data...',
+                        jsonData: {'params' : record},
+                        scope: this,
+                        success: function(msg) {
+                            if (msg.status) {
+                                console.log('success');
+                            }
+                        },
+                        failure: function(msg) {
+                            console.log('failure');
+                        }
+                    });
+                }
+            }
+        });
+
+        var rowModel = Ext.create('Ext.selection.RowModel', {
+            mode : "MULTI",
+            onKeyPress: function(e, t) {
+                console.log(e);
+            }
+        });
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -65,48 +95,95 @@ Ext.define('SrcPageUrl.User.List', {
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',
-                animCollapse:false,
-                constrainHeader:true,
+                animCollapse: false,
+                constrainHeader: true,
                 layout: 'fit',
-                items: [
-                    {
+                items:
+                    [{
                         border: false,
                         xtype: 'grid',
-                        store: storeAllPlayer,
+                        id: 'grid-user-list',
+                        store: storeLoadUser,
+                        loadMask:true,
+                        selModel: rowModel,
+                        plugins: rowEditing,
                         columns: [
                             new Ext.grid.RowNumberer(),
                             {
-                              text: "User Name",
-                              width: 150,
-                              flex: 1,
-  //                                sortable: true,
-                              dataIndex: 'userName'
+                                dataIndex: 'id',
+                                hidden : true
+                            }, {
+                                text: "User Name",
+                                width: 150,
+                                flex: 1,
+                                dataIndex: 'userName'
                             }, {
                                 text: "Name",
-//                                width: 150,
                                 flex: 2,
-                                dataIndex: 'name'
+                                dataIndex: 'name',
+                                editor: {
+                                    xtype: 'textfield'
+                                }
                             }, {
                                 text: "Email",
                                 flex: 3,
-                                dataIndex: 'email'
+                                dataIndex: 'email',
+                                editor: {
+                                    xtype: 'textfield'
+                                }
                             }
                         ]
                     }
                 ],
                 tbar:[{
-                    text:'Add Something',
+                    text:'Add',
                     tooltip:'Add a new row',
                     iconCls:'add'
-                }, '-', {
-                    text:'Options',
-                    tooltip:'Modify options',
-                    iconCls:'option'
-                },'-',{
-                    text:'Remove Something',
+                }, '-',{
+                    text:'Remove',
                     tooltip:'Remove the selected item',
-                    iconCls:'remove'
-                }]
+                    iconCls:'remove',
+                    listeners: {
+                        click: function () {
+                            var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
+
+                            if (selection.length > 0) {
+                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                                    if(btn === 'yes') {
+                                        var arrId = [];
+                                        Ext.each(selection, function(v, k) {
+                                            arrId[k] = v.data.id;
+                                        });
+
+                                        Ext.Ajax.request({
+                                            url: MyUtil.Path.getPathAction("User_Delete"),
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            jsonData: {'params' : arrId},
+                                            scope: this,
+                                            success: function(msg) {
+                                                if (msg.status) {
+                                                    //storeLoadUser.remove(selection);
+                                                    storeLoadUser.reload();
+                                                    console.log('success');
+                                                }
+                                            },
+                                            failure: function(msg) {
+                                                console.log('failure');
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MyUtil.Message.MessageError();
+                            }
+                        }
+                    }
+                }],
+                bbar: new Ext.PagingToolbar({
+                    store: storeLoadUser,
+                    displayInfo:true
+                })
             });
         }
         return win;

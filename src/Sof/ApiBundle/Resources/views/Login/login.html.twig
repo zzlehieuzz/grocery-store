@@ -9,32 +9,26 @@
     <body>
         <div class="login">
             <div class="login-screen">
-                <div class="app-title">
-                    <h1>Login</h1>
-                </div>
-
+                <div class="app-title"><h1>Grocery Store System</h1></div>
                 <div class="login-form">
-                  {% if error %}
-                    <div class="login-error">{{ error }}</div>
-                  {% endif %}
+                    {% if error %}
+                        <div class="login-error">{{ error }}</div>
+                    {% endif %}
 
-                  <form action="{{ path("user_auth") }}" method="post" id="login">
-                    <div class="control-group">
-                        <input type="text" class="login-field" value="{{ lastUsername }}" placeholder="username" id="username"  name="login_username">
-                        <label class="login-field-icon fui-user" for="login-name"></label>
-                    </div>
-
-                    <div class="control-group">
-                        <input type="password" class="login-field" value="" placeholder="password" id="password" name="login_password">
-                        <label class="login-field-icon fui-lock" for="login-pass"></label>
-                    </div>
-
-                    {#<a class="btn btn-primary btn-large btn-block" href="#">login</a>#}
-                    <input class="btn btn-primary btn-large btn-block" type="submit" value="login" />
-
-                    <a class="login-link" href="#">Lost your password?</a>
-                  </form>
+                    <form action="{{ path("user_auth") }}" method="post" id="login">
+                        <div class="control-group">
+                            <input type="text" class="login-field" value="{{ lastUsername }}" placeholder="username" id="username"  name="login_username">
+                            <label class="login-field-icon fui-user" for="login-name"></label>
+                        </div>
+                        <div class="control-group">
+                            <input type="password" class="login-field" value="" placeholder="password" id="password" name="login_password">
+                            <label class="login-field-icon fui-lock" for="login-pass"></label>
+                        </div>
+                        <input class="btn btn-primary btn-large btn-block" type="submit" value="LOGIN" />
+                        {#<a class="login-link" href="#">Lost your password?</a>#}
+                    </form>
                 </div>
+                <div class="designer">Design By HieuNLD</div>
             </div>
         </div>
     </body>

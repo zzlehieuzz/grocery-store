@@ -16,11 +16,6 @@ class EntityService
     const MASTER    = 'default';
 
     /**
-     * @var boolean
-     */
-    private $autoFlush = TRUE;
-
-    /**
      * @var EntityManager
      */
     private $em;
@@ -105,22 +100,6 @@ class EntityService
         return $this->dqlProcessing = $dqlProcessing;
     }
 
-  /**
-   * @param boolean $isFlush
-   */
-  public function setAutoFlush($isFlush)
-  {
-    $this->autoFlush = $isFlush;
-  }
-
-  /**
-   * @return boolean
-   */
-  public function getAutoFlush()
-  {
-    return $this->autoFlush;
-  }
-
     /**
      * @return array
      */
@@ -135,58 +114,41 @@ class EntityService
      */
     public function save($entities, $isFlush = 'DEFAULT')
     {
-//        if (!$entities) {
-//            return;
-//        }
-//
-//        if (!is_array($entities)) {
-//            $entities = array($entities);
-//        }
-//
-//        foreach ($entities as $entity) {
-//            $this->em->persist($entity);
-//        }
-//
-//        if ($isFlush === 'DEFAULT') {
-//            $isFlush = $this->getAutoExecute();
-//        }
-//
-//        $this->needSaveExecute = true;
-//        if ($isFlush) {
-//            $this->saveExecute();
-//        }
+        if (!$entities) {
+            return;
+        }
 
-      if (!$entities)
-        return;
+        if (!is_array($entities)) {
+            $entities = array($entities);
+        }
 
-      if (!is_array($entities)) {
-        $entities = array($entities);
-      }
+        foreach ($entities as $entity) {
+            $this->em->persist($entity);
+        }
 
-      foreach ($entities as $entity) {
-        $this->em->persist($entity);
-      }
+        if ($isFlush === 'DEFAULT') {
+            $isFlush = $this->getAutoExecute();
+        }
 
-      if ($isFlush === 'DEFAULT')
-        $isFlush = $this->getAutoFlush();
-
-      if ($isFlush) {
-        // echo "FLUSHED!". PHP_EOL;
-        $this->em->flush();
-      }
+        $this->needSaveExecute = true;
+        if ($isFlush) {
+            $this->saveExecute();
+        }
     }
 
-  /**
-   * @param String $table
-   * @param Mixed $singleOrArray
-   * @param string $isFlush
-   */
-    public function delete($table, $singleOrArray, $isFlush = 'DEFAULT')
+    /**
+     * @param String $table
+     * @param Mixed $singleOrArray
+     * @param bool|string $isExecute
+     * @return int|mixed
+     */
+    public function delete($table, $singleOrArray, $isExecute = 'DEFAULT')
     {
-      if ($isFlush === 'DEFAULT')
-        $isFlush = $this->getAutoFlush();
+        if ($isExecute === 'DEFAULT') {
+            $isExecute = $this->getAutoExecute();
+        }
 
-      return $this->process($table . ':delete', $singleOrArray, $isFlush);
+        return $this->process($table . ':delete', $singleOrArray, $isExecute);
     }
 
     /**
@@ -219,29 +181,18 @@ class EntityService
      * @param string $connection
      * @return int|mixed
      */
-    public function process($callback, $params, $connection = self::MASTER)
+    private function process($callback, $params, $connection = self::MASTER)
     {
-//        list($entity, $method) = explode(':', $callback);
-//        $repositoryName = BaseRepository::ENTITY_BUNDLE . ':' . $entity;
-//        $repository = $this->doctrine->getRepository($repositoryName, $connection);
-//        $handler = array($repository, $method);
-//
-//        if (is_callable($handler)) {
-//            return call_user_func_array($handler, $params);
-//        }
-//
-//        return -1;
-
         list($entity, $method) = explode(':', $callback);
         $repositoryName = BaseRepository::ENTITY_BUNDLE . ':' . $entity;
-        $repository = $this->em->getRepository($repositoryName);
+        $repository = $this->doctrine->getRepository($repositoryName, $connection);
         $handler = array($repository, $method);
 
         if (is_callable($handler)) {
-          $params = func_get_args();
-          array_shift($params);
-          return call_user_func_array($handler, $params);
+            return call_user_func_array($handler, $params);
         }
+
+        return -1;
     }
 
     public function saveCopyData($entities, $params, $isFlush = 'DEFAULT')
@@ -302,6 +253,23 @@ class EntityService
         return $qBuilder->getQuery()->getArrayResult();
     }
 
+    public function getDataForPaging($entity, $args = array(), $connection = self::SLAVE)
+    {
+        $totalArg = $args;
+        $totalArg['selects'] = array('COUNT(entity)');
+        unset($totalArg['firstResult']);
+        unset($totalArg['maxResults']);
+
+        $total = $this->getFirstData($entity, $totalArg, $connection);
+
+
+        $qBuilder = $this->process($entity . ':querySimpleEntities', array($args), $connection);
+
+        $results = $qBuilder->getQuery()->getArrayResult();
+
+        return array('data' => $results, 'total' => $total);
+    }
+
     public function getForUpdate($entity, $args = array())
     {
         $qBuilder = $this->process($entity . ':querySimpleEntities', array($args), self::MASTER);
@@ -327,6 +295,17 @@ class EntityService
     }
 
     private function dqlRun($dqlType, $entity, $args, $isExecute = true) {
+
+        if ($dqlType == 'UPDATE') {
+            $args['update']['updated_at'] = DateUtil::getTimeNow();
+            $args['update']['updated_by'] = 1;
+            $args['conditions']['deleted_at'] = array('IS' => ' NOT NULL');
+        } else if ($dqlType == 'DELETE'){
+
+        } else {
+            throw new \Exception;
+        }
+
         $qBuilder = $this->process($entity . ':querySimpleEntities', array($args), self::MASTER);
 
         if ($dqlType == 'UPDATE') {
@@ -404,6 +383,45 @@ class EntityService
 
         return false;
     }
+
+    public function rawSqlInsert($entity, $args, $isExecute = true)
+    {
+        $connection = self::MASTER;
+
+        $metadata = $this->getUserEntityManager($connection)->getClassMetadata(BaseRepository::ENTITY_BUNDLE. ':'.$entity);
+        $insertFields = array();
+        $selectFields = array();
+
+        if (!isset($args['insert']) || !$args['insert']) {
+            throw new SofApiException('600001');
+        }
+        $insert = $args['insert'];
+        foreach($insert as $field => $value) {
+            try {
+                $fieldMapping = $metadata->getFieldMapping($field);
+                if ($fieldMapping) {
+                    if ($value instanceof \DateTime) {
+                        $value = $value->format(DateUtil::FORMAT_DATE_TIME);
+                    }
+                    $value = "'".$value."'";
+                    $insertFields[] = $fieldMapping['columnName'];
+                    $selectFields[] = $value;
+                }
+            } catch (MappingException $e) {}
+        }
+
+        $rawSql = "INSERT INTO {$metadata->getTableName()} (" . implode(',', $insertFields) . ")".
+                  " VALUE (".implode(',', $selectFields).");";
+
+        $dqlResult = 0;
+
+        if ($isExecute) {
+            $dqlResult = $this->getEntityManager()->getConnection()->exec($rawSql);
+        }
+
+        return $dqlResult;
+    }
+
 
     public function dqlRawSqlUpdate($entity, $args) {
 //        if ((!isset($args['selfUpdate']) && !isset($args['update'])) || !isset($args['conditions'])) {
@@ -667,5 +685,14 @@ class EntityService
             $numTruncated += $connection->executeUpdate($platform->getTruncateTableSQL($metadata->getTableName(), true));
         }
         return $numTruncated;
+    }
+
+    /**
+     * @param string $connection
+     * @return EntityManager
+     */
+    public function getUserEntityManager($connection)
+    {
+        return $this->doctrine->getManager($connection);
     }
 }

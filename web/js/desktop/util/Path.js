@@ -11,15 +11,13 @@ Ext.define('MyUtil.Path', {
             return 'js/desktop/wallpapers/' + img;
         },
 
-        getActionPath: function (routing) {
-            if (!routing) {
-                alert('Routing is not null');
+        getPathAction: function (id) {
+            if (Ext.get(id).id == id){
+                return Ext.get(id).getAttribute('action');
             }
 
-//            console.log(path);
-            return '{{ path('+routing+') }}';
+            return 'Path not exist.';
         }
-
 
     }
 });

@@ -1,7 +1,11 @@
 {% extends "SofApiBundle::layout.html.twig" %}
 {% block content %}
-    <div id="Common_LoadPlayer" action="{{ path('Common_LoadPlayer') }}"></div>
-    <div id="Common_LoadDriver" action="{{ path('Common_LoadDriver') }}"></div>
-    <div id="updateData" action="{{ path('updateData') }}"></div>
-    <div id="deleteData" action="{{ path('deleteData') }}"></div>
+    <div id="Driver_Load" action="{{ path('Driver_Load') }}"></div>
+    <div id="Driver_Update" action="{{ path('Driver_Update') }}"></div>
+    <div id="Driver_Delete" action="{{ path('Driver_Delete') }}"></div>
+
+    <div id="User_Load" action="{{ path('User_Load') }}"></div>
+    <div id="User_Update" action="{{ path('User_Update') }}"></div>
+    <div id="User_Delete" action="{{ path('User_Delete') }}"></div>
+
 {% endblock %}
