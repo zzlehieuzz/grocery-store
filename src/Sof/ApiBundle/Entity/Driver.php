@@ -22,53 +22,19 @@ class Driver extends BaseEntity
      private $id;
 
     /**
-     * @ORM\Column(name="role_id", type="smallint", nullable=false, options={"comment" = "2:role_id"})
-     * @Assert\Type(type="smallint")
-     */
-     private $role_id;
-
-    /**
-     * @ORM\Column(name="username", type="string", nullable=false, options={"comment" = "3:username"})
+     * @ORM\Column(name="name", type="string", nullable=false, options={"comment" = "3:name"})
      * @Assert\Type(type="string")
      */
-     private $userName;
+     private $name;
 
     /**
-     * @ORM\Column(name="password", type="string", nullable=false, options={"comment" = "4:password"})
+     * @ORM\Column(name="number_plate", type="string", nullable=false, options={"comment" = "3:number_plate"})
      * @Assert\Type(type="string")
      */
-     private $password;
-
-    /**
-     * @ORM\Column(name="name", type="string", nullable=false, options={"comment" = "5:name"})
-     * @Assert\Type(type="string")
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(name="email", type="string", nullable=false, options={"comment" = "6:email"})
-     * @Assert\Type(type="string")
-     */
-    private $email;
+    private $numberPlate;
 
     public function __construct()
     {
-    }
-
-    /**
-     * @param mixed $email
-     */
-    public function setEmail($email)
-    {
-      $this->email = $email;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmail()
-    {
-      return $this->email;
     }
 
     /**
@@ -104,52 +70,19 @@ class Driver extends BaseEntity
     }
 
     /**
-     * @param mixed $password
+     * @param mixed $numberPlate
      */
-    public function setPassword($password)
+    public function setNumberPlate($numberPlate)
     {
-      if ($password !== NULL) {
-        $this->password = md5($password);
-      }
+      $this->numberPlate = $numberPlate;
     }
 
     /**
      * @return mixed
      */
-    public function getPassword()
+    public function getNumberPlate()
     {
-      return $this->password;
+      return $this->numberPlate;
     }
 
-    /**
-     * @param mixed $role_id
-     */
-    public function setRoleId($role_id)
-    {
-      $this->role_id = $role_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRoleId()
-    {
-      return $this->role_id;
-    }
-
-    /**
-     * @param mixed $userName
-     */
-    public function setUserName($userName)
-    {
-      $this->userName = $userName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserName()
-    {
-      return $this->userName;
-    }
 }
