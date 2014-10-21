@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="driver", options={"comment" = "driver"})
 * @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\DriverRepository")
  */
-class Driver
+class Driver extends BaseEntity
 {
     /**
      * @ORM\Id

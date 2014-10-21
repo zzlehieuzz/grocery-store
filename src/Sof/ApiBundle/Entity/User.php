@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="user", options={"comment" = "user"})
 * @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User extends BaseEntity implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
