@@ -9,9 +9,8 @@ var readerJson = {
 };
 
 var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'userName', type: 'string'},
-                   {name: 'name',     type: 'string'},
-                   {name: 'email',    type: 'string'}];
+                   {name: 'name', type: 'string'},
+                   {name: 'numberPlate',     type: 'string'}];
 
 function defineModel (modelName, objectField) {
     Ext.define(modelName, {
@@ -28,7 +27,8 @@ var storeLoadDriver = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Driver_Load"),
         reader: readerJson
     }),
-    autoLoad: true
+    pageSize: 5,
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
 });
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -103,32 +103,24 @@ Ext.define('SrcPageUrl.Driver.List', {
                 items: [
                   {
                     border: false,
-                    id: 'MyGridPanel',
+                    id: 'grid-driver-list',
                     xtype: 'grid',
                     store: storeLoadDriver,
                     selModel: rowModel,
                     columns: [
                       new Ext.grid.RowNumberer(),
                       {
-                        text: "User Name",
+                        text: "Tài",
                         width: 150,
                         flex: 1,
-                        //                                sortable: true,
-                        dataIndex: 'userName',
-                        editor: {
-                          allowBlank: true
-                        }
-                      }, {
-                        text: "Name",
-                        flex: 2,
                         dataIndex: 'name',
                         editor: {
                           allowBlank: true
                         }
                       }, {
-                        text: "Email",
-                        flex: 3,
-                        dataIndex: 'email',
+                        text: "Biển Số",
+                        flex: 2,
+                        dataIndex: 'numberPlate',
                         editor: {
                           allowBlank: true
                         }
@@ -137,13 +129,12 @@ Ext.define('SrcPageUrl.Driver.List', {
                     plugins: [rowEditing],
                     listeners: {
                       'selectionchange': function(view, records) {
-//                        grid.down('#removeEmployee').setDisabled(!records.length);
                       }
                     }
                   }
                 ],
               tbar:[{
-                text:'Add Something',
+                text:'Add',
                 tooltip:'Add a new row',
                 iconCls:'add',
                 handler : function() {
@@ -152,60 +143,57 @@ Ext.define('SrcPageUrl.Driver.List', {
                   // Create a model instance
                   var r = Ext.create('Driver', {
                     id: '',
-                    userName: 'New Guy',
-                    name: 'New Guy',
-                    email: 'new@sencha-test.com'
+                    name: '',
+                    numberPlate: ''
                   });
 
                   storeLoadDriver.insert(0, r);
                   rowEditing.startEdit(0, 0);
                 }
-              }, '-', {
-                text:'Options',
-                tooltip:'Modify options',
-                iconCls:'option'
               },'-',{
-                text:'Remove Something',
+                text:'Remove',
                 tooltip:'Remove the selected item',
                 iconCls:'remove',
-                handler: function() {
-                  var grid = Ext.getCmp("MyGridPanel");
-                  var sm = grid.getSelectionModel();
-                    var obj = (sm.getSelection());
-                    var ob = obj[0];
+                listeners:  {
+                  click: function () {
+                    var selection = Ext.getCmp('grid-driver-list').getView().getSelectionModel().getSelection();
 
-                    Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
-                        if(btn === 'yes'){
-                            //some code
-                            rowEditing.cancelEdit();
-                            storeLoadDriver.remove(sm.getSelection());
+                    if (selection.length > 0) {
+                      Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                        if (btn === 'yes') {
+                          var arrId = [];
+                          Ext.each(selection, function(v, k) {
+                            arrId[k] = v.data.id;
+                          });
 
-                            Ext.Ajax.request({
-                                url: MyUtil.Path.getPathAction("Driver_Delete")
-                                , params: {id : ob.data.id}
-                                , method: 'POST'
-                                , headers: {
-                                    'content-type': 'application/json'
-                                }
-                                , success: function (data) {
-                                    if (storeLoadDriver.getCount() > 0) {
-                                        sm.select(0);
-                                    }
-                                }
-                            });
+                          Ext.Ajax.request({
+                            url: MyUtil.Path.getPathAction("Driver_Delete"),
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            jsonData: {'params' : arrId},
+                            scope: this,
+                            success: function(msg) {
+                              if (msg.status) {
+                                storeLoadDriver.reload();
+                                console.log('success');
+                              }
+                            },
+                            failure: function(msg) {
+                              console.log('failure');
+                            }
+                          });
                         }
-                        else{
-                            //some code
-                        }
-                    });
-                }
-              }, '->', {
-                  text: 'Reload',
-                  iconCls:'reload',
-                  handler: function(){
-                      storeLoadUser.load();
+                      });
+                    } else {
+                      MyUtil.Message.MessageError();
+                    }
                   }
-              }]
+                }
+              }],
+              bbar: new Ext.PagingToolbar({
+                store: storeLoadDriver,
+                displayInfo:true
+              })
             });
         }
         return win;
