@@ -56,7 +56,6 @@ class DriverController extends BaseController
     public function Driver_DeleteAction()
     {
       $entityService = $this->getEntityService();
-
       $params = $this->getJsonParams();
 
       $entityService->dqlDelete(
