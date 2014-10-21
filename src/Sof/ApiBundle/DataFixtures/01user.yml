@@ -1,0 +1,28 @@
+model: Sof\ApiBundle\Entity\User
+tags: [ test, dev ] # optional parameter
+fixtures:
+    user1:
+        roleId: 0
+        userName: admin
+        name: Admin
+        password: 123456
+        email: "Admin@yahoo.com"
+    user2:
+        roleId: 1
+        userName: user01
+        name: user01
+        password: 123456
+        email: "user01@email.com"
+    user3:
+        roleId: 2
+        userName: user02
+        name: user02
+        password: 123456
+        email: "user02@email.com"
+    user3:
+        roleId: 3
+        userName: user03
+        name: user03
+        password: 123456
+        email: "user03@email.com"
+
