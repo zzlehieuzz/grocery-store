@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sof\ApiBundle\Lib\DateUtil;
 use Sof\ApiBundle\Lib\Config;
-use Sof\ApiBundle\Entity\User;
 
 
 class LoginController extends BaseController
@@ -26,7 +25,8 @@ class LoginController extends BaseController
           $error = $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $errorMessage = $error ? Config::getMessage('common.ERR.login_error') : 'Not valid!';
+//        $errorMessage = $error ? Config::getMessage('common.ERR.login_error') : '';
+        $errorMessage = $error ? 'User name or password is not valid!' : null;
 
         return array(
           'lastUsername' => $this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
