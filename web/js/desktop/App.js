@@ -126,7 +126,19 @@ Ext.define('MyDesktop.App', {
     },
 
     onLogout: function () {
-        Ext.Msg.confirm('Logout', 'Are you sure you want to logout?');
+      Ext.MessageBox.confirm('Logout', 'Are you sure you want to logout?', function(btn){
+        if (btn === 'yes'){
+          Ext.Ajax.request({
+            url: MyUtil.Path.getPathAction("user_logout")
+            , params: null
+            , method: 'POST'
+            , success: function (data) {
+              location.reload();
+            }
+          });
+        }
+      });
+
     },
 
     onSettings: function () {
