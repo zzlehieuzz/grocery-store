@@ -34,11 +34,9 @@ class DriverController extends BaseController
 
         $params['id']       = $request->get('id');
         $params['name']     = $request->get('name');
-        $params['userName'] = $request->get('userName');
-        $params['email']    = $request->get('email');
+        $params['numberPlate'] = $request->get('numberPlate');
 
         if ($params['id'] != 0) {
-//            unset($userData['id']);
             $entityService->dqlUpdate(
                 'Driver',
                 array('update' => $params,
@@ -46,13 +44,6 @@ class DriverController extends BaseController
                 )
             );
             $entityService->completeTransaction();
-
-//            $entity = $this->getEntity('Driver', array('id' => $params['id']));
-//            $entity->setUserName($params['userName']);
-//            $entity->setName($params['name']);
-//            $entity->setEmail($params['email']);
-//
-//            $this->get('entity_service')->save($entity);
         } else {
             $entityService->rawSqlInsert('Driver', array('insert' => $params));
         }
@@ -64,23 +55,20 @@ class DriverController extends BaseController
      */
     public function Driver_DeleteAction()
     {
-        $entityService = $this->getEntityService();
-        $params = array();
-        $request = $this->get('request');
-        $params['id'] = $request->get('id');
+      $entityService = $this->getEntityService();
 
-        if ($params['id'] != 0) {
-            $entityService->dqlDelete(
-                'Driver',
-                array(
-                    'conditions' => array(
-                        'id'   => $params,
-                    )
-                )
-            );
-            $entityService->completeTransaction();
-        }
+      $params = $this->getJsonParams();
 
-        return $this->jsonResponse(array('data' => 1));
+      $entityService->dqlDelete(
+        'Driver',
+        array(
+          'conditions' => array(
+            'id'   => $params,
+          )
+        )
+      );
+      $entityService->completeTransaction();
+
+      return $this->jsonResponse(array('data' => $params));
     }
 }
