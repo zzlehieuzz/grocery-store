@@ -21,6 +21,10 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "beberlei/DoctrineExtensions": "v0.1"
     },
+    "require-dev": {
+      "phpunit/phpunit": "3.7.*",
+      "khepin/yaml-fixtures-bundle": "dev-master"
+    },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
