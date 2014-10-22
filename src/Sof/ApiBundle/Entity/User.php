@@ -41,13 +41,13 @@ class User extends BaseEntity implements UserInterface, \Serializable
      private $password;
 
     /**
-     * @ORM\Column(name="name", type="string", nullable=false, options={"comment" = "5:name"})
+     * @ORM\Column(name="name", type="string", nullable=true, options={"comment" = "5:name"})
      * @Assert\Type(type="string")
      */
     private $name;
 
     /**
-     * @ORM\Column(name="email", type="string", nullable=false, options={"comment" = "6:email"})
+     * @ORM\Column(name="email", type="string", nullable=true, options={"comment" = "6:email"})
      * @Assert\Type(type="string")
      */
     private $email;

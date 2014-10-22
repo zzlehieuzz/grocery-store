@@ -28,10 +28,11 @@ php app/console doctrine:schema:create --dump-sql > dmm.sql
 #######################################################
 HELP:
 
-  Update project: php composer self-update
-                  php composer update
-  Update db:   php app/console doctrine:schema:update --em=default --force
-  Clear cache: php app/console cache:clear
+  Update project:    php composer self-update
+                     php composer update
+  Update db:         php app/console doctrine:schema:update --em=default --force
+  Load data default: php app/console doctrine:fixtures:load
+  Clear cache:       php app/console cache:clear
 
 ########################################################
 SQL REF:

@@ -22,7 +22,7 @@ class Product extends BaseEntity
   private $id;
 
   /**
-   * @ORM\Column(name="name", type="string", nullable=true, options={"comment" = "3:name"})
+   * @ORM\Column(name="name", type="string", nullable=false, options={"comment" = "2:name"})
    * @Assert\Type(type="string")
    */
   private $name;
@@ -34,8 +34,8 @@ class Product extends BaseEntity
   private $code;
 
   /**
-   * @ORM\Column(name="unit", type="string", nullable=true, options={"comment" = "3:unit"})
-   * @Assert\Type(type="string")
+   * @ORM\Column(name="unit", type="smallint", nullable=false, options={"comment" = "4:unit"})
+   * @Assert\Type(type="smallint")
    */
   private $unit;
 
