@@ -46,13 +46,13 @@ abstract class BaseEntity
     const NEGATIVE_ONE = -1;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      * @Assert\Type(type="datetime")
      */
     protected $createdAt;
 
     /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Assert\Type(type="datetime")
      */
     protected $updatedAt;

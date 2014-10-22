@@ -31,7 +31,7 @@ HELP:
   Update project:    php composer self-update
                      php composer update
   Update db:         php app/console doctrine:schema:update --em=default --force
-  Load data default: php app/console doctrine:fixtures:load
+  Load data default: php app/console khepin:yamlfixtures:load dev
   Clear cache:       php app/console cache:clear
 
 ########################################################

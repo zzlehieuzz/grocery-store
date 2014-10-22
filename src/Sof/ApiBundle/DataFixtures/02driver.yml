@@ -1,0 +1,22 @@
+model: Sof\ApiBundle\Entity\Driver
+tags: [ test, dev ] # optional parameter
+fixtures:
+    driver1:
+        name: "driver1"
+        number_plate: '0123123'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+
+    driver2:
+        name: "driver2"
+        number_plate: '0123123'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
