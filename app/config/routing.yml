@@ -11,5 +11,5 @@ user_logout:
 
 homepage:
     pattern:   /
-    defaults:  { _controller: SofApiBundle:Login:index }
+    defaults:  { _controller: SofApiBundle:Common:Common_Index }
 
