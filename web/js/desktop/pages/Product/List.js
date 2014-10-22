@@ -9,9 +9,9 @@ var readerJson = {
 };
 
 var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'userName', type: 'string'},
                    {name: 'name',     type: 'string'},
-                   {name: 'email',    type: 'string'}];
+                   {name: 'code',     type: 'string'},
+                   {name: 'unit',     type: 'string'}];
 
 function defineModel (modelName, objectField) {
     Ext.define(modelName, {
@@ -20,19 +20,19 @@ function defineModel (modelName, objectField) {
     });
 }
 
-defineModel('User', objectField);
+defineModel('Product', objectField);
 
-var storeLoadUser = new Ext.data.JsonStore({
-    model: 'User',
+var storeLoadProduct = new Ext.data.JsonStore({
+    model: 'Product',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("User_Load"),
+        url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJson
     }),
     pageSize: 5,
     autoLoad: ({params:{limit: 5, page: 1, start: 1}})
 });
 
-Ext.define('SrcPageUrl.User.List', {
+Ext.define('SrcPageUrl.Product.List', {
     extend: 'Ext.ux.desktop.Module',
     requires: [
         'Ext.data.ArrayStore',
@@ -41,11 +41,11 @@ Ext.define('SrcPageUrl.User.List', {
         'Ext.grid.RowNumberer'
     ],
 
-    id:'user-list',
+    id:'product-list',
 
     init : function(){
         this.launcher = {
-            text: 'User List',
+            text: 'Product List',
             iconCls:'icon-grid'
         };
     },
@@ -59,7 +59,7 @@ Ext.define('SrcPageUrl.User.List', {
                     var record = e.record.data;
 
                     Ext.Ajax.request({
-                        url: MyUtil.Path.getPathAction("User_Update"),
+                        url: MyUtil.Path.getPathAction("Product_Update"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         waitTitle: 'Connecting',
@@ -90,8 +90,8 @@ Ext.define('SrcPageUrl.User.List', {
         var win = desktop.getWindow('grid-win');
         if(!win){
             win = desktop.createWindow({
-                id: 'user-list',
-                title:'User List',
+                id: 'product-list',
+                title:'Product List',
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',
@@ -102,8 +102,8 @@ Ext.define('SrcPageUrl.User.List', {
                     [{
                         border: false,
                         xtype: 'grid',
-                        id: 'grid-user-list',
-                        store: storeLoadUser,
+                        id: 'grid-product-list',
+                        store: storeLoadProduct,
                         loadMask:true,
                         selModel: rowModel,
                         plugins: rowEditing,
@@ -113,24 +113,24 @@ Ext.define('SrcPageUrl.User.List', {
                                 dataIndex: 'id',
                                 hidden : true
                             }, {
-                                text: "User Name",
+                                text: "Product Name",
                                 width: 150,
                                 flex: 1,
-                                dataIndex: 'userName',
+                                dataIndex: 'name',
                                 editor: {
                                   xtype: 'textfield'
                                 }
                             }, {
-                                text: "Name",
+                                text: "Product Code",
                                 flex: 2,
-                                dataIndex: 'name',
+                                dataIndex: 'code',
                                 editor: {
                                     xtype: 'textfield'
                                 }
                             }, {
-                                text: "Email",
+                                text: "Unit",
                                 flex: 3,
-                                dataIndex: 'email',
+                                dataIndex: 'unit',
                                 editor: {
                                     xtype: 'textfield'
                                 }
@@ -146,14 +146,14 @@ Ext.define('SrcPageUrl.User.List', {
                       rowEditing.cancelEdit();
 
                       // Create a model instance
-                      var r = Ext.create('User', {
+                      var r = Ext.create('Product', {
                         id: '',
-                        userName: '',
                         name: '',
-                        email: ''
+                        code: '',
+                        unit: ''
                       });
 
-                      storeLoadUser.insert(0, r);
+                      storeLoadProduct.insert(0, r);
                       rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
@@ -162,7 +162,7 @@ Ext.define('SrcPageUrl.User.List', {
                     iconCls:'remove',
                     listeners: {
                         click: function () {
-                            var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
+                            var selection = Ext.getCmp('grid-product-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
                                 Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
@@ -173,15 +173,15 @@ Ext.define('SrcPageUrl.User.List', {
                                         });
 
                                         Ext.Ajax.request({
-                                            url: MyUtil.Path.getPathAction("User_Delete"),
+                                            url: MyUtil.Path.getPathAction("Product_Delete"),
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             jsonData: {'params' : arrId},
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {
-                                                    //storeLoadUser.remove(selection);
-                                                    storeLoadUser.reload();
+                                                    //storeLoadProduct.remove(selection);
+                                                    storeLoadProduct.reload();
                                                     console.log('success');
                                                 }
                                             },
@@ -198,7 +198,7 @@ Ext.define('SrcPageUrl.User.List', {
                     }
                 }],
                 bbar: new Ext.PagingToolbar({
-                    store: storeLoadUser,
+                    store: storeLoadProduct,
                     displayInfo:true
                 })
             });
