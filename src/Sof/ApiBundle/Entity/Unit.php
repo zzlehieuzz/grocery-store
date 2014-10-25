@@ -28,7 +28,7 @@ class Unit extends BaseEntity
   private $name;
 
   /**
-   * @ORM\Column(name="code", type="string", nullable=false, options={"comment" = "3:code"})
+   * @ORM\Column(name="code", type="string", nullable=true, options={"comment" = "3:code"})
    * @Assert\Type(type="string")
    */
   private $code;

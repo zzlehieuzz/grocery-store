@@ -35,13 +35,13 @@ class ProductUnit extends BaseEntity
     private $unitId1;
 
     /**
-     * @ORM\Column(name="unit_id2", type="integer", nullable=false, options={"comment" = "4:unit_id2"})
+     * @ORM\Column(name="unit_id2", type="integer", nullable=true, options={"comment" = "4:unit_id2"})
      * @Assert\Type(type="integer")
      */
     private $unitId2;
 
     /**
-     * @ORM\Column(name="convert_amount", type="bigint", nullable=false, options={"comment" = "5:convert_amount"})
+     * @ORM\Column(name="convert_amount", type="bigint", nullable=true, options={"comment" = "5:convert_amount"})
      * @Assert\Type(type="bigint")
      */
      private $convertAmount;
