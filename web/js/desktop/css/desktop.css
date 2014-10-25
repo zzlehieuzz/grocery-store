@@ -304,3 +304,24 @@ div.ux-taskbar div.x-toolbar {
 .user-suit {
     background-image:url(../images/gird-window/user_suit.gif) !important;
 }
+
+/*----------------------------------------------------
+ * desktop icon
+ */
+.user-shortcut {
+    background-image: url(../images/desktop/user48x48.png); }
+
+.driver-shortcut {
+    background-image: url(../images/desktop/driver48x48.png); }
+
+.customer-shortcut {
+    background-image: url(../images/desktop/customer48x48.png); }
+
+.product-shortcut {
+    background-image: url(../images/desktop/product48x48.png); }
+
+.unit-shortcut {
+    background-image: url(../images/desktop/unit48x48.png); }
+
+.profile-shortcut {
+    background-image: url(../images/desktop/profile48x48.png); }

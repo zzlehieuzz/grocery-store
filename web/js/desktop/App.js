@@ -82,14 +82,17 @@ Ext.define('MyDesktop.App', {
     },
 
     getDataForShortcutModel: function() {
-        return [{ name: 'Grid User',        iconCls: 'grid-shortcut',      module: 'user-list' },
-                { name: 'Grid Driver',      iconCls: 'grid-shortcut',      module: 'driver-list' },
-                { name: 'Grid Customer',    iconCls: 'grid-shortcut',      module: 'customer-list' },
-                { name: 'Grid Product',     iconCls: 'grid-shortcut',      module: 'product-list' },
-                { name: 'Grid Unit',        iconCls: 'grid-shortcut',      module: 'unit-list' },
-                { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
-                { name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
-                { name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}];
+        return [
+                { name: 'Profile', iconCls: 'profile-shortcut', module: 'notepad' },
+                { name: 'User',        iconCls: 'user-shortcut',      module: 'user-list' },
+                { name: 'Driver',      iconCls: 'driver-shortcut',      module: 'driver-list' },
+                { name: 'Customer',    iconCls: 'customer-shortcut',      module: 'customer-list' },
+                { name: 'Product',     iconCls: 'product-shortcut',      module: 'product-list' },
+                { name: 'Unit',        iconCls: 'unit-shortcut',      module: 'unit-list' }
+
+                //{ name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
+                //{ name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}
+        ];
     },
 
     // config for the start menu
