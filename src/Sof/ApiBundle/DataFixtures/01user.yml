@@ -6,7 +6,7 @@ fixtures:
         userName: admin
         name: Admin
         password: 123456
-        email: "Admin@yahoo.com"
+        email: "zzlehieu@gmail.com"
 #        created_at: '2014-10-22 14:37:14'
 #        updated_at: '2014-10-22 14:37:14'
         deleted_at: null
@@ -14,6 +14,30 @@ fixtures:
         updated_by: 1
         deleted_by: null
     user2:
+        roleId: 0
+        userName: hieunld
+        name: Ngo Le Duy Hieu
+        password: 123456
+        email: "zzlehieu@gmail.com"
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    user3:
+        roleId: 0
+        userName: thongtq
+        name: Tran Quang Thong
+        password: 123456
+        email: "quangthongtran@gmail.com"
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    user4:
         roleId: 1
         userName: user01
         name: user01
@@ -25,8 +49,8 @@ fixtures:
         created_by: 1
         updated_by: 1
         deleted_by: null
-    user3:
-        roleId: 2
+    user4:
+        roleId: 1
         userName: user02
         name: user02
         password: 123456
@@ -37,13 +61,48 @@ fixtures:
         created_by: 1
         updated_by: 1
         deleted_by: null
-
-    user3:
-        roleId: 3
+    user5:
+        roleId: 2
         userName: user03
         name: user03
         password: 123456
         email: "user03@email.com"
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    user6:
+        roleId: 2
+        userName: user04
+        name: user04
+        password: 123456
+        email: "user04@email.com"
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    user7:
+        roleId: 3
+        userName: user05
+        name: user05
+        password: 123456
+        email: "user05@email.com"
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    user8:
+        roleId: 3
+        userName: user06
+        name: user06
+        password: 123456
+        email: "user05@email.com"
 #        created_at: '2014-10-22 14:37:14'
 #        updated_at: '2014-10-22 14:37:14'
         deleted_at: null

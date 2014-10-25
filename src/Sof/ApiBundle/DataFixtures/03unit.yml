@@ -1,0 +1,57 @@
+model: Sof\ApiBundle\Entity\Unit
+tags: [ test, dev ] # optional parameter
+fixtures:
+    unit1:
+        name: "Thùng"
+        code: '001'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    unit2:
+        name: "Kết"
+        code: '002'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    unit3:
+        name: "Hộp"
+        code: '003'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    unit4:
+        name: "Chai"
+        code: '004'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    unit5:
+        name: "Chiếc"
+        code: '005'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    unit6:
+        name: "Cây"
+        code: '006'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
