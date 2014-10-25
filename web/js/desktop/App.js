@@ -28,7 +28,8 @@ Ext.define('MyDesktop.App', {
         'SrcPageUrl.User.List',
         'SrcPageUrl.Driver.List',
         'SrcPageUrl.Customer.List',
-        'SrcPageUrl.Product.List'
+        'SrcPageUrl.Product.List',
+        'SrcPageUrl.Unit.List',
     ],
 
     init: function() {
@@ -54,7 +55,8 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.User.List(),
             new SrcPageUrl.Driver.List(),
             new SrcPageUrl.Customer.List(),
-            new SrcPageUrl.Product.List()
+            new SrcPageUrl.Product.List(),
+            new SrcPageUrl.Unit.List()
         ];
     },
 
@@ -83,6 +85,7 @@ Ext.define('MyDesktop.App', {
                 { name: 'Grid Driver',      iconCls: 'grid-shortcut',      module: 'driver-list' },
                 { name: 'Grid Customer',    iconCls: 'grid-shortcut',      module: 'customer-list' },
                 { name: 'Grid Product',     iconCls: 'grid-shortcut',      module: 'product-list' },
+                { name: 'Grid Unit',        iconCls: 'grid-shortcut',      module: 'unit-list' },
                 { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
                 { name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
                 { name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}];
