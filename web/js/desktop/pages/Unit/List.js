@@ -12,14 +12,7 @@ var objectField = [{name: 'id',       type: 'int'},
                    {name: 'name',     type: 'string'},
                    {name: 'code',     type: 'string'}];
 
-function defineModel (modelName, objectField) {
-    Ext.define(modelName, {
-        extend: 'Ext.data.Model',
-        fields: objectField
-    });
-}
-
-defineModel('Unit', objectField);
+MyUtil.Object.defineModel('Unit', objectField);
 
 var storeLoadUnit = new Ext.data.JsonStore({
     model: 'Unit',
@@ -28,7 +21,7 @@ var storeLoadUnit = new Ext.data.JsonStore({
         reader: readerJson
     }),
     pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
 });
 
 Ext.define('SrcPageUrl.Unit.List', {
@@ -85,6 +78,29 @@ Ext.define('SrcPageUrl.Unit.List', {
             }
         });
 
+        var columnsUnit = [
+            new Ext.grid.RowNumberer(),
+            {
+                dataIndex: 'id',
+                hidden : true
+            }, {
+                text: "Unit Name",
+                width: 150,
+                flex: 1,
+                dataIndex: 'name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Unit Code",
+                flex: 2,
+                dataIndex: 'code',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }
+        ]
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -106,28 +122,12 @@ Ext.define('SrcPageUrl.Unit.List', {
                         loadMask:true,
                         selModel: rowModel,
                         plugins: rowEditing,
-                        columns: [
-                            new Ext.grid.RowNumberer(),
-                            {
-                                dataIndex: 'id',
-                                hidden : true
-                            }, {
-                                text: "Unit Name",
-                                width: 150,
-                                flex: 1,
-                                dataIndex: 'name',
-                                editor: {
-                                  xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Unit Code",
-                                flex: 2,
-                                dataIndex: 'code',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
+                        columns: columnsUnit,
+                        listeners:{
+                            beforerender: function () {
+                                this.store.load();
                             }
-                        ]
+                        }
                     }
                 ],
                 tbar:[{

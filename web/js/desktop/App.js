@@ -24,6 +24,7 @@ Ext.define('MyDesktop.App', {
 
         'MyUtil.Path',
         'MyUtil.Message',
+        'MyUtil.Object',
 
         'SrcPageUrl.User.List',
         'SrcPageUrl.Driver.List',

@@ -13,14 +13,7 @@ var objectField = [{name: 'id',       type: 'int'},
                    {name: 'name',     type: 'string'},
                    {name: 'email',    type: 'string'}];
 
-function defineModel (modelName, objectField) {
-    Ext.define(modelName, {
-        extend: 'Ext.data.Model',
-        fields: objectField
-    });
-}
-
-defineModel('User', objectField);
+MyUtil.Object.defineModel('User', objectField);
 
 var storeLoadUser = new Ext.data.JsonStore({
     model: 'User',
@@ -29,7 +22,7 @@ var storeLoadUser = new Ext.data.JsonStore({
         reader: readerJson
     }),
     pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
 });
 
 Ext.define('SrcPageUrl.User.List', {
@@ -86,6 +79,36 @@ Ext.define('SrcPageUrl.User.List', {
             }
         });
 
+        var columnsUser = [
+            new Ext.grid.RowNumberer(),
+            {
+                dataIndex: 'id',
+                hidden : true
+            }, {
+                text: "User Name",
+                width: 150,
+                flex: 1,
+                dataIndex: 'userName',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Name",
+                flex: 2,
+                dataIndex: 'name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Email",
+                flex: 3,
+                dataIndex: 'email',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }
+        ];
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -107,35 +130,12 @@ Ext.define('SrcPageUrl.User.List', {
                         loadMask:true,
                         selModel: rowModel,
                         plugins: rowEditing,
-                        columns: [
-                            new Ext.grid.RowNumberer(),
-                            {
-                                dataIndex: 'id',
-                                hidden : true
-                            }, {
-                                text: "User Name",
-                                width: 150,
-                                flex: 1,
-                                dataIndex: 'userName',
-                                editor: {
-                                  xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Name",
-                                flex: 2,
-                                dataIndex: 'name',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Email",
-                                flex: 3,
-                                dataIndex: 'email',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
+                        columns: columnsUser,
+                        listeners:{
+                            beforerender: function () {
+                                this.store.load();
                             }
-                        ]
+                        }
                     }
                 ],
                 tbar:[{

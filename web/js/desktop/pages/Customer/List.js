@@ -14,14 +14,7 @@ var objectField = [{name: 'id',           type: 'int'},
                    {name: 'phoneNumber',  type: 'string'},
                    {name: 'address',      type: 'string'}];
 
-function defineModel (modelName, objectField) {
-    Ext.define(modelName, {
-        extend: 'Ext.data.Model',
-        fields: objectField
-    });
-}
-
-defineModel('Customer', objectField);
+MyUtil.Object.defineModel('Customer', objectField);
 
 var storeLoadCustomer = new Ext.data.JsonStore({
     model: 'Customer',
@@ -30,7 +23,7 @@ var storeLoadCustomer = new Ext.data.JsonStore({
         reader: readerJson
     }),
     pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
 });
 
 Ext.define('SrcPageUrl.Customer.List', {
@@ -87,6 +80,43 @@ Ext.define('SrcPageUrl.Customer.List', {
             }
         });
 
+        var columnsCustomer = [
+            new Ext.grid.RowNumberer(),
+            {
+                dataIndex: 'id',
+                hidden : true
+            }, {
+                text: "Customer Code",
+                width: 150,
+                flex: 1,
+                dataIndex: 'code',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Customer Name",
+                flex: 2,
+                dataIndex: 'name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Phone Number",
+                flex: 3,
+                dataIndex: 'phoneNumber',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Address",
+                flex: 4,
+                dataIndex: 'address',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }
+        ];
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -108,42 +138,12 @@ Ext.define('SrcPageUrl.Customer.List', {
                         loadMask:true,
                         selModel: rowModel,
                         plugins: rowEditing,
-                        columns: [
-                            new Ext.grid.RowNumberer(),
-                            {
-                                dataIndex: 'id',
-                                hidden : true
-                            }, {
-                                text: "Customer Code",
-                                width: 150,
-                                flex: 1,
-                                dataIndex: 'code',
-                                editor: {
-                                  xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Customer Name",
-                                flex: 2,
-                                dataIndex: 'name',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Phone Number",
-                                flex: 3,
-                                dataIndex: 'phoneNumber',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Address",
-                                flex: 4,
-                                dataIndex: 'address',
-                                editor: {
-                                  xtype: 'textfield'
-                                }
+                        columns: columnsCustomer,
+                        listeners:{
+                            beforerender: function () {
+                                this.store.load();
                             }
-                        ]
+                        }
                     }
                 ],
                 tbar:[{

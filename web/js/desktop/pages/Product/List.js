@@ -13,14 +13,7 @@ var objectField = [{name: 'id',       type: 'int'},
                    {name: 'code',     type: 'string'},
                    {name: 'unit',     type: 'string'}];
 
-function defineModel (modelName, objectField) {
-    Ext.define(modelName, {
-        extend: 'Ext.data.Model',
-        fields: objectField
-    });
-}
-
-defineModel('Product', objectField);
+MyUtil.Object.defineModel('Product', objectField);
 
 var storeLoadProduct = new Ext.data.JsonStore({
     model: 'Product',
@@ -29,7 +22,7 @@ var storeLoadProduct = new Ext.data.JsonStore({
         reader: readerJson
     }),
     pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
 });
 
 Ext.define('SrcPageUrl.Product.List', {
@@ -86,6 +79,36 @@ Ext.define('SrcPageUrl.Product.List', {
             }
         });
 
+        var columnsProduct = [
+            new Ext.grid.RowNumberer(),
+            {
+                dataIndex: 'id',
+                hidden : true
+            }, {
+                text: "Product Name",
+                width: 150,
+                flex: 1,
+                dataIndex: 'name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Product Code",
+                flex: 2,
+                dataIndex: 'code',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "Unit",
+                flex: 3,
+                dataIndex: 'unit',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }
+        ]
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -107,35 +130,12 @@ Ext.define('SrcPageUrl.Product.List', {
                         loadMask:true,
                         selModel: rowModel,
                         plugins: rowEditing,
-                        columns: [
-                            new Ext.grid.RowNumberer(),
-                            {
-                                dataIndex: 'id',
-                                hidden : true
-                            }, {
-                                text: "Product Name",
-                                width: 150,
-                                flex: 1,
-                                dataIndex: 'name',
-                                editor: {
-                                  xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Product Code",
-                                flex: 2,
-                                dataIndex: 'code',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
-                            }, {
-                                text: "Unit",
-                                flex: 3,
-                                dataIndex: 'unit',
-                                editor: {
-                                    xtype: 'textfield'
-                                }
+                        columns: columnsProduct,
+                        listeners:{
+                            beforerender: function () {
+                                this.store.load();
                             }
-                        ]
+                        }
                     }
                 ],
                 tbar:[{

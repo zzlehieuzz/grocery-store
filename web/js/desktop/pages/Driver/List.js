@@ -8,18 +8,7 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'name', type: 'string'},
-                   {name: 'numberPlate',     type: 'string'}];
-
-function defineModel (modelName, objectField) {
-    Ext.define(modelName, {
-        extend: 'Ext.data.Model',
-        fields: objectField
-    });
-}
-
-defineModel('Driver', objectField);
+MyUtil.Object.defineModel('Driver', objectField);
 
 var storeLoadDriver = new Ext.data.JsonStore({
     model: 'Driver',
@@ -28,7 +17,7 @@ var storeLoadDriver = new Ext.data.JsonStore({
         reader: readerJson
     }),
     pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}})
+    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
 });
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -83,6 +72,26 @@ Ext.define('SrcPageUrl.Driver.List', {
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
 
+        var columnsDriver = [
+            new Ext.grid.RowNumberer(),
+            {
+                text: "Tài",
+                width: 150,
+                flex: 1,
+                dataIndex: 'name',
+                editor: {
+                    allowBlank: true
+                }
+            }, {
+                text: "Biển Số",
+                flex: 2,
+                dataIndex: 'numberPlate',
+                editor: {
+                    allowBlank: true
+                }
+            }
+        ];
+
         var rowModel = Ext.create('Ext.selection.RowModel', {
             mode : "MULTI",
             onKeyPress: function(e, t) {
@@ -107,28 +116,11 @@ Ext.define('SrcPageUrl.Driver.List', {
                     xtype: 'grid',
                     store: storeLoadDriver,
                     selModel: rowModel,
-                    columns: [
-                      new Ext.grid.RowNumberer(),
-                      {
-                        text: "Tài",
-                        width: 150,
-                        flex: 1,
-                        dataIndex: 'name',
-                        editor: {
-                          allowBlank: true
-                        }
-                      }, {
-                        text: "Biển Số",
-                        flex: 2,
-                        dataIndex: 'numberPlate',
-                        editor: {
-                          allowBlank: true
-                        }
-                      }
-                    ],
+                    columns: columnsDriver,
                     plugins: [rowEditing],
                     listeners: {
-                      'selectionchange': function(view, records) {
+                      beforerender: function () {
+                        this.store.load();
                       }
                     }
                   }
