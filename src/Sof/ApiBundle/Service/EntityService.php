@@ -168,7 +168,7 @@ class EntityService
      * @param $callback
      * @return int|mixed
      */
-    public function selectOnMaster($callback)
+    public function selectOnDefault($callback)
     {
         $params = func_get_args();
         array_shift($params);

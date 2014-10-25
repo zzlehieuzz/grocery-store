@@ -16,6 +16,11 @@ class CommonController extends BaseController
      */
     public function Common_IndexAction()
     {
+        $a = $this->getEntityService()->selectOnUserFriendCard(
+            'User:getData',
+            $userId
+        );
+
         return array();
     }
 }
