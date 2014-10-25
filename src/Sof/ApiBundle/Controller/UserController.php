@@ -32,20 +32,24 @@ class UserController extends BaseController
      */
     public function User_UpdateAction()
     {
-        $params        = $this->getJsonParams();
-        $userData      = $params;
-        $entityService = $this->getEntityService();
-        unset($userData['id']);
+      $params        = $this->getJsonParams();
+      $entityService = $this->getEntityService();
+
+      if ($params['id'] != 0) {
         $entityService->dqlUpdate(
-            'User',
-            array('update' => $userData,
-                  'conditions' => array('id' => $params['id'])
-            )
+          'User',
+          array('update' => $params,
+            'conditions' => array('id' => $params['id'])
+          )
         );
 
-        $entityService->completeTransaction();
+      } else {
+        $entityService->rawSqlInsert('User', array('insert' => $params));
+      }
 
-        return $this->jsonResponse(array('data' => $userData));
+      $entityService->completeTransaction();
+
+      return $this->jsonResponse(array('data' => $params));
     }
 
     /**
