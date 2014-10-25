@@ -33,13 +33,15 @@ var storeLoadProduct = new Ext.data.JsonStore({
     autoLoad: ({params:{limit: 20, page: 1, start: 1}}, false)
 });
 
-var storeLoadUnit = new Ext.data.JsonStore({
+var storeLoadUnit1 = new Ext.data.JsonStore({
     model: 'Unit',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
-    })
+    }), autoLoad: true
 });
+
+var storeLoadUnit2 = storeLoadUnit1;
 
 Ext.define('SrcPageUrl.Product.List', {
     extend: 'Ext.ux.desktop.Module',
@@ -121,9 +123,20 @@ Ext.define('SrcPageUrl.Product.List', {
                 editor:
                 {
                     xtype: 'combobox',
-                    store: storeLoadUnit,
+                    store: storeLoadUnit1,
                     displayField: 'name',
                     valueField: 'id'
+                },
+                renderer: function(value){
+                    if(value != 0 && value != "")
+                    {
+                        if(storeLoadUnit1.findRecord("id", value) != null)
+                            return storeLoadUnit1.findRecord("id", value).get('name');
+                        else
+                            return value;
+                    }
+                    else
+                        return "";  // display nothing if value is empty
                 }
             }, {
                 header: 'Unit 2',
@@ -131,9 +144,20 @@ Ext.define('SrcPageUrl.Product.List', {
                 editor:
                 {
                     xtype: 'combobox',
-                    store: storeLoadUnit,
+                    store: storeLoadUnit2,
                     displayField: 'name',
                     valueField: 'id'
+                },
+                renderer: function(value){
+                    if(value != 0 && value != "")
+                    {
+                        if(storeLoadUnit2.findRecord("id", value) != null)
+                            return storeLoadUnit2.findRecord("id", value).get('name');
+                        else
+                            return value;
+                    }
+                    else
+                        return "";  // display nothing if value is empty
                 }
             }, {
                  text: "Convert Amount",
