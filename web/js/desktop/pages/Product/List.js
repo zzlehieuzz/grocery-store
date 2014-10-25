@@ -8,12 +8,20 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'name',     type: 'string'},
-                   {name: 'code',     type: 'string'},
-                   {name: 'unit',     type: 'string'}];
+var objectField = [{name: 'id',                 type: 'int'},
+                   {name: 'name',               type: 'string'},
+                   {name: 'code',               type: 'string'},
+                   {name: 'productUnitId',      type: 'string'},
+                   {name: 'unitId1',            type: 'string'},
+                   {name: 'unitId2',            type: 'string'},
+                   {name: 'convertAmount',      type: 'string'}];
+
+var objectUnitField = [{name: 'id',       type: 'int'},
+                       {name: 'name',     type: 'string'},
+                       {name: 'code',     type: 'string'}];
 
 MyUtil.Object.defineModel('Product', objectField);
+MyUtil.Object.defineModel('Unit', objectUnitField);
 
 var storeLoadProduct = new Ext.data.JsonStore({
     model: 'Product',
@@ -21,8 +29,16 @@ var storeLoadProduct = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJson
     }),
-    pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
+    pageSize: 20,
+    autoLoad: ({params:{limit: 20, page: 1, start: 1}}, false)
+});
+
+var storeLoadUnit = new Ext.data.JsonStore({
+    model: 'Unit',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Unit_Load"),
+        reader: readerJson
+    })
 });
 
 Ext.define('SrcPageUrl.Product.List', {
@@ -100,14 +116,33 @@ Ext.define('SrcPageUrl.Product.List', {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Unit",
-                flex: 3,
-                dataIndex: 'unit',
-                editor: {
-                    xtype: 'textfield'
+                header: 'Unit 1',
+                dataIndex: 'unitId1',
+                editor:
+                {
+                    xtype: 'combobox',
+                    store: storeLoadUnit,
+                    displayField: 'name',
+                    valueField: 'id'
                 }
-            }
-        ]
+            }, {
+                header: 'Unit 2',
+                dataIndex: 'unitId2',
+                editor:
+                {
+                    xtype: 'combobox',
+                    store: storeLoadUnit,
+                    displayField: 'name',
+                    valueField: 'id'
+                }
+            }, {
+                 text: "Convert Amount",
+                 dataIndex: 'convertAmount',
+                 editor: {
+                 xtype: 'textfield'
+                 }
+             }
+        ];
 
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
