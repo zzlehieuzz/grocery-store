@@ -13,12 +13,14 @@ Ext.define('MyUtil.Message', {
 
             Ext.MessageBox.show({
                 title: title,
-                msg: 'MessageError',
+                msg: msg,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.ERROR
             });
         },
         MessageInfo: function (msg, title) {
+            title = title || 'Info';
+            msg   = msg || 'Info messsage';
             Ext.MessageBox.show({
                 title: title,
                 msg: msg,
@@ -27,17 +29,21 @@ Ext.define('MyUtil.Message', {
             });
         },
         MessageQuestion: function (msg, title) {
+            title = title || 'Question';
+            msg   = msg || 'Question messsage';
             Ext.MessageBox.show({
-                title: 'Stub Generation',
-                msg: 'Generation Successful',
+                title: title,
+                msg: msg,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.QUESTION
             });
         },
         MessageWarning: function (msg, title) {
+            title = title || 'Warning';
+            msg   = msg || 'Warning messsage';
             Ext.MessageBox.show({
-                title: 'Stub Generation',
-                msg: 'Generation Successful',
+                title: title,
+                msg: msg,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.WARNING
             });

@@ -11,7 +11,8 @@ var readerJson = {
 var objectField = [{name: 'id',       type: 'int'},
                    {name: 'userName', type: 'string'},
                    {name: 'name',     type: 'string'},
-                   {name: 'email',    type: 'string'}];
+                   {name: 'email',    type: 'string'}
+];
 
 MyUtil.Object.defineModel('User', objectField);
 
@@ -48,7 +49,7 @@ Ext.define('SrcPageUrl.User.List', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             listeners: {
-                'edit': function (editor,e) {
+                'edit': function (editor, e) {
                     var record = e.record.data;
 
                     Ext.Ajax.request({
@@ -70,6 +71,100 @@ Ext.define('SrcPageUrl.User.List', {
                     });
                 }
             }
+        });
+
+        Ext.apply(Ext.form.VTypes, {
+            password: function(val, field) {
+                if (field.initialPassField) {
+                    var pwd = field.up('form').down('#' + field.initialPassField);
+                    return (val == pwd.getValue());
+                }
+                return true;
+            },
+
+            passwordText: 'Passwords do not match'
+        });
+
+        var changePasswordForm = Ext.widget({
+            xtype: 'form',
+            layout: 'form',
+            frame: true,
+            border: false,
+            style: 'border: 0;',
+            width: 350,
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 75
+            },
+            defaultType: 'textfield',
+            items: [{
+                xtype: 'hidden',
+                name: 'userId',
+                id: 'changeUserId',
+                allowBlank: false
+            }, {
+                fieldLabel: 'New pass',
+                inputType: 'password',
+                name: 'newPass',
+                id: 'changeNewPass',
+                allowBlank: false
+            }, {
+                fieldLabel: 'Confirm',
+                inputType: 'password',
+                name: 'confirm',
+                vtype: 'password',
+                id: 'changeConfirm',
+                initialPassField: 'changeNewPass',
+                allowBlank: false
+            }],
+
+            buttons: [{
+                text: 'Save',
+                handler: function() {
+                    var isValid = this.up('form').getForm().isValid();
+                    if (isValid) {
+                        var arrChangePass = {
+                            id     : Ext.getCmp('changeUserId').value,
+                            newPass: Ext.getCmp('changeNewPass').value
+                        };
+
+                        if (arrChangePass) {
+                            Ext.Ajax.request({
+                                url: MyUtil.Path.getPathAction("User_ChangePassword"),
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                jsonData: {'params' : arrChangePass},
+                                scope: this,
+                                success: function(msg) {
+                                    if (msg.status) {
+                                        console.log('success');
+                                        this.up('form').getForm().reset();
+                                        popupChangePasswordForm.hide();
+                                    }
+                                },
+                                failure: function(msg) {
+                                    console.log('failure');
+                                }
+                            });
+                        }
+                    }
+                }
+            }, {
+                text: 'Cancel',
+                handler: function() {
+                    this.up('form').getForm().reset();
+                    popupChangePasswordForm.hide();
+                }
+            }]
+        });
+
+        var popupChangePasswordForm = new Ext.Window({
+            title: 'Change Password'
+            , autoWidth: true
+            , autoHeight: true
+            , border: true
+            , modal: true
+            , items: changePasswordForm
         });
 
         var rowModel = Ext.create('Ext.selection.RowModel', {
@@ -156,7 +251,20 @@ Ext.define('SrcPageUrl.User.List', {
                       storeLoadUser.insert(0, r);
                       rowEditing.startEdit(0, 0);
                     }
-                }, '-',{
+                    }, '-', {
+                        text:'Change Password',
+                        tooltip:'Change Password',
+                        iconCls:'edit',
+                        handler : function() {
+                            var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
+                            if (selection.length == 1) {
+                                popupChangePasswordForm.show();
+                                changePasswordForm.getForm().setValues({ changeUserId: selection[0].data.id });
+                            } else {
+                                MyUtil.Message.MessageWarning('Please choose 1 record to change password !');
+                            }
+                        }
+                    }, '-',{
                     text:'Remove',
                     tooltip:'Remove the selected item',
                     iconCls:'remove',
@@ -165,7 +273,7 @@ Ext.define('SrcPageUrl.User.List', {
                             var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn) {
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {

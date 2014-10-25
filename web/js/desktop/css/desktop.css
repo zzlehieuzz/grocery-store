@@ -250,28 +250,33 @@ div.ux-taskbar div.x-toolbar {
     background-image: url( ../images/gears.gif ) !important;
 }
 
-
+/*----------------------------------------------------
+ * icon in grid
+ */
 .icon-grid {
-    background-image:url( ../images/grid.png ) !important;
-}
+    background-image:url( ../images/grid.png ) !important; }
+
 .add {
-    background-image:url(../images/gird-window/add.gif) !important;
-}
+    background-image:url(../images/gird-window/add.gif) !important; }
+
 .option {
-    background-image:url(../images/gird-window/plugin.gif) !important;
-}
+    background-image:url(../images/gird-window/plugin.gif) !important; }
+
 .remove {
-    background-image:url(../images/gird-window/delete.gif) !important;
-}
+    background-image:url(../images/gird-window/delete.gif) !important; }
+
 .save {
     background-image:url(../images/gird-window/save.gif) !important;
 }
+
 .accordion {
-    background-image:url(../images/accordian.gif) !important;
-}
+    background-image:url(../images/accordian.gif) !important; }
+
 .tabs {
-    background-image:url(../images/tabs.gif) !important;
-}
+    background-image:url(../images/tabs.gif) !important; }
+
+.edit {
+    background-image:url(../images/gird-window/edit.png) !important; }
 
 /*----------------------------------------------------
     IM window icons
