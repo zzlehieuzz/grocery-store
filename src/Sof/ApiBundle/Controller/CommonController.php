@@ -5,7 +5,7 @@ namespace Sof\ApiBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sof\ApiBundle\Lib\DateUtil;
+use Sof\ApiBundle\Entity\ValueConst\BaseConst;
 
 class CommonController extends BaseController
 {
@@ -16,6 +16,12 @@ class CommonController extends BaseController
      */
     public function Common_IndexAction()
     {
-        return array();
+        $module = $this->getEntityService()->getAllData('Module',
+            array('selects' => array('name', 'iconCls', 'module'),
+                'conditions' => array('isActive' => BaseConst::FLAG_ON),
+                'orderBy' => array('sort')
+            ));
+
+        return array('module' => json_encode($module));
     }
 }
