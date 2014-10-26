@@ -26,7 +26,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
      * @ORM\Column(name="role_id", type="smallint", nullable=false, options={"comment" = "2:role_id"})
      * @Assert\Type(type="smallint")
      */
-     private $role_id;
+     private $roleId;
 
     /**
      * @ORM\Column(name="username", type="string", nullable=false, options={"comment" = "3:username"})
@@ -123,11 +123,11 @@ class User extends BaseEntity implements UserInterface, \Serializable
     }
 
     /**
-     * @param mixed $role_id
+     * @param mixed $roleId
      */
-    public function setRoleId($role_id)
+    public function setRoleId($roleId)
     {
-      $this->role_id = $role_id;
+      $this->roleId = $roleId;
     }
 
     /**
@@ -135,7 +135,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
      */
     public function getRoleId()
     {
-      return $this->role_id;
+      return $this->roleId;
     }
 
     /**
