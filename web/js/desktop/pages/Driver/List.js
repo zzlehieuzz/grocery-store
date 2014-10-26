@@ -8,6 +8,10 @@ var readerJson = {
     totalProperty: 'total'
 };
 
+var objectField = [{name: 'id',   type: 'int'},
+                   {name: 'numberPlate', type: 'string'},
+                   {name: 'name', type: 'string'}];
+
 MyUtil.Object.defineModel('Driver', objectField);
 
 var storeLoadDriver = new Ext.data.JsonStore({

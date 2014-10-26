@@ -7,44 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class BaseEntity
 {
-    //flag: 有|無
-    const FLAG_ON   = 1;//有
-    const FLAG_OFF  = 0;//無
-
-    //week: 曜日
-    const WEEK_SUN = 0;//日
-    const WEEK_MON = 1;//月
-    const WEEK_TUE = 2;//火
-    const WEEK_WED = 3;//水
-    const WEEK_THU = 4;//木
-    const WEEK_FRI = 5;//金
-    const WEEK_SAT = 6;//土
-
-    const KONMA    = ',';
-    const DIVISION = '/';
-
-    const ID_ZERO   = 0;
-
-    const SENDER_MANAGEMENT    = '運営';
-    const SENDER_NORMAL    = '送付主';
-
-    //shopId: ショップID
-    const SHOP_ID_DISTRIBUTION = 99; //ログインボーナス用配布ショップID
-
-    //shopId: ショップID
-    const SHOP_ID_EVENT_REWARD = 98; //イベント報酬用のショップID
-
-    const CARD_WILD_NO_1 = 97;
-
-    const CARD_WILD_NO_2 = 98;
-
-    //classification: リスト種別
-    const CLASSIFICATION_AREA_BOSS        = 1;
-    const CLASSIFICATION_RAID_BOSS        = 2;
-    const CLASSIFICATION_RESCUE_RAID_BOSS = 3;
-
-    const NEGATIVE_ONE = -1;
-
     /**
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      * @Assert\Type(type="datetime")
@@ -80,6 +42,12 @@ abstract class BaseEntity
      * @Assert\Type(type="integer")
      */
     protected $deletedBy;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime('now');
+        $this->updatedAt = new \DateTime('now');
+    }
 
     /**
      * @param mixed $createdAt

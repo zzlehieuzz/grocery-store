@@ -330,3 +330,6 @@ div.ux-taskbar div.x-toolbar {
 
 .profile-shortcut {
     background-image: url(../images/desktop/profile48x48.png); }
+
+.win7-start {
+    background-image: url(../images/taskbar/win7.png); }

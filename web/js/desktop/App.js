@@ -66,33 +66,23 @@ Ext.define('MyDesktop.App', {
 
         return Ext.apply(ret, {
             //cls: 'ux-desktop-black',
-
-            contextMenuItems: [
-                { text: 'Change Settings', handler: me.onSettings, scope: me }
-            ],
-
+            contextMenuItems: [{ text: 'Change Settings', handler: me.onSettings, scope: me }],
             shortcuts: Ext.create('Ext.data.Store', {
                 model: 'Ext.ux.desktop.ShortcutModel',
                 data: this.getDataForShortcutModel()
             }),
-
             wallpaper: MyUtil.Path.getPathWallpaper('Blue-Sencha.jpg'),
             wallpaperStretch: false
         });
     },
 
     getDataForShortcutModel: function() {
-        return [
-                { name: 'Profile', iconCls: 'profile-shortcut', module: 'notepad' },
-                { name: 'User',        iconCls: 'user-shortcut',      module: 'user-list' },
-                { name: 'Driver',      iconCls: 'driver-shortcut',      module: 'driver-list' },
-                { name: 'Customer',    iconCls: 'customer-shortcut',      module: 'customer-list' },
-                { name: 'Product',     iconCls: 'product-shortcut',      module: 'product-list' },
-                { name: 'Unit',        iconCls: 'unit-shortcut',      module: 'unit-list' }
+        var jsonModuleData = Ext.get('Common_LoadModule').getAttribute('data');
 
-                //{ name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
-                //{ name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}
-        ];
+        return JSON.parse(jsonModuleData);
+            //{ name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },
+            //{ name: 'System Status',    iconCls: 'cpu-shortcut',       module: 'systemstatus'}
+
     },
 
     // config for the start menu
@@ -111,9 +101,7 @@ Ext.define('MyDesktop.App', {
                         iconCls:'settings',
                         handler: me.onSettings,
                         scope: me
-                    },
-                    '-',
-                    {
+                    }, '-', {
                         text:'Logout',
                         iconCls:'logout',
                         handler: me.onLogout,
@@ -151,7 +139,6 @@ Ext.define('MyDesktop.App', {
           });
         }
       });
-
     },
 
     onSettings: function () {

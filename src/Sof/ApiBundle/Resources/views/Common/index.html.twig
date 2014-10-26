@@ -9,6 +9,7 @@
     <div id="User_Load" action="{{ path('User_Load') }}"></div>
     <div id="User_Update" action="{{ path('User_Update') }}"></div>
     <div id="User_Delete" action="{{ path('User_Delete') }}"></div>
+    <div id="User_ChangePassword" action="{{ path('User_ChangePassword') }}"></div>
 
     {#module Customer#}
     <div id="Customer_Load" action="{{ path('Customer_Load') }}"></div>
@@ -27,5 +28,8 @@
 
     {#Logout path#}
     <div id="user_logout" action="{{ path('user_logout') }}"></div>
+
+    {#data store#}
+    <div id="Common_LoadModule" data="{{ module }}"></div>
 
 {% endblock %}

@@ -5,8 +5,7 @@ namespace Sof\ApiBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sof\ApiBundle\Entity\User;
-use Sof\ApiBundle\Lib\DateUtil;
+use Sof\ApiBundle\Entity\ValueConst\BaseConst;
 
 class UserController extends BaseController
 {
@@ -19,7 +18,8 @@ class UserController extends BaseController
         $params = $this->getPagingParams();
 
         $arrEntity = $this->getEntityService()->getDataForPaging('User',
-            array('orderBy' => array('id' => 'DESC'),
+            array('conditions' => array('roleId' => array('<>' => BaseConst::FLAG_OFF)),
+                  'orderBy' => array('id' => 'DESC'),
                   'firstResult' => $params['start'],
                   'maxResults' => $params['limit']
             ));
@@ -69,6 +69,30 @@ class UserController extends BaseController
                 )
             )
         );
+        $entityService->completeTransaction();
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
+    /**
+     * @Route("/User_ChangePassword", name="User_ChangePassword")
+     */
+    public function User_ChangePasswordAction()
+    {
+        $params        = $this->getJsonParams();
+        $entityService = $this->getEntityService();
+
+        if ($params['id'] && $params['newPass']) {
+            $entityService->dqlUpdate(
+                'User',
+                array('update' => array('password' => md5($params['newPass'])),
+                      'conditions' => array('id' => $params['id'])
+                )
+            );
+        } else {
+            $entityService->rawSqlInsert('User', array('insert' => $params));
+        }
+
         $entityService->completeTransaction();
 
         return $this->jsonResponse(array('data' => $params));

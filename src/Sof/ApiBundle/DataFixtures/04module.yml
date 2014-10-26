@@ -1,0 +1,59 @@
+model: Sof\ApiBundle\Entity\Module
+tags: [ test, dev ] # optional parameter
+fixtures:
+    module1:
+        name: "Profile"
+        icon_cls: 'profile-shortcut'
+#        created_at: '2014-10-22 14:37:14'
+#        updated_at: '2014-10-22 14:37:14'
+        sort: 1
+        module: 'notepad'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module2:
+        name: "User"
+        icon_cls: 'user-shortcut'
+        sort: 2
+        module: 'user-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module3:
+        name: "Driver"
+        icon_cls: 'driver-shortcut'
+        sort: 3
+        module: 'driver-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module4:
+        name: "Customer"
+        icon_cls: 'customer-shortcut'
+        sort: 4
+        module: 'customer-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module5:
+        name: "Product"
+        icon_cls: 'product-shortcut'
+        sort: 5
+        module: 'product-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module6:
+        name: "Unit"
+        icon_cls: 'unit-shortcut'
+        sort: 6
+        module: 'unit-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null

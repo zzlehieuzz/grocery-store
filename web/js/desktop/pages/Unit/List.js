@@ -8,9 +8,9 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'name',     type: 'string'},
-                   {name: 'code',     type: 'string'}];
+var objectField = [{name: 'id',   type: 'int'},
+                   {name: 'name', type: 'string'},
+                   {name: 'code', type: 'string'}];
 
 MyUtil.Object.defineModel('Unit', objectField);
 
