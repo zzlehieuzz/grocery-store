@@ -387,10 +387,18 @@ class EntityService
     public function rawSqlInsert($entity, $args, $isExecute = true)
     {
         $connection = self::MASTER;
-
+        $dbDate = date(DateUtil::FORMAT_DATE_TIME);
         $metadata = $this->getUserEntityManager($connection)->getClassMetadata(BaseRepository::ENTITY_BUNDLE. ':'.$entity);
         $insertFields = array();
         $selectFields = array();
+        $insertFields[] = 'created_at';
+        $insertFields[] = 'updated_at';
+        $insertFields[] = 'created_by';
+        $insertFields[] = 'updated_by';
+        $selectFields[] = "'".$dbDate."'";
+        $selectFields[] = "'".$dbDate."'";
+        $selectFields[] = 1;
+        $selectFields[] = 1;
 
         if (!isset($args['insert']) || !$args['insert']) {
             throw new SofApiException('600001');
@@ -413,13 +421,14 @@ class EntityService
         $rawSql = "INSERT INTO {$metadata->getTableName()} (" . implode(',', $insertFields) . ")".
                   " VALUE (".implode(',', $selectFields).");";
 
-        $dqlResult = 0;
-
+        $id = 0;
         if ($isExecute) {
-            $dqlResult = $this->getEntityManager()->getConnection()->exec($rawSql);
+          $conn = $this->getDoctrine()->getConnection();
+          $conn->exec($rawSql);
+          $id = $conn->lastInsertId();
         }
 
-        return $dqlResult;
+        return $id;
     }
 
 

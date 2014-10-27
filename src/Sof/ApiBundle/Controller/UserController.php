@@ -42,9 +42,11 @@ class UserController extends BaseController
             'conditions' => array('id' => $params['id'])
           )
         );
-
       } else {
-        $entityService->rawSqlInsert('User', array('insert' => $params));
+        $params['roleId']   = 1;
+        $params['password'] = md5(123456);
+        $id = $entityService->rawSqlInsert('User', array('insert' => $params));
+        $params['id'] = $id;
       }
 
       $entityService->completeTransaction();
