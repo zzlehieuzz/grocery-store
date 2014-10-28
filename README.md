@@ -48,6 +48,11 @@ MySQL Password :     ngusaocho10489
 MySQL Server:        SEE THE CPANEL
 
 ########################################################
+
+link test: http://adorzhang.com/exp-grocery-store/web/Login
+link test: http://adorzhang.com/exp-grocery-store/web/Common_Index
+
+########################################################
 SQL REF:
 
 http://docs.doctrine-project.org/en/latest/index.html

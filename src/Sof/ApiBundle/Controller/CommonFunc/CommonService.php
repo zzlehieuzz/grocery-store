@@ -6,7 +6,7 @@ use Sof\ApiBundle\Service\EntityService;
 
 class CommonService
 {
-    use C00CommonApiFunc;
+    //use C00CommonApiFunc;
 
     /**
      * @var EntityService
