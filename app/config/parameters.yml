@@ -7,18 +7,30 @@ parameters:
     locale: jp
     secret: ThisTokenIsNotSoSecretChangeIt
     database_driver: pdo_mysql
+
     database_host: localhost
     database_port: 3306
     database_name: grocery_store
     database_user: root
     database_password: null
-    database_host_log: log
-    database_port_log: 3306
-    database_name_log: log
-    database_user_log: root
-    database_password_log: null
     database_host_slave1: localhost
     database_port_slave1: 3306
     database_name_slave1: grocery_store
     database_user_slave1: root
     database_password_slave1: null
+#    database_driver: pdo_mysql
+#    database_host: localhost
+#    database_port: 3306
+#    database_name: adorzhang_store
+#    database_user: adorzhang_store
+#    database_password: test123456
+#    database_host_slave1: localhost
+#    database_port_slave1: 3306
+#    database_name_slave1: adorzhang_store
+#    database_user_slave1: adorzhang_store
+#    database_password_slave1: test123456
+    database_host_log: log
+    database_port_log: 3306
+    database_name_log: log
+    database_user_log: root
+    database_password_log: null
