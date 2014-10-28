@@ -31,6 +31,7 @@ Ext.define('MyDesktop.App', {
         'SrcPageUrl.Customer.List',
         'SrcPageUrl.Product.List',
         'SrcPageUrl.Unit.List',
+        'SrcPageUrl.Profile.Form'
     ],
 
     init: function() {
@@ -57,7 +58,8 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.Driver.List(),
             new SrcPageUrl.Customer.List(),
             new SrcPageUrl.Product.List(),
-            new SrcPageUrl.Unit.List()
+            new SrcPageUrl.Unit.List(),
+            new SrcPageUrl.Profile.Form()
         ];
     },
 
@@ -77,7 +79,7 @@ Ext.define('MyDesktop.App', {
     },
 
     getDataForShortcutModel: function() {
-        var jsonModuleData = Ext.get('Common_LoadModule').getAttribute('data');
+        var jsonModuleData = Ext.get('ModuleJson').getAttribute('data');
 
         return JSON.parse(jsonModuleData);
             //{ name: 'Notepad',          iconCls: 'notepad-shortcut',   module: 'notepad' },

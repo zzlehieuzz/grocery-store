@@ -6,6 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\ValueConst\BaseConst;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class CommonController extends BaseController
 {
@@ -21,7 +24,14 @@ class CommonController extends BaseController
                 'conditions' => array('isActive' => BaseConst::FLAG_ON),
                 'orderBy' => array('sort')
             ));
+        $encoder = new JsonEncoder();
+        $normalizer = new GetSetMethodNormalizer();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+        $username = $this->get('security.context')->getToken()->getUser();
+        $userLoginJson = $serializer->serialize($username, 'json');
+        $moduleJson = $serializer->serialize($module, 'json');
 
-        return array('module' => json_encode($module));
+        return array('moduleJson'    => $moduleJson,
+                     'userLoginJson' => $userLoginJson);
     }
 }

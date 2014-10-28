@@ -279,6 +279,12 @@ div.ux-taskbar div.x-toolbar {
     background-image:url(../images/gird-window/edit.png) !important; }
 
 /*----------------------------------------------------
+ * icon in form
+ */
+.icon-form {
+    background-image:url( ../images/gird-window/application_view_list.png ) !important; }
+
+/*----------------------------------------------------
     IM window icons
 */
 

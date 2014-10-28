@@ -99,7 +99,7 @@ Ext.define('SrcPageUrl.Unit.List', {
                     xtype: 'textfield'
                 }
             }
-        ]
+        ];
 
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
