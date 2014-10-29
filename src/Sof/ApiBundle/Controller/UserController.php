@@ -109,26 +109,20 @@ class UserController extends BaseController
         $entityService = $this->getEntityService();
 
         $data = array();
-        if (isset($params['password']) && ($password = $params['password'])) {
+        if (isset($params['profileNewPass']) && ($password = $params['profileNewPass'])) {
             $data['password'] = md5($password);
         }
 
-        if (isset($params['name']) && ($name = $params['name'])) {
+        if (isset($params['profileName']) && ($name = $params['profileName'])) {
             $data['name'] = $name;
         }
-
+        $newData = array();
         if ($data) {
-            $entityService->dqlUpdate(
-                'User',
-                array('update' => $data,
-                      'conditions' => array('id' => $params['userId'])
-                )
-            );
+            $entityService->dqlUpdate('User', array('update' => $data, 'conditions' => array('id' => $params['userId'])));
             $entityService->completeTransaction();
+            $newData = $entityService->getAllData('User', array('conditions' => array('id' => $params['userId'])));
         };
 
-
-
-        return $this->jsonResponse(array('data' => $params));
+        return $this->jsonResponse(array('data' => $newData));
     }
 }

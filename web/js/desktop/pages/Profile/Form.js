@@ -33,7 +33,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
         });
 
         var jsonUserLoginData = Ext.get('UserLoginJson').getAttribute('data'),
-            userLoginData     = JSON.parse(jsonUserLoginData),
+            userLoginData     = Ext.JSON.decode(jsonUserLoginData),
             desktop           = this.app.getDesktop(),
             win               = desktop.getWindow('notepad');
         if(!win){
@@ -95,8 +95,12 @@ Ext.define('SrcPageUrl.Profile.Form', {
                                         scope: this,
                                         success: function(msg) {
                                             if (msg.status) {
-                                                console.log('success');
-                                                this.up('form').getForm().reset();
+                                                var data    = Ext.JSON.decode(msg.responseText).data,
+                                                    dataJson = Ext.JSON.encode(data[0]);
+                                                console.log(dataJson);
+                                                //Ext.get('UserLoginJson').getAttribute('data', dataJson);
+                                                //console.log(obj2);
+                                                //this.up('form').getForm().reset();
                                                 //popupChangePasswordForm.hide();
                                             }
                                         },

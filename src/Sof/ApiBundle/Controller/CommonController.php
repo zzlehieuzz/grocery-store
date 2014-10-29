@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\ValueConst\BaseConst;
+use Sof\ApiBundle\Lib\ArrayUtil;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -21,17 +22,13 @@ class CommonController extends BaseController
     {
         $module = $this->getEntityService()->getAllData('Module',
             array('selects' => array('name', 'iconCls', 'module'),
-                'conditions' => array('isActive' => BaseConst::FLAG_ON),
-                'orderBy' => array('sort')
-            ));
-        $encoder = new JsonEncoder();
+                  'conditions' => array('isActive' => BaseConst::FLAG_ON),
+                  'orderBy' => array('sort')));
+        $encoder    = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
         $serializer = new Serializer(array($normalizer), array($encoder));
-        $username = $this->get('security.context')->getToken()->getUser();
-        $userLoginJson = $serializer->serialize($username, 'json');
         $moduleJson = $serializer->serialize($module, 'json');
 
-        return array('moduleJson'    => $moduleJson,
-                     'userLoginJson' => $userLoginJson);
+        return array('moduleJson' => $moduleJson);
     }
 }
