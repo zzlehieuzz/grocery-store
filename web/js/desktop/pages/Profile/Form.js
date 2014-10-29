@@ -38,74 +38,76 @@ Ext.define('SrcPageUrl.Profile.Form', {
             win               = desktop.getWindow('notepad');
         if(!win){
             win = desktop.createWindow({
-                title: 'Profile - [' + userLoginData.userName + '}',
-                width: 300,
+                title: 'Profile - [' + userLoginData.userName + ']',
+                width: 280,
                 autoHeight: true,
                 iconCls: 'notepad',
                 animCollapse: false,
-                border: false,
-                hideMode: 'offsets',
-                defaultType: 'textfield',
-                layout: 'form',
+                constrainHeader: true,
+                id: 'profileForm',
                 items: [{
-                    xtype: 'hidden',
-                    name: 'userId',
-                    id: 'userId',
-                    value: userLoginData.id,
-                    allowBlank: false
-                }, {
-                    fieldLabel: 'Name',
-                    name: 'name',
-                    id: 'profileName',
-                    value: userLoginData.name,
-                    allowBlank: false
-                }, {
-                    fieldLabel: 'New pass',
-                    inputType: 'password',
-                    name: 'newPass',
-                    id: 'profileNewPass',
-                    allowBlank: false
-                }, {
-                    fieldLabel: 'Confirm',
-                    inputType: 'password',
-                    name: 'confirm',
-                    vtype: 'password',
-                    id: 'profileConfirm',
-                    initialPassField: 'profileNewPass',
-                    allowBlank: false
-                }],
-                buttons: [{
-                    text: 'Save',
-                    handler: function() {
-                        var isValid = this.up('form').getForm().isValid();
-                        if (isValid) {
-                            var changeProfile = {
-                                userId         : Ext.getCmp('userId').value,
-                                profileName    : Ext.getCmp('profileName').value,
-                                profileNewPass : Ext.getCmp('profileNewPass').value
-                            };
-                            this.up('form').getForm().reset();
-                            //if (arrChangePass) {
-                            //    Ext.Ajax.request({
-                            //        url: MyUtil.Path.getPathAction("User_ChangePassword"),
-                            //        method: 'POST',
-                            //        headers: { 'Content-Type': 'application/json' },
-                            //        jsonData: {'params' : arrChangePass},
-                            //        scope: this,
-                            //        success: function(msg) {
-                            //            if (msg.status) {
-                            //                console.log('success');
-                            //                this.up('form').getForm().reset();
-                            //                popupChangePasswordForm.hide();
-                            //            }
-                            //        },
-                            //        failure: function(msg) {
-                            //            console.log('failure');
-                            //        }
-                            //    });
-                            //}
+                            xtype: 'form',
+                            bodyPadding: 5,
+                            defaultType: 'textfield',
+                            border: false,
+                            items: [{
+                            xtype: 'hidden',
+                            name: 'userId',
+                            id: 'userId',
+                            value: userLoginData.id,
+                            allowBlank: false
+                        }, {
+                            fieldLabel: 'Name',
+                            name: 'name',
+                            id: 'profileName',
+                            value: userLoginData.name,
+                            allowBlank: false
+                        }, {
+                            fieldLabel: 'New pass',
+                            inputType: 'password',
+                            name: 'newPass',
+                            id: 'profileNewPass'
+                        }, {
+                            fieldLabel: 'Confirm',
+                            inputType: 'password',
+                            name: 'confirm',
+                            vtype: 'password',
+                            id: 'profileConfirm',
+                            initialPassField: 'profileNewPass'
+                        }],
+                    buttons: [{
+                        text: 'Save',
+                        handler: function(e) {
+                            var isValid = this.up('form').getForm().isValid();
+                            if (isValid) {
+                                var changeProfile = {
+                                    userId         : Ext.getCmp('userId').value,
+                                    profileName    : Ext.getCmp('profileName').value,
+                                    profileNewPass : Ext.getCmp('profileNewPass').value
+                                };
+                                this.up('form').getForm().reset();
+                                if (changeProfile) {
+                                    Ext.Ajax.request({
+                                        url: MyUtil.Path.getPathAction("User_ChangeProfile"),
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        jsonData: {'params' : changeProfile},
+                                        scope: this,
+                                        success: function(msg) {
+                                            if (msg.status) {
+                                                console.log('success');
+                                                this.up('form').getForm().reset();
+                                                //popupChangePasswordForm.hide();
+                                            }
+                                        },
+                                        failure: function(msg) {
+                                            console.log('failure');
+                                        }
+                                    });
+                                }
+                            }
                         }
-                    }
+                    }]
                 }]
             });
         }

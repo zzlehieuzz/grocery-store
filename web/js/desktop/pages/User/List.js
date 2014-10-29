@@ -53,7 +53,7 @@ Ext.define('SrcPageUrl.User.List', {
                     var record = e.record.data;
 
                     Ext.Ajax.request({
-                        url: MyUtil.Path.getPathAction("User_Update"),
+                        url: MyUtil.Path.getPathAction("User_ChangeProfile"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         waitTitle: 'Connecting',

@@ -99,4 +99,36 @@ class UserController extends BaseController
 
         return $this->jsonResponse(array('data' => $params));
     }
+
+    /**
+     * @Route("/User_ChangeProfile", name="User_ChangeProfile")
+     */
+    public function User_ChangeProfileAction()
+    {
+        $params        = $this->getJsonParams();
+        $entityService = $this->getEntityService();
+
+        $data = array();
+        if (isset($params['password']) && ($password = $params['password'])) {
+            $data['password'] = md5($password);
+        }
+
+        if (isset($params['name']) && ($name = $params['name'])) {
+            $data['name'] = $name;
+        }
+
+        if ($data) {
+            $entityService->dqlUpdate(
+                'User',
+                array('update' => $data,
+                      'conditions' => array('id' => $params['userId'])
+                )
+            );
+            $entityService->completeTransaction();
+        };
+
+
+
+        return $this->jsonResponse(array('data' => $params));
+    }
 }
