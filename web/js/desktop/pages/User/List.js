@@ -49,7 +49,7 @@ Ext.define('SrcPageUrl.User.List', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             listeners: {
-                'edit': function (editor, e) {
+                edit: function (editor, e) {
                     var record = e.record.data;
 
                     Ext.Ajax.request({

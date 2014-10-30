@@ -4,10 +4,7 @@
 Ext.define('SrcPageUrl.Profile.Form', {
     extend: 'Ext.ux.desktop.Module',
     requires: [
-        'Ext.data.ArrayStore',
-        'Ext.util.Format',
-        'Ext.grid.Panel',
-        'Ext.grid.RowNumberer'
+
     ],
 
     id:'profile-form',
@@ -95,13 +92,16 @@ Ext.define('SrcPageUrl.Profile.Form', {
                                         scope: this,
                                         success: function(msg) {
                                             if (msg.status) {
-                                                var data    = Ext.JSON.decode(msg.responseText).data,
+                                                var data     = Ext.JSON.decode(msg.responseText).data,
                                                     dataJson = Ext.JSON.encode(data[0]);
-                                                console.log(dataJson);
-                                                //Ext.get('UserLoginJson').getAttribute('data', dataJson);
-                                                //console.log(obj2);
-                                                //this.up('form').getForm().reset();
-                                                //popupChangePasswordForm.hide();
+
+                                                Ext.getCmp('userId').setValue(data[0].id);
+                                                Ext.getCmp('profileName').setValue(data[0].name);
+
+                                                var attrData = {'data': dataJson};
+                                                Ext.get('UserLoginJson').set(attrData);
+                                                MyUtil.Message.MessageInfo('Save successfully');
+                                                win.doClose();
                                             }
                                         },
                                         failure: function(msg) {
@@ -115,8 +115,8 @@ Ext.define('SrcPageUrl.Profile.Form', {
                 }]
             });
         }
-        return win;
 
+        return win;
     },
 
     statics: {

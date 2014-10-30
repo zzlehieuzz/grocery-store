@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Sof\ApiBundle\Entity\User
  *
- * @ORM\Table(name="user", options={"comment" = "user"})
+ * @ORM\Table(name="user", options={"comment" = "user", "collate"="utf8_general_ci", "charset"="utf8"})
 * @ORM\Entity(repositoryClass="Sof\ApiBundle\Entity\UserRepository")
  */
 class User extends BaseEntity implements UserInterface, \Serializable
@@ -29,7 +29,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
      private $roleId;
 
     /**
-     * @ORM\Column(name="username", type="string", nullable=false, options={"comment" = "3:username"})
+     * @ORM\Column(name="user_name", type="string", nullable=false, options={"comment" = "3:username"})
      * @Assert\Type(type="string")
      */
      private $userName;

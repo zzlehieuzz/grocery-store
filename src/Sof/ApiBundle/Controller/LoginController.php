@@ -7,8 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
-use Sof\ApiBundle\Lib\DateUtil;
-use Sof\ApiBundle\Lib\Config;
 
 
 class LoginController extends BaseController

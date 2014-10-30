@@ -120,8 +120,10 @@ class UserController extends BaseController
         if ($data) {
             $entityService->dqlUpdate('User', array('update' => $data, 'conditions' => array('id' => $params['userId'])));
             $entityService->completeTransaction();
-            $newData = $entityService->getAllData('User', array('conditions' => array('id' => $params['userId'])));
-        };
+            $newData = $entityService->getAllData('User',
+                array('selects' => array('id', 'roleId', 'userName', 'password', 'name'),
+                      'conditions' => array('id' => $params['userId'])));
+        }
 
         return $this->jsonResponse(array('data' => $newData));
     }

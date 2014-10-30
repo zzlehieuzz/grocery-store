@@ -27,14 +27,6 @@
     <div id="user_logout" action="{{ path('user_logout') }}"></div>
 
     {#Data store#}
-
-    {% set data = '{"email":' ~ '"' ~ app.user.email ~ '"'
-                   ~ ',"id":' ~ '"' ~ app.user.id ~ '"'
-                   ~ ',"name":' ~ '"' ~ app.user.name ~ '"'
-                   ~ ',"password":' ~ '"' ~ app.user.password ~ '"'
-                   ~ ',"roleId":' ~ '"' ~ app.user.roleId ~ '"'
-                   ~ ',"userName":' ~ '"' ~ app.user.userName ~ '"}' %}
     <div id="ModuleJson"    data="{{ moduleJson }}"></div>
-    <div id="UserLoginJson" data="{{ data }}"></div>
-    {#<div id="aa" data="{{ app.user }}"></div>#}
+    <div id="UserLoginJson" data="{{ userJson }}"></div>
 {% endblock %}
