@@ -7,18 +7,23 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}" />
 
-        {% set extUrl       = asset('js/ext-js') %}
-        {% set desktopUrl   = asset('js/desktop/js') %}
-        {% set utilUrl      = asset('js/desktop/util') %}
-        {% set myDesktopUrl = asset('js/desktop') %}
-        {% set srcPageUrl   = asset('js/desktop/pages') %}
+        {% set extUrl          = asset('js/ext-js') %}
+        {% set desktopUrl      = asset('js/desktop/js') %}
+        {% set utilUrl         = asset('js/desktop/util') %}
+        {% set myDesktopUrl    = asset('js/desktop') %}
+        {% set srcPageUrl      = asset('js/desktop/pages') %}
+        {% set srcTranslateUrl = asset('js/desktop/translate') %}
 
         <link rel="stylesheet" href="{{ asset(extUrl) ~ '/resources/ext-theme-classic/ext-theme-classic-all-debug.css' }}" />
         <link rel="stylesheet" href="{{ asset(myDesktopUrl) ~ '/css/desktop.css' }}" />
 
         <script src="{{ asset(extUrl) ~ '/ext-all-debug.js' }}"></script>
         <script src="{{ asset(extUrl) ~ '/examples/shared/include-ext.js' }}"></script>
+        <script src="{{ asset(utilUrl) ~ '/Translate.js' }}"></script>
         {#<script src="{{ asset(extUrl) ~ '/examples/shared/options-toolbar.js' }}"></script>#}
+
+        {#Call multi language#}
+        <script src="{{ asset(srcTranslateUrl) ~ '/vi_VN/common.js' }}"></script>
 
         <script>
             var url          = "{{ desktopUrl }}",

@@ -159,7 +159,7 @@ Ext.define('SrcPageUrl.User.List', {
         });
 
         var popupChangePasswordForm = new Ext.Window({
-            title: 'Change Password'
+            title: 'change-pass'.Translator('user')
             , autoWidth: true
             , autoHeight: true
             , border: true
@@ -180,7 +180,7 @@ Ext.define('SrcPageUrl.User.List', {
                 dataIndex: 'id',
                 hidden : true
             }, {
-                text: "User Name",
+                //text: "user-name".Translator('user'),
                 width: 150,
                 flex: 1,
                 dataIndex: 'userName',
@@ -188,14 +188,14 @@ Ext.define('SrcPageUrl.User.List', {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Name",
+                //text: "name".Translator('user'),
                 flex: 2,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Email",
+                //text: "email".Translator('user'),
                 flex: 3,
                 dataIndex: 'email',
                 editor: {
@@ -209,7 +209,7 @@ Ext.define('SrcPageUrl.User.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'user-list',
-                title:'User List',
+                title: 'user-management'.Translator('user'),
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',
@@ -234,8 +234,8 @@ Ext.define('SrcPageUrl.User.List', {
                     }
                 ],
                 tbar:[{
-                    text:'Add',
-                    tooltip:'Add a new row',
+                    text: 'add'.Translator('common'),
+                    tooltip: 'add'.Translator('common'),
                     iconCls:'add',
                     handler : function() {
                       rowEditing.cancelEdit();
@@ -252,8 +252,8 @@ Ext.define('SrcPageUrl.User.List', {
                       rowEditing.startEdit(0, 0);
                     }
                     }, '-', {
-                        text:'Change Password',
-                        tooltip:'Change Password',
+                        text:'change-pass'.Translator('user'),
+                        tooltip:'change-pass'.Translator('user'),
                         iconCls:'edit',
                         handler : function() {
                             var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
@@ -265,8 +265,8 @@ Ext.define('SrcPageUrl.User.List', {
                             }
                         }
                     }, '-',{
-                    text:'Remove',
-                    tooltip:'Remove the selected item',
+                    text: 'remove'.Translator('common'),
+                    tooltip: 'remove'.Translator('common'),
                     iconCls:'remove',
                     listeners: {
                         click: function () {
