@@ -146,8 +146,8 @@ Ext.define('SrcPageUrl.Customer.List', {
                     }
                 ],
                 tbar:[{
-                    text:'Add'.Translator('Common'),
-                    tooltip:'Add'.Translator('Common'),
+                    text:'add'.Translator('Common'),
+                    tooltip:'add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
                       rowEditing.cancelEdit();
