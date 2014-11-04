@@ -11,7 +11,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
 
     init : function(){
         this.launcher = {
-            text: 'Profile form',
+            text: 'profile'.Translator('Module'),
             iconCls: 'notepad'
         };
     },
@@ -35,7 +35,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
             win               = desktop.getWindow('notepad');
         if(!win){
             win = desktop.createWindow({
-                title: 'profile'.Translator('Profile') +' - [' + userLoginData.userName + ']',
+                title: 'profile'.Translator('Module') +' - [' + userLoginData.userName + ']',
                 width: 280,
                 autoHeight: true,
                 iconCls: 'notepad',
@@ -54,7 +54,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
                             value: userLoginData.id,
                             allowBlank: false
                         }, {
-                            fieldLabel: 'name'.Translator('Profile'),
+                            fieldLabel: 'name'.Translator('Common'),
                             name: 'name',
                             id: 'profileName',
                             value: userLoginData.name,
@@ -99,7 +99,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
 
                                                 var attrData = {'data': dataJson};
                                                 Ext.get('UserLoginJson').set(attrData);
-                                                MyUtil.Message.MessageInfo('Save successfully');
+                                                MyUtil.Message.MessageInfo('save successfully'.Translator('Common'));
                                                 win.doClose();
                                             }
                                         },

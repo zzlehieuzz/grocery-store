@@ -39,7 +39,7 @@ Ext.define('SrcPageUrl.Customer.List', {
 
     init : function(){
         this.launcher = {
-            text: 'customer-management'.Translator('Customer'),
+            text: 'customer management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -86,28 +86,28 @@ Ext.define('SrcPageUrl.Customer.List', {
                 dataIndex: 'id',
                 hidden : true
             }, {
-                text: "Customer Code",
-                width: 100,
-                dataIndex: 'code',
-                editor: {
-                    xtype: 'textfield'
-                }
-            }, {
-                text: "Customer Name",
+                text: "name".Translator("Common"),
                 width: 200,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Phone Number",
+                text: "customer code".Translator("Customer"),
+                width: 100,
+                dataIndex: 'code',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: "phone".Translator("Customer"),
                 width: 200,
                 dataIndex: 'phoneNumber',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Address",
+                text: "address".Translator("Customer"),
                 flex: 1,
                 dataIndex: 'address',
                 editor: {
@@ -121,7 +121,7 @@ Ext.define('SrcPageUrl.Customer.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'customer-list',
-                title:'customer-management'.Translator('Customer'),
+                title:'customer management'.Translator('Module'),
                 width:800,
                 height:480,
                 iconCls: 'icon-grid',

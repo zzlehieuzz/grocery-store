@@ -56,7 +56,7 @@ Ext.define('SrcPageUrl.Product.List', {
 
     init : function(){
         this.launcher = {
-            text: 'Product List',
+            text: 'product management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -103,25 +103,20 @@ Ext.define('SrcPageUrl.Product.List', {
                 dataIndex: 'id',
                 hidden : true
             }, {
-                text: "Product Name",
+                text: "name".Translator('Common'),
                 width: 150,
-                flex: 1,
                 dataIndex: 'name',
-                editor: {
-                    xtype: 'textfield'
-                }
+                editor: { xtype: 'textfield' }
             }, {
-                text: "Product Code",
-                flex: 2,
+                text: "product code".Translator('Product'),
+                width: 120,
                 dataIndex: 'code',
-                editor: {
-                    xtype: 'textfield'
-                }
+                editor: { xtype: 'textfield' }
             }, {
-                header: 'Unit 1',
+                header: 'unit 1'.Translator('Product'),
                 dataIndex: 'unitId1',
-                editor:
-                {
+                width: 110,
+                editor: {
                     xtype: 'combobox',
                     store: storeLoadUnit1,
                     displayField: 'name',
@@ -134,38 +129,31 @@ Ext.define('SrcPageUrl.Product.List', {
                             return storeLoadUnit1.findRecord("id", value).get('name');
                         else
                             return value;
-                    }
-                    else
-                        return "";  // display nothing if value is empty
+                    } else return "";  // display nothing if value is empty
                 }
             }, {
-                header: 'Unit 2',
+                header: 'unit 2'.Translator('Product'),
                 dataIndex: 'unitId2',
-                editor:
-                {
+                width: 110,
+                editor: {
                     xtype: 'combobox',
                     store: storeLoadUnit2,
                     displayField: 'name',
                     valueField: 'id'
-                },
-                renderer: function(value){
-                    if(value != 0 && value != "")
-                    {
+                }, renderer: function(value){
+                    if(value != 0 && value != "") {
                         if(storeLoadUnit2.findRecord("id", value) != null)
                             return storeLoadUnit2.findRecord("id", value).get('name');
                         else
                             return value;
-                    }
-                    else
-                        return "";  // display nothing if value is empty
+                    } else return "";  // display nothing if value is empty
                 }
             }, {
-                 text: "Convert Amount",
-                 dataIndex: 'convertAmount',
-                 editor: {
-                 xtype: 'textfield'
-                 }
-             }
+                text: "convert amount".Translator('Product'),
+                flex: 1,
+                dataIndex: 'convertAmount',
+                editor: {xtype: 'textfield'}
+            }
         ];
 
         var desktop = this.app.getDesktop();
@@ -173,7 +161,7 @@ Ext.define('SrcPageUrl.Product.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'product-list',
-                title:'Product List',
+                title: 'product management'.Translator('Module'),
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',
@@ -198,9 +186,9 @@ Ext.define('SrcPageUrl.Product.List', {
                     }
                 ],
                 tbar:[{
-                    text:'Add',
-                    tooltip:'Add a new row',
-                    iconCls:'add',
+                    text: 'add'.Translator('Common'),
+                    tooltip: 'add'.Translator('Common'),
+                    iconCls: 'add',
                     handler : function() {
                       rowEditing.cancelEdit();
 
@@ -216,9 +204,9 @@ Ext.define('SrcPageUrl.Product.List', {
                       rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
-                    text:'Remove',
-                    tooltip:'Remove the selected item',
-                    iconCls:'remove',
+                    text: 'remove'.Translator('Common'),
+                    tooltip: 'remove'.Translator('Common'),
+                    iconCls: 'remove',
                     listeners: {
                         click: function () {
                             var selection = Ext.getCmp('grid-product-list').getView().getSelectionModel().getSelection();

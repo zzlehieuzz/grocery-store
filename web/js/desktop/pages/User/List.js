@@ -39,7 +39,7 @@ Ext.define('SrcPageUrl.User.List', {
 
     init : function(){
         this.launcher = {
-            text: 'user-management'.Translator('User'),
+            text: 'user management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -188,7 +188,7 @@ Ext.define('SrcPageUrl.User.List', {
                     xtype: 'textfield'
                 }
             }, {
-                text: "name".Translator('User'),
+                text: "name".Translator('Common'),
                 flex: 2,
                 dataIndex: 'name',
                 editor: {
@@ -209,7 +209,7 @@ Ext.define('SrcPageUrl.User.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'user-list',
-                title: 'user-management'.Translator('User'),
+                title: 'user management'.Translator('Module'),
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',

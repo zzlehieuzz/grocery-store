@@ -322,6 +322,9 @@ div.ux-taskbar div.x-toolbar {
 .user-shortcut {
     background-image: url(../images/desktop/user48x48.png); }
 
+.user-shortcut-16 {
+    background-image: url(../images/desktop/user16x16.png); }
+
 .driver-shortcut {
     background-image: url(../images/desktop/driver48x48.png); }
 
@@ -336,6 +339,9 @@ div.ux-taskbar div.x-toolbar {
 
 .profile-shortcut {
     background-image: url(../images/desktop/profile48x48.png); }
+
+.profile-shortcut-16 {
+    background-image: url(../images/desktop/profile16x16.png); }
 
 .win7-start {
     background-image: url(../images/taskbar/win7.png); }

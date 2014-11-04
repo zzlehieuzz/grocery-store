@@ -37,7 +37,7 @@ Ext.define('SrcPageUrl.Unit.List', {
 
     init : function(){
         this.launcher = {
-            text: 'Unit List',
+            text: 'unit management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -84,7 +84,7 @@ Ext.define('SrcPageUrl.Unit.List', {
                 dataIndex: 'id',
                 hidden : true
             }, {
-                text: "Unit Name",
+                text: "name".Translator('Common'),
                 width: 150,
                 flex: 1,
                 dataIndex: 'name',
@@ -92,7 +92,7 @@ Ext.define('SrcPageUrl.Unit.List', {
                     xtype: 'textfield'
                 }
             }, {
-                text: "Unit Code",
+                text: "unit code".Translator('Unit'),
                 flex: 2,
                 dataIndex: 'code',
                 editor: {
@@ -106,7 +106,7 @@ Ext.define('SrcPageUrl.Unit.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'unit-list',
-                title:'Unit List',
+                title: 'unit management'.Translator('Module'),
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',

@@ -1,61 +1,93 @@
 Locale.module('Common', {
-  //button
-  'add': 'Thêm',
-  'edit': 'Sửa',
-  'remove': 'Xóa',
-  'save': 'Lưu',
-  'cancel': 'Hủy',
-  'delete': 'Xóa',
+    //button
+    'add': 'Thêm',
+    'edit': 'Sửa',
+    'remove': 'Xóa',
+    'save': 'Lưu',
+    'cancel': 'Hủy',
+    'delete': 'Xóa',
 
-  //message
-  'error': 'Lỗi',
-  'warning': 'Cảnh báo',
-  'info': 'Thông tin',
-  'question': 'Câu hỏi',
-  'No records found': 'Không có dữ liệu.',
+    //message
+    'error': 'Lỗi',
+    'warning': 'Cảnh báo',
+    'info': 'Thông tin',
+    'question': 'Câu hỏi',
+    'No records found': 'Không có dữ liệu.',
 
-  'save-successfully': 'Lưu thành công',
-  'are you sure': 'Bạn đã chắc chắn ?'
+    'save successfully': 'Lưu thành công',
+    'update successfully': 'Cập nhật thành công',
+    'delete successfully': 'Xóa thành công',
+    'are you sure': 'Bạn đã chắc chắn ?',
+
+    //label
+    'name': 'Tên'
+});
+
+Locale.module('Module', {
+    'user management': 'Quản lý tài khoản',
+    'unit management': 'Quản lý đơn vị',
+    'product management': 'Quản lý sản phẩm',
+    'customer management': 'Quản lý khách hàng',
+    'driver management': 'Quản lý tài/xe',
+    'profile': 'Hồ sơ'
+});
+
+Locale.module('Logout', {
+    'logout': 'Đăng xuất',
+    'are you sure you want to logout': 'Bạn có chắc muốn đăng xuất ?'
+});
+
+Locale.module('Settings', {
+    'settings': 'Cấu hình',
+    'change settings': 'Đổi cấu hình'
 });
 
 Locale.module('User', {
-  //button
-  'change-pass': 'Đổi mật khẩu',
+    //button
+    'change-pass': 'Đổi mật khẩu',
 
-  //label
-  'user-management': 'Quản lý tài khoản',
-  'new-pass': 'Mật khẩu mới',
-  'confirm-pass': 'Xác nhận',
+    //label
+    'new-pass': 'Mật khẩu mới',
+    'confirm-pass': 'Xác nhận',
 
-  //record
-  'user-name': 'Tên tài khoản',
-  'name': 'Tên',
-  'email': 'Email',
+    //record
+    'user-name': 'Tên tài khoản',
+    'name': 'Tên',
+    'email': 'Email',
 
-  //message
-  'Please choose 1 record to change password': 'Chọn 1 dòng để đổi mật khẩu !',
-  'Please choose 1 record has data': 'Chọn 1 dòng có dữ liệu.',
-  'Please choose 1 record to delete': 'Chọn 1 dòng để xóa!'
+    //message
+    'Please choose 1 record to change password': 'Chọn 1 dòng để đổi mật khẩu !',
+    'Please choose 1 record has data': 'Chọn 1 dòng có dữ liệu.',
+    'Please choose 1 record to delete': 'Chọn 1 dòng để xóa!'
 });
 
 Locale.module('Profile', {
-  //label
-  'profile': 'Hồ sơ',
-  'name': 'Tên',
-  'new-pass': 'Mật khẩu mới',
-  'confirm-pass': 'Xác nhận'
+    //label
+    'new-pass': 'Mật khẩu mới',
+    'confirm-pass': 'Xác nhận'
 });
 
 Locale.module('Driver', {
-  //label
-  'driver-management': 'Quản lý tài/xe',
-  'name': 'Tên',
-  'number-plate': 'Biển số'
+    //label
+    'number plate': 'Biển số'
 });
 
 Locale.module('Customer', {
-  //label
-  'customer-management': 'Quản lý khách hàng',
-  'name': 'Tên',
-  'number-plate': 'Biển số'
+    //label
+    'customer code': 'Mã khách hàng',
+    'phone': 'Số điện thoại',
+    'address': 'Địa chỉ'
+});
+
+Locale.module('Product', {
+    //label
+    'product code': 'Mã sản phẩm',
+    'unit 1': 'Đơn vị 1',
+    'unit 2': 'Đơn vị 2',
+    'convert amount': 'Số lượng chuyển đổi'
+});
+
+Locale.module('Unit', {
+    //label
+    'unit code': 'Mã đơn vị'
 });
