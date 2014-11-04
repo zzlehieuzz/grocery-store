@@ -8,8 +8,8 @@
 Ext.define('MyUtil.Message', {
     statics: {
         MessageError: function (msg, title) {
-            title = title || 'Error';
-            msg   = msg || 'Error messsage';
+            title = title || 'error'.Translator('Common');
+            msg   = msg || 'Error default';
 
             Ext.MessageBox.show({
                 title: title,
@@ -19,8 +19,8 @@ Ext.define('MyUtil.Message', {
             });
         },
         MessageInfo: function (msg, title) {
-            title = title || 'Info';
-            msg   = msg || 'Info messsage';
+            title = title || 'info'.Translator('Common');
+            msg   = msg || 'Info default';
             Ext.MessageBox.show({
                 title: title,
                 msg: msg,
@@ -29,8 +29,8 @@ Ext.define('MyUtil.Message', {
             });
         },
         MessageQuestion: function (msg, title) {
-            title = title || 'Question';
-            msg   = msg || 'Question messsage';
+            title = title || 'question'.Translator('Common');
+            msg   = msg || 'Question default';
             Ext.MessageBox.show({
                 title: title,
                 msg: msg,
@@ -39,8 +39,8 @@ Ext.define('MyUtil.Message', {
             });
         },
         MessageWarning: function (msg, title) {
-            title = title || 'Warning';
-            msg   = msg || 'Warning messsage';
+            title = title || 'warning'.Translator('Common');
+            msg   = msg || 'Warning default';
             Ext.MessageBox.show({
                 title: title,
                 msg: msg,

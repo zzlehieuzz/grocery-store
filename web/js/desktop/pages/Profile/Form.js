@@ -35,12 +35,12 @@ Ext.define('SrcPageUrl.Profile.Form', {
             win               = desktop.getWindow('notepad');
         if(!win){
             win = desktop.createWindow({
-                title: 'Profile - [' + userLoginData.userName + ']',
+                title: 'profile'.Translator('Profile') +' - [' + userLoginData.userName + ']',
                 width: 280,
                 autoHeight: true,
                 iconCls: 'notepad',
                 animCollapse: false,
-                constrainHeader: true,
+                constrainHeader: false,
                 id: 'profileForm',
                 items: [{
                             xtype: 'form',
@@ -54,18 +54,18 @@ Ext.define('SrcPageUrl.Profile.Form', {
                             value: userLoginData.id,
                             allowBlank: false
                         }, {
-                            fieldLabel: 'Name',
+                            fieldLabel: 'name'.Translator('Profile'),
                             name: 'name',
                             id: 'profileName',
                             value: userLoginData.name,
                             allowBlank: false
                         }, {
-                            fieldLabel: 'New pass',
+                            fieldLabel: 'new-pass'.Translator('Profile'),
                             inputType: 'password',
                             name: 'newPass',
                             id: 'profileNewPass'
                         }, {
-                            fieldLabel: 'Confirm',
+                            fieldLabel: 'confirm-pass'.Translator('Profile'),
                             inputType: 'password',
                             name: 'confirm',
                             vtype: 'password',
@@ -73,7 +73,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
                             initialPassField: 'profileNewPass'
                         }],
                     buttons: [{
-                        text: 'Save',
+                        text: 'save'.Translator('Common'),
                         handler: function(e) {
                             var isValid = this.up('form').getForm().isValid();
                             if (isValid) {
@@ -82,7 +82,6 @@ Ext.define('SrcPageUrl.Profile.Form', {
                                     profileName    : Ext.getCmp('profileName').value,
                                     profileNewPass : Ext.getCmp('profileNewPass').value
                                 };
-                                this.up('form').getForm().reset();
                                 if (changeProfile) {
                                     Ext.Ajax.request({
                                         url: MyUtil.Path.getPathAction("User_ChangeProfile"),

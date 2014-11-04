@@ -39,7 +39,7 @@ Ext.define('SrcPageUrl.User.List', {
 
     init : function(){
         this.launcher = {
-            text: 'User List',
+            text: 'user-management'.Translator('User'),
             iconCls:'icon-grid'
         };
     },
@@ -103,13 +103,13 @@ Ext.define('SrcPageUrl.User.List', {
                 id: 'changeUserId',
                 allowBlank: false
             }, {
-                fieldLabel: 'New pass',
+                fieldLabel: 'new-pass'.Translator('User'),
                 inputType: 'password',
                 name: 'newPass',
                 id: 'changeNewPass',
                 allowBlank: false
             }, {
-                fieldLabel: 'Confirm',
+                fieldLabel: 'confirm-pass'.Translator('User'),
                 inputType: 'password',
                 name: 'confirm',
                 vtype: 'password',
@@ -119,7 +119,7 @@ Ext.define('SrcPageUrl.User.List', {
             }],
 
             buttons: [{
-                text: 'Save',
+                text: 'save'.Translator('Common'),
                 handler: function() {
                     var isValid = this.up('form').getForm().isValid();
                     if (isValid) {
@@ -150,7 +150,7 @@ Ext.define('SrcPageUrl.User.List', {
                     }
                 }
             }, {
-                text: 'Cancel',
+                text: 'cancel'.Translator('Common'),
                 handler: function() {
                     this.up('form').getForm().reset();
                     popupChangePasswordForm.hide();
@@ -159,7 +159,7 @@ Ext.define('SrcPageUrl.User.List', {
         });
 
         var popupChangePasswordForm = new Ext.Window({
-            title: 'change-pass'.Translator('user')
+            title: 'change-pass'.Translator('User')
             , autoWidth: true
             , autoHeight: true
             , border: true
@@ -180,7 +180,7 @@ Ext.define('SrcPageUrl.User.List', {
                 dataIndex: 'id',
                 hidden : true
             }, {
-                //text: "user-name".Translator('user'),
+                text: "user-name".Translator('User'),
                 width: 150,
                 flex: 1,
                 dataIndex: 'userName',
@@ -188,14 +188,14 @@ Ext.define('SrcPageUrl.User.List', {
                     xtype: 'textfield'
                 }
             }, {
-                //text: "name".Translator('user'),
+                text: "name".Translator('User'),
                 flex: 2,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-                //text: "email".Translator('user'),
+                text: "email".Translator('User'),
                 flex: 3,
                 dataIndex: 'email',
                 editor: {
@@ -209,7 +209,7 @@ Ext.define('SrcPageUrl.User.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'user-list',
-                title: 'user-management'.Translator('user'),
+                title: 'user-management'.Translator('User'),
                 width:740,
                 height:480,
                 iconCls: 'icon-grid',
@@ -234,8 +234,8 @@ Ext.define('SrcPageUrl.User.List', {
                     }
                 ],
                 tbar:[{
-                    text: 'add'.Translator('common'),
-                    tooltip: 'add'.Translator('common'),
+                    text: 'add'.Translator('Common'),
+                    tooltip: 'add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
                       rowEditing.cancelEdit();
@@ -252,28 +252,33 @@ Ext.define('SrcPageUrl.User.List', {
                       rowEditing.startEdit(0, 0);
                     }
                     }, '-', {
-                        text:'change-pass'.Translator('user'),
-                        tooltip:'change-pass'.Translator('user'),
+                        text:'change-pass'.Translator('User'),
+                        tooltip:'change-pass'.Translator('User'),
                         iconCls:'edit',
                         handler : function() {
                             var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
+
                             if (selection.length == 1) {
-                                popupChangePasswordForm.show();
-                                changePasswordForm.getForm().setValues({ changeUserId: selection[0].data.id });
+                                if(selection[0].data.id) {
+                                    popupChangePasswordForm.show();
+                                    changePasswordForm.getForm().setValues({ changeUserId: selection[0].data.id });
+                                } else {
+                                  MyUtil.Message.MessageWarning('Please choose 1 record has data'.Translator('User'));
+                                }
                             } else {
-                                MyUtil.Message.MessageWarning('Please choose 1 record to change password !');
+                                MyUtil.Message.MessageWarning('Please choose 1 record to change password'.Translator('User'));
                             }
                         }
                     }, '-',{
-                    text: 'remove'.Translator('common'),
-                    tooltip: 'remove'.Translator('common'),
+                    text: 'remove'.Translator('Common'),
+                    tooltip: 'remove'.Translator('Common'),
                     iconCls:'remove',
                     listeners: {
                         click: function () {
                             var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn) {
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn) {
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
@@ -300,7 +305,7 @@ Ext.define('SrcPageUrl.User.List', {
                                     }
                                 });
                             } else {
-                                MyUtil.Message.MessageError();
+                              MyUtil.Message.MessageWarning('Please choose 1 record to delete'.Translator('User'));
                             }
                         }
                     }

@@ -39,7 +39,7 @@ Ext.define('SrcPageUrl.Customer.List', {
 
     init : function(){
         this.launcher = {
-            text: 'Customer List',
+            text: 'customer-management'.Translator('Customer'),
             iconCls:'icon-grid'
         };
     },
@@ -87,29 +87,28 @@ Ext.define('SrcPageUrl.Customer.List', {
                 hidden : true
             }, {
                 text: "Customer Code",
-                width: 150,
-                flex: 1,
+                width: 100,
                 dataIndex: 'code',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "Customer Name",
-                flex: 2,
+                width: 200,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "Phone Number",
-                flex: 3,
+                width: 200,
                 dataIndex: 'phoneNumber',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "Address",
-                flex: 4,
+                flex: 1,
                 dataIndex: 'address',
                 editor: {
                     xtype: 'textfield'
@@ -122,8 +121,8 @@ Ext.define('SrcPageUrl.Customer.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'customer-list',
-                title:'Customer List',
-                width:740,
+                title:'customer-management'.Translator('Customer'),
+                width:800,
                 height:480,
                 iconCls: 'icon-grid',
                 animCollapse: false,
@@ -147,8 +146,8 @@ Ext.define('SrcPageUrl.Customer.List', {
                     }
                 ],
                 tbar:[{
-                    text:'Add',
-                    tooltip:'Add a new row',
+                    text:'Add'.Translator('Common'),
+                    tooltip:'Add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
                       rowEditing.cancelEdit();
@@ -166,15 +165,15 @@ Ext.define('SrcPageUrl.Customer.List', {
                       rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
-                    text:'Remove',
-                    tooltip:'Remove the selected item',
+                    text:'remove'.Translator('Common'),
+                    tooltip:'remove'.Translator('Common'),
                     iconCls:'remove',
                     listeners: {
                         click: function () {
                             var selection = Ext.getCmp('grid-customer-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {

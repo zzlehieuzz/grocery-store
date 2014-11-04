@@ -67,7 +67,7 @@ Ext.define('SrcPageUrl.Driver.List', {
 
     init : function(){
         this.launcher = {
-            text: 'Driver List',
+            text: 'driver-management'.Translator('Driver'),
             iconCls:'icon-grid'
         };
     },
@@ -79,16 +79,15 @@ Ext.define('SrcPageUrl.Driver.List', {
         var columnsDriver = [
             new Ext.grid.RowNumberer(),
             {
-                text: "Tài",
-                width: 150,
-                flex: 1,
+                text: "name".Translator('Driver'),
+                width: 300,
                 dataIndex: 'name',
                 editor: {
                     allowBlank: true
                 }
             }, {
-                text: "Biển Số",
-                flex: 2,
+                text: "number-plate".Translator('Driver'),
+                flex: 1,
                 dataIndex: 'numberPlate',
                 editor: {
                     allowBlank: true
@@ -106,8 +105,8 @@ Ext.define('SrcPageUrl.Driver.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'driver-list',
-                title:'Driver List',
-                width:740,
+                title:'driver-management'.Translator('Driver'),
+                width:600,
                 height:480,
                 iconCls: 'icon-grid',
                 animCollapse:false,
@@ -130,8 +129,8 @@ Ext.define('SrcPageUrl.Driver.List', {
                   }
                 ],
               tbar:[{
-                text:'Add',
-                tooltip:'Add a new row',
+                text:'add'.Translator('Common'),
+                tooltip:'add'.Translator('Common'),
                 iconCls:'add',
                 handler : function() {
                   rowEditing.cancelEdit();
@@ -147,15 +146,15 @@ Ext.define('SrcPageUrl.Driver.List', {
                   rowEditing.startEdit(0, 0);
                 }
               },'-',{
-                text:'Remove',
-                tooltip:'Remove the selected item',
+                text: 'remove'.Translator('Common'),
+                tooltip:'remove'.Translator('Common'),
                 iconCls:'remove',
                 listeners:  {
                   click: function () {
                     var selection = Ext.getCmp('grid-driver-list').getView().getSelectionModel().getSelection();
 
                     if (selection.length > 0) {
-                      Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                      Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
                         if (btn === 'yes') {
                           var arrId = [];
                           Ext.each(selection, function(v, k) {

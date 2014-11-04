@@ -131,8 +131,8 @@ Ext.define('SrcPageUrl.Unit.List', {
                     }
                 ],
                 tbar:[{
-                    text:'Add',
-                    tooltip:'Add a new row',
+                    text:'add'.Translator('Common'),
+                    tooltip:'add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
                       rowEditing.cancelEdit();
@@ -149,15 +149,15 @@ Ext.define('SrcPageUrl.Unit.List', {
                       rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
-                    text:'Remove',
-                    tooltip:'Remove the selected item',
+                    text:'remove'.Translator('Common'),
+                    tooltip:'remove'.Translator('Common'),
                     iconCls:'remove',
                     listeners: {
                         click: function () {
                             var selection = Ext.getCmp('grid-unit-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
