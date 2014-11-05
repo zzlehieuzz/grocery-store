@@ -46,6 +46,8 @@ class ProductController extends BaseController
             $arrTemp[$key]['productUnitId'] = $productUnitId;
             $arrTemp[$key]['name']          = $entity['name'];
             $arrTemp[$key]['code']          = $entity['code'];
+            $arrTemp[$key]['originalPrice'] = $entity['originalPrice'];
+            $arrTemp[$key]['salePrice']     = $entity['salePrice'];
         }
 
         return $this->jsonResponse(array('data' => $arrTemp), $arrEntity['total']);
@@ -59,9 +61,11 @@ class ProductController extends BaseController
       $params        = $this->getJsonParams();
       $entityService = $this->getEntityService();
       $arrProduct = array();
-      $arrProduct['id'] =  $params['id'];
+      $arrProduct['id']   =  $params['id'];
       $arrProduct['code'] =  $params['code'];
       $arrProduct['name'] =  $params['name'];
+      $arrProduct['originalPrice'] =  $params['originalPrice'];
+      $arrProduct['salePrice']     =  $params['salePrice'];
 
       if ($params['id'] != 0) {
         $entityService->dqlUpdate(

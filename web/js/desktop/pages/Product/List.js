@@ -8,13 +8,17 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',                 type: 'int'},
-                   {name: 'name',               type: 'string'},
-                   {name: 'code',               type: 'string'},
-                   {name: 'productUnitId',      type: 'string'},
-                   {name: 'unitId1',            type: 'string'},
-                   {name: 'unitId2',            type: 'string'},
-                   {name: 'convertAmount',      type: 'string'}];
+var objectField = [{name: 'id',            type: 'int'},
+                   {name: 'name',          type: 'string'},
+                   {name: 'code',          type: 'string'},
+                   {name: 'productUnitId', type: 'string'},
+                   {name: 'originalPrice', type: 'string'},
+                   {name: 'salePrice',     type: 'string'},
+                   {name: 'unitId1',       type: 'string'},
+                   {name: 'unitId2',       type: 'string'},
+                   {name: 'convertAmount', type: 'string'}];
+
+
 
 var objectUnitField = [{name: 'id',       type: 'int'},
                        {name: 'name',     type: 'string'},
@@ -113,6 +117,22 @@ Ext.define('SrcPageUrl.Product.List', {
                 dataIndex: 'code',
                 editor: { xtype: 'textfield' }
             }, {
+                text: "original price".Translator('Product'),
+                width: 120,
+                dataIndex: 'originalPrice',
+                editor: {
+                    xtype: 'numberfield',
+                    decimalPrecision: 2
+                }
+            }, {
+                text: "sale price".Translator('Product'),
+                width: 120,
+                dataIndex: 'salePrice',
+                editor: {
+                    xtype: 'numberfield',
+                    decimalPrecision: 2
+                }
+            }, {
                 header: 'unit 1'.Translator('Product'),
                 dataIndex: 'unitId1',
                 width: 110,
@@ -123,8 +143,7 @@ Ext.define('SrcPageUrl.Product.List', {
                     valueField: 'id'
                 },
                 renderer: function(value){
-                    if(value != 0 && value != "")
-                    {
+                    if(value != 0 && value != "") {
                         if(storeLoadUnit1.findRecord("id", value) != null)
                             return storeLoadUnit1.findRecord("id", value).get('name');
                         else
@@ -152,7 +171,10 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
                 dataIndex: 'convertAmount',
-                editor: {xtype: 'textfield'}
+                editor: {
+                    xtype: 'numberfield',
+                    decimalPrecision: 2
+                }
             }
         ];
 
@@ -162,8 +184,8 @@ Ext.define('SrcPageUrl.Product.List', {
             win = desktop.createWindow({
                 id: 'product-list',
                 title: 'product management'.Translator('Module'),
-                width:740,
-                height:480,
+                width: 900,
+                height: 480,
                 iconCls: 'icon-grid',
                 animCollapse: false,
                 constrainHeader: true,

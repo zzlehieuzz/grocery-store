@@ -86,7 +86,6 @@ Ext.define('SrcPageUrl.Unit.List', {
             }, {
                 text: "name".Translator('Common'),
                 width: 150,
-                flex: 1,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
@@ -107,7 +106,7 @@ Ext.define('SrcPageUrl.Unit.List', {
             win = desktop.createWindow({
                 id: 'unit-list',
                 title: 'unit management'.Translator('Module'),
-                width:740,
+                width:300,
                 height:480,
                 iconCls: 'icon-grid',
                 animCollapse: false,

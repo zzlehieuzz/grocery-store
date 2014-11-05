@@ -82,6 +82,8 @@ Locale.module('Customer', {
 Locale.module('Product', {
     //label
     'product code': 'Mã sản phẩm',
+    'original price': 'Giá gốc',
+    'sale price': 'Giá bán',
     'unit 1': 'Đơn vị 1',
     'unit 2': 'Đơn vị 2',
     'convert amount': 'Số lượng chuyển đổi'
