@@ -89,6 +89,8 @@ class ProductController extends BaseController
         unset($params['code']);
         unset($params['name']);
         unset($params['productUnitId']);
+        unset($params['originalPrice']);
+        unset($params['salePrice']);
 
         if ((int)$productUnitId != 0) {
             $entityService->dqlUpdate(
