@@ -5,7 +5,7 @@ fixtures:
         name: "profile"
         icon_cls: 'profile-shortcut'
         sort: 1
-        module: 'notepad'
+        module: 'profile-form'
         deleted_at: null
         created_by: 1
         updated_by: 1
