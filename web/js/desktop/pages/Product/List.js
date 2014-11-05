@@ -119,18 +119,20 @@ Ext.define('SrcPageUrl.Product.List', {
             }, {
                 text: "original price".Translator('Product'),
                 width: 120,
+                renderer:  Ext.util.Format.numberRenderer(moneyFormat),
                 dataIndex: 'originalPrice',
                 editor: {
                     xtype: 'numberfield',
-                    decimalPrecision: 2
+                    decimalPrecision: decimalPrecision
                 }
             }, {
                 text: "sale price".Translator('Product'),
                 width: 120,
                 dataIndex: 'salePrice',
+                renderer:  Ext.util.Format.numberRenderer(moneyFormat),
                 editor: {
                     xtype: 'numberfield',
-                    decimalPrecision: 2
+                    decimalPrecision: decimalPrecision
                 }
             }, {
                 header: 'unit 1'.Translator('Product'),
@@ -171,9 +173,10 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
                 dataIndex: 'convertAmount',
+                renderer:  Ext.util.Format.numberRenderer(moneyFormat),
                 editor: {
                     xtype: 'numberfield',
-                    decimalPrecision: 2
+                    decimalPrecision: decimalPrecision
                 }
             }
         ];

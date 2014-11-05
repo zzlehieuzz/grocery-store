@@ -1,6 +1,60 @@
-{% extends '::base.html.twig' %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Language" content="vi"/>
+        <title>{% block title %}Admin Grocery Store{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}" />
 
-{% block body %}
-    {% block content %}
-    {% endblock %}
-{% endblock %}
+        {% set extUrl          = asset('js/ext-js') %}
+        {% set desktopUrl      = asset('js/desktop/js') %}
+        {% set utilUrl         = asset('js/desktop/util') %}
+        {% set myDesktopUrl    = asset('js/desktop') %}
+        {% set srcPageUrl      = asset('js/desktop/pages') %}
+        {% set srcTranslateUrl = asset('js/desktop/translate') %}
+
+        <link rel="stylesheet" href="{{ asset(extUrl) ~ '/resources/ext-theme-classic/ext-theme-classic-all-debug.css' }}" />
+        <link rel="stylesheet" href="{{ asset(myDesktopUrl) ~ '/css/desktop.css' }}" />
+
+        <script src="{{ asset(extUrl) ~ '/ext-all-debug.js' }}"></script>
+        <script src="{{ asset(extUrl) ~ '/examples/shared/include-ext.js' }}"></script>
+        <script src="{{ asset(utilUrl) ~ '/Translate.js' }}"></script>
+        {#<script src="{{ asset(extUrl) ~ '/examples/shared/options-toolbar.js' }}"></script>#}
+
+        {#Call multi language#}
+        <script src="{{ asset(srcTranslateUrl) ~ '/vi_VN/common.js' }}"></script>
+
+        <script>
+            var url          = "{{ desktopUrl }}",
+                utilUrl      = "{{ utilUrl }}",
+                myDesktopUrl = "{{ myDesktopUrl }}",
+                srcPageUrl   = "{{ srcPageUrl }}",
+
+                moneyFormat      = "0,000.00",
+                decimalPrecision = 2,
+                offset           = 10;
+
+            Ext.Loader.setPath({
+                'Ext.ux.desktop': url,
+                MyUtil          : utilUrl,
+                MyDesktop       : myDesktopUrl,
+                SrcPageUrl      : srcPageUrl
+            });
+
+            Ext.require('MyDesktop.App');
+
+            var myDesktopApp;
+            Ext.onReady(function () {
+                myDesktopApp = new MyDesktop.App();
+            });
+        </script>
+    </head>
+    <body>
+        {% block body %}
+            {% block content %}
+            {% endblock %}
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
