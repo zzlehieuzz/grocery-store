@@ -57,3 +57,21 @@ fixtures:
         created_by: 1
         updated_by: 1
         deleted_by: null
+    module7:
+        name: "Invoices Input"
+        icon_cls: 'invoices-shortcut'
+        sort: 7
+        module: 'invoices-input'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module8:
+        name: "Invoices Output"
+        icon_cls: 'invoices-shortcut'
+        sort: 8
+        module: 'invoices-output'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
