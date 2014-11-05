@@ -1,0 +1,1 @@
+ALTER TABLE product ADD original_price NUMERIC(16, 2) DEFAULT 0 NOT NULL COMMENT '5:original_price', ADD sale_price NUMERIC(16, 2) DEFAULT 0 NOT NULL COMMENT '6:sale_price';

@@ -39,9 +39,22 @@ class Product extends BaseEntity
      */
     private $code;
 
+    /**
+     * @ORM\Column(name="original_price", type="decimal", precision=16, scale=2, nullable=false, options={"comment" = "5:original_price"})
+     * @Assert\Type(type="decimal")
+     */
+    private $originalPrice;
+
+    /**
+     * @ORM\Column(name="sale_price", type="decimal", precision=16, scale=2, nullable=false, options={"comment" = "6:sale_price"})
+     * @Assert\Type(type="decimal")
+     */
+    private $salePrice;
 
     public function __construct()
     {
+      $this->originalPrice = 0;
+      $this->salePrice = 0;
     }
 
     /**
@@ -106,5 +119,37 @@ class Product extends BaseEntity
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginalPrice()
+    {
+      return $this->originalPrice;
+    }
+
+    /**
+     * @param mixed $originalPrice
+     */
+    public function setOriginalPrice($originalPrice)
+    {
+      $this->originalPrice = $originalPrice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalePrice()
+    {
+      return $this->salePrice;
+    }
+
+    /**
+     * @param mixed $salePrice
+     */
+    public function setSalePrice($salePrice)
+    {
+      $this->salePrice = $salePrice;
     }
 }

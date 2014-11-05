@@ -67,7 +67,7 @@ Ext.define('SrcPageUrl.Driver.List', {
 
     init : function(){
         this.launcher = {
-            text: 'driver-management'.Translator('Driver'),
+            text: 'driver management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -79,14 +79,14 @@ Ext.define('SrcPageUrl.Driver.List', {
         var columnsDriver = [
             new Ext.grid.RowNumberer(),
             {
-                text: "name".Translator('Driver'),
+                text: "name".Translator('Common'),
                 width: 300,
                 dataIndex: 'name',
                 editor: {
                     allowBlank: true
                 }
             }, {
-                text: "number-plate".Translator('Driver'),
+                text: "number plate".Translator('Driver'),
                 flex: 1,
                 dataIndex: 'numberPlate',
                 editor: {
@@ -105,7 +105,7 @@ Ext.define('SrcPageUrl.Driver.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'driver-list',
-                title:'driver-management'.Translator('Driver'),
+                title:'driver management'.Translator('Module'),
                 width:600,
                 height:480,
                 iconCls: 'icon-grid',
