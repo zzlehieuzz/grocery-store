@@ -109,19 +109,23 @@ Ext.define('SrcPageUrl.Product.List', {
                 hidden : true
             }, {
                 text: "name".Translator('Common'),
-                width: 150,
+                width: 160,
                 dataIndex: 'name',
+                style: 'text-align:center;',
                 editor: { xtype: 'textfield' }
             }, {
                 text: "product code".Translator('Product'),
-                width: 120,
+                width: 140,
                 dataIndex: 'code',
+            style: 'text-align:center;',
                 editor: { xtype: 'textfield' }
             }, {
                 text: "original price".Translator('Product'),
                 width: 120,
                 renderer:  Ext.util.Format.numberRenderer(moneyFormat),
                 dataIndex: 'originalPrice',
+                style: 'text-align:center;',
+                align: 'right',
                 editor: {
                     xtype: 'numberfield',
                     decimalPrecision: decimalPrecision
@@ -130,6 +134,8 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "sale price".Translator('Product'),
                 width: 120,
                 dataIndex: 'salePrice',
+                style: 'text-align:center;',
+                align: 'right',
                 renderer:  Ext.util.Format.numberRenderer(moneyFormat),
                 editor: {
                     xtype: 'numberfield',
@@ -138,7 +144,8 @@ Ext.define('SrcPageUrl.Product.List', {
             }, {
                 header: 'unit 1'.Translator('Product'),
                 dataIndex: 'unitId1',
-                width: 110,
+                style: 'text-align:center;',
+                width: 100,
                 editor: {
                     xtype: 'combobox',
                     store: storeLoadUnit1,
@@ -156,7 +163,8 @@ Ext.define('SrcPageUrl.Product.List', {
             }, {
                 header: 'unit 2'.Translator('Product'),
                 dataIndex: 'unitId2',
-                width: 110,
+                width: 100,
+                style: 'text-align:center;',
                 editor: {
                     xtype: 'combobox',
                     store: storeLoadUnit2,
@@ -174,6 +182,8 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
                 dataIndex: 'convertAmount',
+                style: 'text-align:center;',
+                align: 'right',
                 renderer: 0,
                 editor: {
                     xtype: 'numberfield',
