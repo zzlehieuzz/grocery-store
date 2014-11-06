@@ -83,6 +83,7 @@ Ext.define('SrcPageUrl.Product.List', {
                         scope: this,
                         success: function(msg) {
                             if (msg.status) {
+                              storeLoadProduct.load();
                                 console.log('success');
                             }
                         },
@@ -173,7 +174,7 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
                 dataIndex: 'convertAmount',
-                renderer:  Ext.util.Format.numberRenderer(moneyFormat),
+                renderer: 0,
                 editor: {
                     xtype: 'numberfield',
                     decimalPrecision: decimalPrecision

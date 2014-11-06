@@ -58,62 +58,56 @@ class ProductController extends BaseController
      */
     public function Product_UpdateAction()
     {
-      $params        = $this->getJsonParams();
-      $entityService = $this->getEntityService();
-      $arrProduct = array();
-      $arrProduct['id']   =  $params['id'];
-      $arrProduct['code'] =  $params['code'];
-      $arrProduct['name'] =  $params['name'];
-      $arrProduct['originalPrice'] =  $params['originalPrice'];
-      $arrProduct['salePrice']     =  $params['salePrice'];
+        $params        = $this->getJsonParams();
+        $entityService = $this->getEntityService();
+        $arrProduct    = $arrProductUnit = array();
 
-      if ($params['id'] != 0) {
-        $entityService->dqlUpdate(
-          'Product',
-          array('update' => $arrProduct,
-            'conditions' => array('id' => $params['id'])
-          )
-        );
-
-        $productId = $params['id'];
-
-      } else {
-        $lastId = $entityService->rawSqlInsert('Product', array('insert' => $arrProduct));
-        $productId = $lastId;
-      }
-
+        $productId     = $params['id'];
         $productUnitId = $params['productUnitId'];
-        $params['productId'] = $params['id'];
 
-        unset($params['id']);
-        unset($params['code']);
-        unset($params['name']);
-        unset($params['productUnitId']);
-        unset($params['originalPrice']);
-        unset($params['salePrice']);
+        $arrProduct['code']          =  $params['code'];
+        $arrProduct['name']          =  $params['name'];
+        $arrProduct['originalPrice'] =  $params['originalPrice'];
+        $arrProduct['salePrice']     =  $params['salePrice'];
 
-        if ((int)$productUnitId != 0) {
+        $arrProductUnit['unitId1']       = $params['unitId1'];
+        $arrProductUnit['unitId2']       = $params['unitId2'];
+        $arrProductUnit['convertAmount'] = $params['convertAmount'];
+        $arrProductUnit['description']   = '';
+
+        //Update
+        if ($productId != 0 && $productUnitId != 0) {
             $entityService->dqlUpdate(
-                'ProductUnit',
-                array('update' => $params,
-                    'conditions' => array('id' => $productUnitId)
+                'Product',
+                array('update' => $arrProduct,
+                  'conditions' => array('id' => $productId)
                 )
             );
-        } else {
-            $lastId = $entityService->rawSqlInsert('ProductUnit', array('insert' => $params));
-            $productUnitId = $lastId;
-        }
 
-        $entityService->dqlUpdate(
+            $entityService->dqlUpdate(
+              'ProductUnit',
+              array('update' => $arrProductUnit,
+                'conditions' => array('id' => $productUnitId)
+              )
+            );
+        }
+        //Insert
+        else {
+          $newProductId = $entityService->rawSqlInsert('Product', array('insert' => $arrProduct));
+          $arrProductUnit['productId'] = $newProductId;
+
+          $newProductUnitId = $entityService->rawSqlInsert('ProductUnit', array('insert' => $arrProductUnit));
+          $entityService->dqlUpdate(
             'Product',
-            array('update' => array('productUnitId' => $productUnitId),
-                    'conditions' => array('id' => $productId)
+            array('update' => array('productUnitId' => $newProductUnitId),
+              'conditions' => array('id' => $newProductId)
             )
-        );
+          );
+        }
 
         $entityService->completeTransaction();
 
-      return $this->jsonResponse(array('data' => $params));
+        return $this->jsonResponse(array('data' => $params));
     }
 
     /**
