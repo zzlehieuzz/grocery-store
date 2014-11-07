@@ -18,6 +18,8 @@ Locale.module('Common', {
     'update successfully': 'Cập nhật thành công',
     'delete successfully': 'Xóa thành công',
     'are you sure': 'Bạn đã chắc chắn ?',
+    'processing': 'Đang xử lý ...',
+    'sending data': 'Chuyển dữ liệu ...',
 
     //label
     'name': 'Tên'

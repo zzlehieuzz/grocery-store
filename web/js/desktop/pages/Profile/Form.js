@@ -88,6 +88,8 @@ Ext.define('SrcPageUrl.Profile.Form', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         jsonData: {'params' : changeProfile},
+                                        waitTitle: 'processing'.Translator('Common'),
+                                        waitMsg: 'sending data'.Translator('Common'),
                                         scope: this,
                                         success: function(msg) {
                                             if (msg.status) {

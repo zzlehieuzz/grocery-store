@@ -64,12 +64,12 @@ class ProductController extends BaseController
 
         $productId     = $params['id'];
         $productUnitId = $params['productUnitId'];
-
+        //Product
         $arrProduct['code']          =  $params['code'];
         $arrProduct['name']          =  $params['name'];
         $arrProduct['originalPrice'] =  $params['originalPrice'];
         $arrProduct['salePrice']     =  $params['salePrice'];
-
+        //ProductUnit
         $arrProductUnit['unitId1']       = $params['unitId1'];
         $arrProductUnit['unitId2']       = $params['unitId2'];
         $arrProductUnit['convertAmount'] = $params['convertAmount'];

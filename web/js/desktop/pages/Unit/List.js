@@ -54,12 +54,13 @@ Ext.define('SrcPageUrl.Unit.List', {
                         url: MyUtil.Path.getPathAction("Unit_Update"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        waitTitle: 'Connecting',
-                        waitMsg: 'Sending data...',
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
                         jsonData: {'params' : record},
                         scope: this,
                         success: function(msg) {
                             if (msg.status) {
+                                storeLoadUnit.reload();
                                 console.log('success');
                             }
                         },
@@ -168,10 +169,11 @@ Ext.define('SrcPageUrl.Unit.List', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             jsonData: {'params' : arrId},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {
-                                                    //storeLoadUnit.remove(selection);
                                                     storeLoadUnit.reload();
                                                     console.log('success');
                                                 }

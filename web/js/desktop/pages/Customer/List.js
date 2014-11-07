@@ -56,12 +56,13 @@ Ext.define('SrcPageUrl.Customer.List', {
                         url: MyUtil.Path.getPathAction("Customer_Update"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        waitTitle: 'Connecting',
-                        waitMsg: 'Sending data...',
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
                         jsonData: {'params' : record},
                         scope: this,
                         success: function(msg) {
                             if (msg.status) {
+                                storeLoadCustomer.reload();
                                 console.log('success');
                             }
                         },
@@ -185,6 +186,8 @@ Ext.define('SrcPageUrl.Customer.List', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             jsonData: {'params' : arrId},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {

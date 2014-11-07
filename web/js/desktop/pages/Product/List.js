@@ -18,8 +18,6 @@ var objectField = [{name: 'id',            type: 'int'},
                    {name: 'unitId2',       type: 'string'},
                    {name: 'convertAmount', type: 'string'}];
 
-
-
 var objectUnitField = [{name: 'id',       type: 'int'},
                        {name: 'name',     type: 'string'},
                        {name: 'code',     type: 'string'}];
@@ -70,20 +68,19 @@ Ext.define('SrcPageUrl.Product.List', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             listeners: {
-                'edit': function (editor,e) {
+                'edit': function (editor, e) {
                     var record = e.record.data;
-
                     Ext.Ajax.request({
                         url: MyUtil.Path.getPathAction("Product_Update"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        waitTitle: 'Connecting',
-                        waitMsg: 'Sending data...',
-                        jsonData: {'params' : record},
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
                         scope: this,
+                        jsonData: {'params' : record},
                         success: function(msg) {
                             if (msg.status) {
-                              storeLoadProduct.load();
+                                storeLoadProduct.reload();
                                 console.log('success');
                             }
                         },
@@ -117,7 +114,7 @@ Ext.define('SrcPageUrl.Product.List', {
                 text: "product code".Translator('Product'),
                 width: 140,
                 dataIndex: 'code',
-            style: 'text-align:center;',
+                style: 'text-align:center;',
                 editor: { xtype: 'textfield' }
             }, {
                 text: "original price".Translator('Product'),
@@ -206,11 +203,11 @@ Ext.define('SrcPageUrl.Product.List', {
                 layout: 'fit',
                 items:
                     [{
-                        border: false,
                         xtype: 'grid',
+                        border: false,
                         id: 'grid-product-list',
                         store: storeLoadProduct,
-                        loadMask:true,
+                        loadMask: true,
                         selModel: rowModel,
                         plugins: rowEditing,
                         columns: columnsProduct,
@@ -248,7 +245,7 @@ Ext.define('SrcPageUrl.Product.List', {
                             var selection = Ext.getCmp('grid-product-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
@@ -260,6 +257,8 @@ Ext.define('SrcPageUrl.Product.List', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             jsonData: {'params' : arrId},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {

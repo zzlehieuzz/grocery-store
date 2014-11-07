@@ -56,8 +56,8 @@ Ext.define('SrcPageUrl.User.List', {
                         url: MyUtil.Path.getPathAction("User_ChangeProfile"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        waitTitle: 'Connecting',
-                        waitMsg: 'Sending data...',
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
                         jsonData: {'params' : record},
                         scope: this,
                         success: function(msg) {
@@ -134,6 +134,8 @@ Ext.define('SrcPageUrl.User.List', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 jsonData: {'params' : arrChangePass},
+                                waitTitle: 'processing'.Translator('Common'),
+                                waitMsg: 'sending data'.Translator('Common'),
                                 scope: this,
                                 success: function(msg) {
                                     if (msg.status) {
@@ -290,6 +292,8 @@ Ext.define('SrcPageUrl.User.List', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             jsonData: {'params' : arrId},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {
