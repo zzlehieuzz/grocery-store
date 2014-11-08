@@ -73,3 +73,12 @@ fixtures:
         created_by: 1
         updated_by: 1
         deleted_by: null
+    module9:
+        name: "List Invoices"
+        icon_cls: 'invoices-shortcut'
+        sort: 9
+        module: 'invoices-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
