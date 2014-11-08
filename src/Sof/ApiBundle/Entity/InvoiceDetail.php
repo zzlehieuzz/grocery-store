@@ -51,6 +51,12 @@ class InvoiceDetail extends BaseEntity
      */
     private $price;
 
+    /**
+     * @ORM\Column(name="quantity", type="integer", nullable=true, options={"comment" = "5:quantity"})
+     * @Assert\Type(type="integer")
+     */
+    private $quantity;
+
 
   public function __construct()
   {
@@ -150,6 +156,22 @@ class InvoiceDetail extends BaseEntity
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * @param mixed $quantity
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 
 }
