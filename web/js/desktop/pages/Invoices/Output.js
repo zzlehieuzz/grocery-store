@@ -12,12 +12,12 @@ var objectField = [{name: 'id',   type: 'int'},
                    {name: 'numberPlate', type: 'string'},
                    {name: 'name', type: 'string'}];
 
-MyUtil.Object.defineModel('Driver', objectField);
+MyUtil.Object.defineModel('Invoice', objectField);
 
-var storeLoadDriver = new Ext.data.JsonStore({
-    model: 'Driver',
+var storeLoadInvoice = new Ext.data.JsonStore({
+    model: 'Invoice',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Driver_Load"),
+        url: MyUtil.Path.getPathAction("Invoice_Load"),
         reader: readerJson
     }),
     pageSize: 5,
@@ -30,15 +30,12 @@ var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
   listeners:{
     'canceledit': function(rowEditing, context) {
       // Canceling editing of a locally added, unsaved record: remove it
-//      if (context.record.phantom) {
-//        context.store.remove(context.record);
-//      }
     },
     'edit': function(rowEditing, context) {
       console.log(context.record.data);
 
       Ext.Ajax.request({
-        url: MyUtil.Path.getPathAction("Driver_Update")
+        url: MyUtil.Path.getPathAction("Invoice_Update")
         , params: context.record.data
         , method: 'POST'
         , headers: {
@@ -67,7 +64,8 @@ Ext.define('SrcPageUrl.Invoices.Output', {
 
     init : function(){
         this.launcher = {
-            text: 'Phiếu Xuất',
+//            text: 'Phiếu Xuất',
+            text: 'invoices output',
             iconCls:'icon-grid'
         };
     },
@@ -134,7 +132,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
             }]
         };
 
-        var columnsDriver = [
+        var columnsInvoice = [
 //            new Ext.grid.RowNumberer({text: 'STT'}),
             { xtype : 'rownumberer', text : 'STT', width : 30 },
             {
@@ -207,9 +205,9 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                     border: false,
                     id: 'grid-output',
                     xtype: 'grid',
-                    store: storeLoadDriver,
+                    store: storeLoadInvoice,
                     selModel: rowModel,
-                    columns: columnsDriver,
+                    columns: columnsInvoice,
                     plugins: [rowEditing],
                     listeners: {
                       beforerender: function () {
@@ -226,13 +224,13 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                   rowEditing.cancelEdit();
 
                   // Create a model instance
-                  var r = Ext.create('Driver', {
+                  var r = Ext.create('Invoice', {
                     id: '',
                     name: '',
                     numberPlate: ''
                   });
 
-                  storeLoadDriver.insert(0, r);
+                  storeLoadInvoice.insert(0, r);
                   rowEditing.startEdit(0, 0);
                 }
               },'-',{
@@ -252,14 +250,14 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                           });
 
                           Ext.Ajax.request({
-                            url: MyUtil.Path.getPathAction("Driver_Delete"),
+                            url: MyUtil.Path.getPathAction("Invoice_Delete"),
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             jsonData: {'params' : arrId},
                             scope: this,
                             success: function(msg) {
                               if (msg.status) {
-                                storeLoadDriver.reload();
+                                storeLoadInvoice.reload();
                                 console.log('success');
                               }
                             },
@@ -276,7 +274,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                 }
               }],
               bbar: new Ext.PagingToolbar({
-                store: storeLoadDriver,
+                store: storeLoadInvoice,
                 displayInfo:true
               })
             });
