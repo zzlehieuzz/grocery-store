@@ -12,54 +12,35 @@ class InvoicesController extends BaseController
 {
 
     /**
-     * @Route("/Driver_Load", name="Driver_Load")
+     * @Route("/Invoice_Load", name="Invoice_Load")
      */
-    public function Driver_LoadAction()
+    public function Invoice_LoadAction()
     {
         $arrEntity = $this->getEntityService()->getAllData(
-            'Driver',
+            'Invoice',
             array('orderBy' => array('id' => 'DESC')));
 
-        return $this->jsonResponse(array('data' => $arrEntity));
-    }
-
-    /**
-     * @Route("/Driver_Update", name="Driver_Update")
-     */
-    public function Driver_UpdateAction()
-    {
-        $entityService = $this->getEntityService();
-        $params        = array();
-        $request       = $this->get('request');
-
-        $params['id']       = $request->get('id');
-        $params['name']     = $request->get('name');
-        $params['numberPlate'] = $request->get('numberPlate');
-
-        if ($params['id'] != 0) {
-            $entityService->dqlUpdate(
-                'Driver',
-                array('update' => $params,
-                      'conditions' => array('id' => $params['id'])
-                )
-            );
-            $entityService->completeTransaction();
-        } else {
-            $entityService->rawSqlInsert('Driver', array('insert' => $params));
+        $arrData = array();
+        foreach($arrEntity as $entity){
+            unset($entity['createInvoiceDate']);
+            $arrData[] = $entity;
         }
 
-        return $this->jsonResponse(array('data' => 1));
+//        var_dump($arrData); die;
+
+        return $this->jsonResponse(array('data' => $arrData));
     }
+
     /**
-     * @Route("/Driver_Delete", name="Driver_Delete")
+     * @Route("/Invoice_Delete", name="Invoice_Delete")
      */
-    public function Driver_DeleteAction()
+    public function Invoice_DeleteAction()
     {
       $entityService = $this->getEntityService();
       $params = $this->getJsonParams();
 
       $entityService->dqlDelete(
-        'Driver',
+        'Invoice',
         array(
           'conditions' => array(
             'id'   => $params,
