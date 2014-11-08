@@ -17,7 +17,7 @@ MyUtil.Object.defineModel('Invoice', objectField);
 var storeLoadInvoice = new Ext.data.JsonStore({
     model: 'Invoice',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Invoice_Load"),
+        url: MyUtil.Path.getPathAction("Output_Load"),
         reader: readerJson
     }),
     pageSize: 5,
@@ -35,7 +35,7 @@ var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
       console.log(context.record.data);
 
       Ext.Ajax.request({
-        url: MyUtil.Path.getPathAction("Invoice_Update")
+        url: MyUtil.Path.getPathAction("Output_Update")
         , params: context.record.data
         , method: 'POST'
         , headers: {
@@ -250,7 +250,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                           });
 
                           Ext.Ajax.request({
-                            url: MyUtil.Path.getPathAction("Invoice_Delete"),
+                            url: MyUtil.Path.getPathAction("Output_Delete"),
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             jsonData: {'params' : arrId},
