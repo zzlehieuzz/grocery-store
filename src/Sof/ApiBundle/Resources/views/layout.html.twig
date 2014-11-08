@@ -24,16 +24,19 @@
 
         {#Call multi language#}
         <script src="{{ asset(srcTranslateUrl) ~ '/vi_VN/common.js' }}"></script>
-
         <script>
-            var url          = "{{ desktopUrl }}",
-                utilUrl      = "{{ utilUrl }}",
-                myDesktopUrl = "{{ myDesktopUrl }}",
-                srcPageUrl   = "{{ srcPageUrl }}",
+            var url              = "{{ desktopUrl }}",
+                utilUrl          = "{{ utilUrl }}",
+                myDesktopUrl     = "{{ myDesktopUrl }}",
+                srcPageUrl       = "{{ srcPageUrl }}",
 
                 moneyFormat      = "0,000.00",
                 decimalPrecision = 2,
-                offset           = 10;
+
+                limitDefault            = 10;
+                pageSizeDefault         = 10;
+                pageDefault             = 1;
+                startDefault            = 1;
 
             Ext.Loader.setPath({
                 'Ext.ux.desktop': url,

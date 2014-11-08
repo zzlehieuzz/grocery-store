@@ -22,8 +22,8 @@ var storeLoadCustomer = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Customer_Load"),
         reader: readerJson
     }),
-    pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
+    pageSize: limitDefault,
+    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
 Ext.define('SrcPageUrl.Customer.List', {

@@ -20,8 +20,8 @@ var storeLoadDriver = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Driver_Load"),
         reader: readerJson
     }),
-    pageSize: 5,
-    autoLoad: ({params: {limit: 5, page: 1, start: 1}}, false)
+    pageSize: pageSizeDefault,
+    autoLoad: ({params: {limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {

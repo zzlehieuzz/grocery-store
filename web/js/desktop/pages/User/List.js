@@ -22,8 +22,8 @@ var storeLoadUser = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("User_Load"),
         reader: readerJson
     }),
-    pageSize: 5,
-    autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
+    pageSize: pageSizeDefault,
+    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
 Ext.define('SrcPageUrl.User.List', {
@@ -53,7 +53,7 @@ Ext.define('SrcPageUrl.User.List', {
                     var record = e.record.data;
 
                     Ext.Ajax.request({
-                        url: MyUtil.Path.getPathAction("User_ChangeProfile"),
+                        url: MyUtil.Path.getPathAction("User_Update"),
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         waitTitle: 'processing'.Translator('Common'),
@@ -184,21 +184,20 @@ Ext.define('SrcPageUrl.User.List', {
             }, {
                 text: "user-name".Translator('User'),
                 width: 150,
-                flex: 1,
                 dataIndex: 'userName',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "name".Translator('Common'),
-                flex: 2,
+                flex: 1,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "email".Translator('User'),
-                flex: 3,
+                flex: 2,
                 dataIndex: 'email',
                 editor: {
                     xtype: 'textfield'

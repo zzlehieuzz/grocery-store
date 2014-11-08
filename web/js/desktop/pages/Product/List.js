@@ -31,8 +31,8 @@ var storeLoadProduct = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJson
     }),
-    pageSize: 20,
-    autoLoad: ({params:{limit: 20, page: 1, start: 1}}, false)
+    pageSize: pageSizeDefault,
+    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
 var storeLoadUnit1 = new Ext.data.JsonStore({
@@ -40,7 +40,7 @@ var storeLoadUnit1 = new Ext.data.JsonStore({
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
-    }), autoLoad: true
+    }), autoLoad: false
 });
 
 var storeLoadUnit2 = storeLoadUnit1;
@@ -214,6 +214,7 @@ Ext.define('SrcPageUrl.Product.List', {
                         listeners:{
                             beforerender: function () {
                                 this.store.load();
+                                storeLoadUnit1.load();
                             }
                         }
                     }

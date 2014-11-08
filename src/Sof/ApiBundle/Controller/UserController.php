@@ -34,21 +34,19 @@ class UserController extends BaseController
     {
       $params        = $this->getJsonParams();
       $entityService = $this->getEntityService();
-
-      if ($params['id'] != 0) {
-        $entityService->dqlUpdate(
-          'User',
-          array('update' => $params,
-            'conditions' => array('id' => $params['id'])
-          )
-        );
+      if ($params['id']) {
+          $entityService->dqlUpdate(
+              'User',
+              array('update' => $params,
+                  'conditions' => array('id' => $params['id'])
+              )
+          );
       } else {
-        $params['roleId']   = 1;
-        $params['password'] = md5(123456);
-        $id = $entityService->rawSqlInsert('User', array('insert' => $params));
-        $params['id'] = $id;
+          $params['roleId']   = 1;
+          $params['password'] = md5(123456);
+          $id = $entityService->rawSqlInsert('User', array('insert' => $params));
+          $params['id'] = $id;
       }
-
       $entityService->completeTransaction();
 
       return $this->jsonResponse(array('data' => $params));
