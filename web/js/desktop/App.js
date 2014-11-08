@@ -31,7 +31,8 @@ Ext.define('MyDesktop.App', {
         'SrcPageUrl.Unit.List',
         'SrcPageUrl.Profile.Form',
         'SrcPageUrl.Invoices.Input',
-        'SrcPageUrl.Invoices.Output'
+        'SrcPageUrl.Invoices.Output',
+        'SrcPageUrl.Invoices.List'
     ],
     init: function() {
         this.callParent();
@@ -55,7 +56,8 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.Unit.List(),
             new SrcPageUrl.Profile.Form(),
             new SrcPageUrl.Invoices.Input(),
-            new SrcPageUrl.Invoices.Output()
+            new SrcPageUrl.Invoices.Output(),
+            new SrcPageUrl.Invoices.List()
         ];
     },
 
