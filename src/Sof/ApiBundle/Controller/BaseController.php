@@ -269,6 +269,14 @@ class BaseController extends Controller implements FilterControllerInterface
             $result['data'] = $data['data'];
         }
 
+        if (isset($data['grid_data']) && $data['grid_data']) {
+            $result['grid_data'] = $data['grid_data'];
+        }
+
+        if (isset($data['form_data']) && $data['form_data']) {
+            $result['form_data'] = $data['form_data'];
+        }
+
         if (isset($data['error']) && $data['error']) {
             $result['error'] = $data['error'];
         }
