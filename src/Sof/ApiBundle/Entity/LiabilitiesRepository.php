@@ -2,6 +2,7 @@
 
 namespace Sof\ApiBundle\Entity;
 
+use Sof\ApiBundle\Lib\SofUtil;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -16,8 +17,4 @@ use Doctrine\ORM\NoResultException;
  */
 class LiabilitiesRepository extends BaseRepository
 {
-    public function getData($conditions = array()) {
-        print_r($conditions);
-        die;
-    }
 }

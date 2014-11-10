@@ -4,6 +4,7 @@ namespace Sof\ApiBundle\Entity;
 
 use Sof\ApiBundle\Lib\Config;
 
+use Sof\ApiBundle\Lib\SofUtil;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -18,5 +19,10 @@ use Doctrine\ORM\NoResultException;
  */
 class CustomerRepository extends BaseRepository
 {
+    public function getData() {
+        $query = $this->querySimpleEntities(array('selects' => array('id', 'name')));
+        $query->innerJoin(self::ENTITY_BUNDLE . ":Invoice", 'invoice', 'WITH', "entity.id = invoice.subject");
 
+        return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
+    }
 }
