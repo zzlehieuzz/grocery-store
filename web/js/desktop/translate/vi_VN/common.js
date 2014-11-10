@@ -6,6 +6,7 @@ Locale.module('Common', {
     'save': 'Lưu',
     'cancel': 'Hủy',
     'delete': 'Xóa',
+    'total': 'Tổng',
 
     //message
     'error': 'Lỗi',
@@ -22,7 +23,9 @@ Locale.module('Common', {
     'sending data': 'Chuyển dữ liệu ...',
 
     //label
-    'name': 'Tên'
+    'name': 'Tên',
+    'amount': 'Số lượng',
+    'price': 'Giá'
 });
 
 Locale.module('Module', {
@@ -31,7 +34,10 @@ Locale.module('Module', {
     'product management': 'Quản lý sản phẩm',
     'customer management': 'Quản lý khách hàng',
     'driver management': 'Quản lý tài/xe',
-    'profile': 'Hồ sơ'
+    'profile': 'Hồ sơ',
+    'invoices input': 'Phiếu nhập',
+    'invoices output': 'Phiếu xuất',
+    'liabilities management': 'Quản lý công nợ'
 });
 
 Locale.module('Logout', {
@@ -94,4 +100,10 @@ Locale.module('Product', {
 Locale.module('Unit', {
     //label
     'unit code': 'Mã đơn vị'
+});
+
+Locale.module('Liabilities', {
+    //label
+    'liabilities customer': 'Khách hàng còn nợ',
+    'liabilities output invoice': 'Phiếu còn nợ'
 });

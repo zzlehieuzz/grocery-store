@@ -56,8 +56,8 @@ fixtures:
         updated_by: 1
         deleted_by: null
     module7:
-        name: "Invoices Input"
-        icon_cls: 'invoices-shortcut'
+        name: "invoices input"
+        icon_cls: 'invoices-input-shortcut'
         sort: 7
         module: 'invoices-input'
         deleted_at: null
@@ -65,8 +65,8 @@ fixtures:
         updated_by: 1
         deleted_by: null
     module8:
-        name: "Invoices Output"
-        icon_cls: 'invoices-shortcut'
+        name: "invoices output"
+        icon_cls: 'invoices-output-shortcut'
         sort: 8
         module: 'invoices-output'
         deleted_at: null
@@ -78,6 +78,15 @@ fixtures:
         icon_cls: 'invoices-shortcut'
         sort: 9
         module: 'invoices-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module10:
+        name: "liabilities management"
+        icon_cls: 'liabilities-shortcut'
+        sort: 9
+        module: 'liabilities-list'
         deleted_at: null
         created_by: 1
         updated_by: 1

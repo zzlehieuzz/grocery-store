@@ -119,7 +119,7 @@ Ext.define('SrcPageUrl.Product.List', {
             }, {
                 text: "original price".Translator('Product'),
                 width: 120,
-                renderer:  Ext.util.Format.numberRenderer(moneyFormat),
+                renderer: Ext.util.Format.numberRenderer(moneyFormat),
                 dataIndex: 'originalPrice',
                 style: 'text-align:center;',
                 align: 'right',

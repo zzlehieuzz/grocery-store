@@ -33,7 +33,21 @@ HELP:
   Update db:         php app/console doctrine:schema:update --em=default --force
   Load data default: php app/console khepin:yamlfixtures:load dev
   Clear cache:       php app/console cache:clear
-
+  
+########################################################
+  SQL REF:
+  
+  http://docs.doctrine-project.org/en/latest/index.html
+  http://docs.doctrine-project.org/en/latest/reference/query-builder.html
+  http://docs.doctrine-project.org/en/latest/reference/dql-doctrine-query-language.html
+  Select object with specified fields: Normally, when select object, it will be include all fields in table (select * from..),
+  so that if select object with specified fields (select user.name, user.pass... from...)
+      "partial u.{id, name, pass} AS user from ..."
+  Select array data, not array object: ->getQuery()->getArrayResult()
+  Select array object: ->getQuery()->getResult()
+  
+  Call function in repository:
+  $this->get('entity_service')->process('EntityName:functionName', args,...);
 ########################################################
 
 Cpanel Username:     b15_15455114
@@ -52,3 +66,16 @@ b15_15455114_grocery_store
 
 link test: http://adorzhang.com/exp-grocery-store/web/Login
 link test: http://adorzhang.com/exp-grocery-store/web/Common_Index
+Cpanel Username:    adorzhang     
+Cpanel Password:    zhang1509   
+Your URL:  http://adorzhang.com               
+FTP Server :   ftp.adorzhang.com       
+FTP Login :     adorzhang        
+FTP Password :  zhang1509        
+MySQL Database Name: adorzhang_store
+MySQL Username : adorzhang_store
+MySQL Password : test123456       
+MySQL Server: localhost          
+
+
+Cpanel URL:    http://adorzhang.com:7878 
