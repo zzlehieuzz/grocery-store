@@ -58,7 +58,8 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.Profile.Form(),
             new SrcPageUrl.Liabilities.List(),
             new SrcPageUrl.Invoices.Input(),
-            new SrcPageUrl.Invoices.Output()
+            new SrcPageUrl.Invoices.Output(),
+            new SrcPageUrl.Invoices.List()
         ];
     },
 

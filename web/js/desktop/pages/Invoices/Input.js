@@ -3,29 +3,72 @@
  */
 var readerJson = {
     type: 'json',
-    root: 'data',
+    root: 'grid_data',
     id  : 'id',
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',   type: 'int'},
-                   {name: 'invoiceId', type: 'int'},
-                   {name: 'productId', type: 'int'},
-                   {name: 'price', type: 'string'},
-                   {name: 'unit', type: 'int'},
-                   {name: 'quantity', type: 'int'},
-                   {name: 'amount', type: 'int'}];
+var readerJsonForm = {
+    type: 'json',
+    root: 'form_data',
+    id  : 'id',
+    totalProperty: 'total'
+};
 
-MyUtil.Object.defineModel('Invoice', objectField);
+//GridField
+var objectGridField = [{name: 'id',   type: 'int'},
+                       {name: 'invoiceId', type: 'int'},
+                       {name: 'productId', type: 'int'},
+                       {name: 'price', type: 'string'},
+                       {name: 'unit', type: 'int'},
+                       {name: 'quantity', type: 'int'},
+                       {name: 'amount', type: 'int'}];
 
-var storeLoadInvoice = new Ext.data.JsonStore({
-    model: 'Invoice',
+//FormField
+var objectFormField = [{name: 'id',   type: 'int'},
+                    {name: 'invoiceNumber', type: 'string'},
+                    {name: 'createInvoiceDate', type: 'string'},
+                    {name: 'subject', type: 'int'},
+                    {name: 'createInvoiceMan', type: 'string'},
+                    {name: 'phoneNumber', type: 'string'},
+                    {name: 'invoiceType', type: 'string'},
+                    {name: 'paymentStatus', type: 'int'}
+];
+
+MyUtil.Object.defineModel('Input', objectGridField);
+MyUtil.Object.defineModel('Input2', objectFormField);
+
+var storeLoadInput = new Ext.data.JsonStore({
+    model: 'Input',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Input_Load"),
         reader: readerJson
     }),
     pageSize: 5,
     autoLoad: ({params:{limit: 5, page: 1, start: 1}}, false)
+});
+
+var storeLoadInputForm = new Ext.data.JsonStore({
+    model: 'Input2',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Input_Load"),
+        reader: readerJsonForm
+    }),
+    autoLoad: true
+});
+
+//Default value
+var formData = { 'id' : '',
+                'invoiceNumber' : '',
+                'createInvoiceDate': new Date('d-m-Y'),
+                'subject': 1,
+                'createInvoiceMan': '',
+                'phoneNumber': '',
+                'invoiceType': '',
+                'paymentStatus': ''};
+
+storeLoadInputForm.on('load', function(){
+    formData = storeLoadInputForm.data.items[0].data;
 });
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -89,36 +132,48 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 anchor: '60%'
             },
             layout: 'anchor',
-            items: [{
+            items: [ {
+                xtype:'hidden',
+                name:'invoiceId',
+                id:'invoiceId',
+                value: formData.id
+            },{
                 fieldLabel: 'Số Phiếu',
                 name: 'invoice_number',
-                id: 'invoice_number'
+                id: 'invoice_number',
+                value: formData.invoiceNumber
             }, {
                 fieldLabel: 'Ngày Lập Phiếu',
                 name: 'create_invoice_date',
                 id: 'create_invoice_date',
-                xtype: 'datefield'
+                xtype: 'datefield',
+                value: formData.createInvoiceDate
             }, {
                 fieldLabel: 'Nhà Phân Phối',
                 name: 'subject',
-                id: 'subject'
+                id: 'subject',
+                value: formData.subject
             }, {
                 fieldLabel: 'Người Giao Hàng',
                 name: 'delivery_receiver_man',
-                id: 'delivery_receiver_man'
+                id: 'delivery_receiver_man',
+                value: formData.deliveryReceiverMan
             }, {
                 fieldLabel: 'Người Lập',
                 name: 'create_invoice_man',
-                id: 'create_invoice_man'
+                id: 'create_invoice_man',
+                value: formData.createInvoiceMan
             }, {
 //                labelWidth: 200,
                 fieldLabel: 'Địa Chỉ Nhà PP',
                 name: 'address',
-                id: 'address'
+                id: 'address',
+                value: formData.address
             },{
                 fieldLabel: 'Điện Thoại Nhà PP',
                 name: 'phone_number',
-                id: 'phone_number'
+                id: 'phone_number',
+                value: formData.phoneNumber
             },{
                 xtype: 'button',
                 text: 'Thêm',
@@ -133,6 +188,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 handler : function() {
 
                     //Get value form
+                    var id = Ext.getCmp('invoiceId').getValue();
                     var invoice_number = Ext.getCmp('invoice_number').getValue();
                     var create_invoice_date = Ext.util.Format.date(Ext.getCmp('create_invoice_date').getValue(), 'Y-m-d');
                     var subject = Ext.getCmp('subject').getValue();
@@ -141,13 +197,14 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                     var address = Ext.getCmp('address').getValue();
                     var phone_number = Ext.getCmp('phone_number').getValue();
 
-                    var form_fields_value = [{'invoice_number': invoice_number,
-                        'create_invoice_date': create_invoice_date,
-                        'subject': subject,
-                        'delivery_receiver_man': delivery_receiver_man,
-                        'create_invoice_man': create_invoice_man,
-                        'address': address,
-                        'phone_number': phone_number
+                    var form_fields_value = [{'id': id,
+                                            'invoice_number': invoice_number,
+                                            'create_invoice_date': create_invoice_date,
+                                            'subject': subject,
+                                            'delivery_receiver_man': delivery_receiver_man,
+                                            'create_invoice_man': create_invoice_man,
+                                            'address': address,
+                                            'phone_number': phone_number
                     }];
 
                     //Get value grid product
@@ -262,7 +319,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                     border: false,
                     id: 'grid-input',
                     xtype: 'grid',
-                    store: storeLoadInvoice,
+                    store: storeLoadInput,
                     selModel: rowModel,
                     columns: columnsInvoice,
                     plugins: [rowEditing],
@@ -281,7 +338,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                   rowEditing.cancelEdit();
 
                   // Create a model instance
-                  var r = Ext.create('Invoice', {
+                  var r = Ext.create('Input', {
                       id: '',
                       invoiceId: '',
                       productId: '',
@@ -291,7 +348,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                       amount: ''
                   });
 
-                  storeLoadInvoice.insert(0, r);
+                  storeLoadInput.insert(0, r);
                   rowEditing.startEdit(0, 0);
                 }
               },'-',{
@@ -318,7 +375,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                             scope: this,
                             success: function(msg) {
                               if (msg.status) {
-                                storeLoadInvoice.reload();
+                                storeLoadInput.reload();
                                 console.log('success');
                               }
                             },
@@ -335,7 +392,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 }
               }],
               bbar: new Ext.PagingToolbar({
-                store: storeLoadInvoice,
+                store: storeLoadInput,
                 displayInfo:true
               })
             });

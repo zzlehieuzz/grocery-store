@@ -9,13 +9,17 @@ var readerJson = {
 };
 
 var objectField = [{name: 'id',   type: 'int'},
-                   {name: 'numberPlate', type: 'string'},
-                   {name: 'name', type: 'string'}];
+                    {name: 'invoiceId', type: 'int'},
+                    {name: 'productId', type: 'int'},
+                    {name: 'price', type: 'string'},
+                    {name: 'unit', type: 'int'},
+                    {name: 'quantity', type: 'int'},
+                    {name: 'amount', type: 'int'}];
 
-MyUtil.Object.defineModel('Invoice', objectField);
+MyUtil.Object.defineModel('Output', objectField);
 
-var storeLoadInvoice = new Ext.data.JsonStore({
-    model: 'Invoice',
+var storeLoadOutput = new Ext.data.JsonStore({
+    model: 'Output',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Output_Load"),
         reader: readerJson
@@ -205,7 +209,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                     border: false,
                     id: 'grid-output',
                     xtype: 'grid',
-                    store: storeLoadInvoice,
+                    store: storeLoadOutput,
                     selModel: rowModel,
                     columns: columnsInvoice,
                     plugins: [rowEditing],
@@ -230,7 +234,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                     numberPlate: ''
                   });
 
-                  storeLoadInvoice.insert(0, r);
+                  storeLoadOutput.insert(0, r);
                   rowEditing.startEdit(0, 0);
                 }
               },'-',{
@@ -257,7 +261,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                             scope: this,
                             success: function(msg) {
                               if (msg.status) {
-                                storeLoadInvoice.reload();
+                                storeLoadOutput.reload();
                                 console.log('success');
                               }
                             },
@@ -274,7 +278,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                 }
               }],
               bbar: new Ext.PagingToolbar({
-                store: storeLoadInvoice,
+                store: storeLoadOutput,
                 displayInfo:true
               })
             });
