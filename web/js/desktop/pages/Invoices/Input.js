@@ -15,6 +15,13 @@ var readerJsonForm = {
     totalProperty: 'total'
 };
 
+var readerJsonCommon = {
+    type: 'json',
+    root: 'data',
+    id  : 'id',
+    totalProperty: 'total'
+};
+
 //GridField
 var objectGridField = [{name: 'id',   type: 'int'},
                        {name: 'invoiceId', type: 'int'},
@@ -26,17 +33,33 @@ var objectGridField = [{name: 'id',   type: 'int'},
 
 //FormField
 var objectFormField = [{name: 'id',   type: 'int'},
-                    {name: 'invoiceNumber', type: 'string'},
-                    {name: 'createInvoiceDate', type: 'string'},
-                    {name: 'subject', type: 'int'},
-                    {name: 'createInvoiceMan', type: 'string'},
-                    {name: 'phoneNumber', type: 'string'},
-                    {name: 'invoiceType', type: 'string'},
-                    {name: 'paymentStatus', type: 'int'}
-];
+                        {name: 'invoiceNumber', type: 'string'},
+                        {name: 'createInvoiceDate', type: 'string'},
+                        {name: 'subject', type: 'int'},
+                        {name: 'createInvoiceMan', type: 'string'},
+                        {name: 'phoneNumber', type: 'string'},
+                        {name: 'invoiceType', type: 'string'},
+                        {name: 'paymentStatus', type: 'int'}
+                    ];
+
+//Distributor
+var objectDistributorField = [{name: 'id',   type: 'int'},
+                                {name: 'name', type: 'string'},
+                                {name: 'address', type: 'string'},
+                                {name: 'phoneNumber', type: 'string'}
+                            ];
+
+//Product
+var objectProductField = [{name: 'id',   type: 'int'},
+                        {name: 'name', type: 'string'},
+                        {name: 'code', type: 'string'},
+                        {name: 'productUnitId', type: 'int'}
+                        ];
 
 MyUtil.Object.defineModel('Input', objectGridField);
 MyUtil.Object.defineModel('Input2', objectFormField);
+MyUtil.Object.defineModel('DistributorCmb', objectDistributorField);
+MyUtil.Object.defineModel('ProductCmb', objectProductField);
 
 var storeLoadInput = new Ext.data.JsonStore({
     model: 'Input',
@@ -57,10 +80,29 @@ var storeLoadInputForm = new Ext.data.JsonStore({
     autoLoad: true
 });
 
+var storeLoadDistributorCmb = new Ext.data.JsonStore({
+    model: 'DistributorCmb',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Distributor_Load"),
+        reader: readerJsonCommon
+    }),
+    autoLoad: true
+});
+
+var storeLoadProductCmb = new Ext.data.JsonStore({
+    model: 'ProductCmb',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Product_Load"),
+        reader: readerJsonCommon
+    }),
+    autoLoad: true
+});
+
 //Default value
 var formData = { 'id' : '',
                 'invoiceNumber' : '',
-                'createInvoiceDate': new Date('d-m-Y'),
+//                'createInvoiceDate': new Date('d-m-Y'),
+                'createInvoiceDate': '',
                 'subject': 1,
                 'createInvoiceMan': '',
                 'phoneNumber': '',
@@ -68,7 +110,9 @@ var formData = { 'id' : '',
                 'paymentStatus': ''};
 
 storeLoadInputForm.on('load', function(){
-    formData = storeLoadInputForm.data.items[0].data;
+    if (storeLoadInputForm.data.items[0]) {
+        formData = storeLoadInputForm.data.items[0].data;
+    }
 });
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -79,19 +123,6 @@ var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
 //
 //    },
     'edit': function(rowEditing, context) {
-//      console.log(context.record.data);
-
-      Ext.Ajax.request({
-        url: MyUtil.Path.getPathAction("Input_Update")
-        , params: context.record.data
-        , method: 'POST'
-        , headers: {
-          'content-type': 'application/json'
-        }
-        , success: function (data) {
-          // do any thing
-        }
-      });
 
     }
   }
@@ -148,11 +179,26 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 id: 'create_invoice_date',
                 xtype: 'datefield',
                 value: formData.createInvoiceDate
-            }, {
+            },{
+                xtype:'combobox',
+                listConfig: {minWidth: 180},
                 fieldLabel: 'Nhà Phân Phối',
+                value: formData.subject,
                 name: 'subject',
                 id: 'subject',
-                value: formData.subject
+                valueField: 'id',
+                typeAhead: true,
+                triggerAction: 'all',
+                selectOnTab: true,
+                store: storeLoadDistributorCmb,
+                displayField: 'name',
+                lazyRender: true,
+                queryMode: 'local',
+                listeners: {
+                    select : function(combo, record, index){
+                        Ext.getCmp('address').setValue(record[0].data.address);
+                        Ext.getCmp('phone_number').setValue(record[0].data.phoneNumber);
+                    }}
             }, {
                 fieldLabel: 'Người Giao Hàng',
                 name: 'delivery_receiver_man',
@@ -179,7 +225,13 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 text: 'Thêm',
                 width: 30,
                 handler : function() {
-                    alert('Thêm mới Phiếu');
+                    Ext.getCmp('invoice_number').setValue('');
+                    Ext.getCmp('create_invoice_date').setValue('');
+                    Ext.getCmp('subject').setValue('');
+                    Ext.getCmp('delivery_receiver_man').setValue('');
+                    Ext.getCmp('create_invoice_man').setValue('');
+                    Ext.getCmp('address').setValue('');
+                    Ext.getCmp('phone_number').setValue('');
                 }
             },{
                 xtype: 'button',
@@ -209,8 +261,6 @@ Ext.define('SrcPageUrl.Invoices.Input', {
 
                     //Get value grid product
                     var selection = Ext.getCmp('grid-input').getView().getStore().getRange();
-//                    var selection = Ext.getCmp('grid-input').getView().getSelectionModel().selectAll();
-//                    var selection = Ext.getCmp('grid-input').record;
 
                     var gridData = [];
                     var tourData = selection;
@@ -240,37 +290,62 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 text: 'Xóa',
                 width: 30,
                 handler : function() {
-                    alert('Xóa Phiếu');
+                    Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
+                        if (btn === 'yes') {
+
+                            Ext.Ajax.request({
+                                url: MyUtil.Path.getPathAction("Input_Delete"),
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                jsonData: {'params' : 0},
+                                scope: this,
+                                success: function(msg) {
+                                    if (msg.status) {
+                                        storeLoadInput.reload();
+                                        console.log('success');
+                                    }
+                                },
+                                failure: function(msg) {
+                                    console.log('failure');
+                                }
+                            });
+                        }
+                    });
                 }
             }]
 
         };
 
             var columnsInvoice = [
-//            new Ext.grid.RowNumberer({text: 'STT'}),
             { xtype : 'rownumberer', text : 'STT', width : 30 },
             {
-                text: "Tên Sản Phẩm",
-                width: 150,
-                flex: 1,
+                header: 'Tên Sản Phẩm',
                 dataIndex: 'productId',
+                editor:
+                {
+                    xtype: 'combobox',
+                    store: storeLoadProductCmb,
+                    displayField: 'name',
+                    valueField: 'id'
+                }
+            }, {
+                header: 'Mã Sản Phẩm',
+                dataIndex: 'productId',
+                editor:
+                {
+                    xtype: 'combobox',
+                    store: storeLoadProductCmb,
+                    displayField: 'code',
+                    valueField: 'id'
+                }
+            }
+            ,{
+                text: "Đơn Vị Tính",
+                flex: 2,
+                dataIndex: 'unit',
                 editor: {
                     allowBlank: true
                 }
-            }, {
-                    text: "Mã Sản Phẩm",
-                    flex: 2,
-                    dataIndex: 'productId',
-                    editor: {
-                        allowBlank: true
-                    }
-            }, {
-                    text: "Đơn Vị Tính",
-                    flex: 2,
-                    dataIndex: 'unit',
-                    editor: {
-                        allowBlank: true
-                    }
             }, {
                 text: "Số lượng",
                 flex: 2,
@@ -357,37 +432,10 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 iconCls:'remove',
                 listeners:  {
                   click: function () {
-                    var selection = Ext.getCmp('grid-input').getView().getSelectionModel().getSelection();
-
-                    if (selection.length > 0) {
-                      Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
-                        if (btn === 'yes') {
-                          var arrId = [];
-                          Ext.each(selection, function(v, k) {
-                            arrId[k] = v.data.id;
-                          });
-
-                          Ext.Ajax.request({
-                            url: MyUtil.Path.getPathAction("Input_Delete"),
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            jsonData: {'params' : arrId},
-                            scope: this,
-                            success: function(msg) {
-                              if (msg.status) {
-                                storeLoadInput.reload();
-                                console.log('success');
-                              }
-                            },
-                            failure: function(msg) {
-                              console.log('failure');
-                            }
-                          });
-                        }
-                      });
-                    } else {
-                      MyUtil.Message.MessageError();
-                    }
+                      var selection = Ext.getCmp('grid-input').getView().getSelectionModel().getSelection()[0];
+                      if (selection) {
+                          storeLoadInput.remove(selection);
+                      }
                   }
                 }
               }],
