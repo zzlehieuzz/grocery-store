@@ -33,7 +33,8 @@ Ext.define('MyDesktop.App', {
         'SrcPageUrl.Invoices.Input',
         'SrcPageUrl.Invoices.Output',
         'SrcPageUrl.Liabilities.List',
-        'SrcPageUrl.Invoices.List'
+        'SrcPageUrl.Invoices.List',
+        'SrcPageUrl.Distributor.List'
     ],
     init: function() {
         this.callParent();
@@ -59,7 +60,8 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.Liabilities.List(),
             new SrcPageUrl.Invoices.Input(),
             new SrcPageUrl.Invoices.Output(),
-            new SrcPageUrl.Invoices.List()
+            new SrcPageUrl.Invoices.List(),
+            new SrcPageUrl.Distributor.List()
         ];
     },
 
