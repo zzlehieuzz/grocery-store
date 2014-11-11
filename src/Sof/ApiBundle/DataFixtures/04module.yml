@@ -85,8 +85,17 @@ fixtures:
     module10:
         name: "liabilities management"
         icon_cls: 'liabilities-shortcut'
-        sort: 9
+        sort: 10
         module: 'liabilities-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module11:
+        name: "distributor management"
+        icon_cls: 'distributor-shortcut'
+        sort: 11
+        module: 'distributor-list'
         deleted_at: null
         created_by: 1
         updated_by: 1
