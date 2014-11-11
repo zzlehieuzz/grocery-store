@@ -237,7 +237,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         }],
                         listeners: {
                             beforerender: function () {
-                                this.store.load();
+                                //this.store.load();
                             }
                         }
                     }],
