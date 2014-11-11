@@ -62,19 +62,22 @@ class InvoicesController extends BaseController
         $arrData = array();
         $entityInvoice = array();
 
-        if ($id = 1) {
+        if (isset($arrGet['id'])) {
+//            $invoiceId = $arrGet['id'];
+            $invoiceId = 1;
+
             $entityInvoice = $this->getEntityService()->getAllData(
                 'Invoice',
                 array(
                       'orderBy'     => array('id' => 'DESC'),
-                      'conditions'  => array('id' => 1)
+                      'conditions'  => array('id' => $invoiceId)
                 ))[0];
 
             $arrInvoiceDetail = $this->getEntityService()->getAllData(
                 'InvoiceDetail',
                 array(
                     'orderBy'    => array('id' => 'DESC'),
-                    'conditions' => array('invoiceId' => 1)
+                    'conditions' => array('invoiceId' => $invoiceId)
                 ));
 
             foreach($arrInvoiceDetail as $entity){
@@ -101,6 +104,11 @@ class InvoicesController extends BaseController
         $params = json_decode($params);
         $form_fields_value = (array)$params->form_fields_value;
         $grid_value = (array)$params->grid_value;
+
+        echo "<pre>";
+        print_r($form_fields_value);
+        print_r($grid_value);
+        die;
 
         if ($form_fields_value['id'] != "") {
             //Update
@@ -178,17 +186,31 @@ class InvoicesController extends BaseController
      */
     public function Input_DeleteAction()
     {
-        $arrEntity = $this->getEntityService()->getAllData(
+        $entityService = $this->getEntityService();
+
+        $params = $this->getJsonParams();
+
+        $entityService->dqlDelete(
+            'InvoiceDetail',
+            array(
+                'conditions' => array(
+                    'id'   => $params,
+                )
+            )
+        );
+
+        $entityService->dqlDelete(
             'Invoice',
-            array('orderBy' => array('id' => 'DESC')));
+            array(
+                'conditions' => array(
+                    'id'   => $params,
+                )
+            )
+        );
 
-        $arrData = array();
-        foreach($arrEntity as $entity){
-            unset($entity['createInvoiceDate']);
-            $arrData[] = $entity;
-        }
+        $entityService->completeTransaction();
 
-        return $this->jsonResponse(array('data' => $arrData));
+        return $this->jsonResponse(array('data' => $params));
     }
 
     //PHIEU XUAT
@@ -199,22 +221,32 @@ class InvoicesController extends BaseController
     {
         //Phiếu Xuất: type= 2
         $arrData = array();
+        $entityInvoice = array();
 
-        if ($id = 1) {
-            $arrEntity = $this->getEntityService()->getAllData(
+        if (!isset($arrGet['id'])) {
+//            $invoiceId = $arrGet['id'];
+            $invoiceId = 2;
+
+            $entityInvoice = $this->getEntityService()->getAllData(
                 'Invoice',
                 array(
-                    'orderBy' => array('id' => 'DESC'),
-                    'conditions' => array('id' => 2)
+                    'orderBy'     => array('id' => 'DESC'),
+                    'conditions'  => array('id' => $invoiceId)
+                ))[0];
+
+            $arrInvoiceDetail = $this->getEntityService()->getAllData(
+                'InvoiceDetail',
+                array(
+                    'orderBy'    => array('id' => 'DESC'),
+                    'conditions' => array('invoiceId' => $invoiceId)
                 ));
 
-            foreach($arrEntity as $entity){
-                unset($entity['createInvoiceDate']);
+            foreach($arrInvoiceDetail as $entity){
                 $arrData[] = $entity;
             }
         }
 
-        return $this->jsonResponse(array('data' => $arrData));
+        return $this->jsonResponse(array('grid_data' => $arrData, 'form_data' => $entityInvoice));
     }
 
     /**
@@ -222,17 +254,82 @@ class InvoicesController extends BaseController
      */
     public function Output_UpdateAction()
     {
-        $arrEntity = $this->getEntityService()->getAllData(
-            'Invoice',
-            array('orderBy' => array('id' => 'DESC')));
+        $entityService = $this->getEntityService();
 
-        $arrData = array();
-        foreach($arrEntity as $entity){
-            unset($entity['createInvoiceDate']);
-            $arrData[] = $entity;
+        $params        =  $this->get('request')->getContent();
+        $params = json_decode($params);
+        $form_fields_value = (array)$params->form_fields_value;
+        $grid_value = (array)$params->grid_value;
+
+        if ($form_fields_value['id'] != "") {
+            //Update
+
+            $invoiceId = $form_fields_value['id'];
+            unset($form_fields_value['id']);
+
+            $entityService->dqlUpdate(
+                'Invoice',
+                array('update' => $form_fields_value,
+                    'conditions' => array('id' => $invoiceId)
+                )
+            );
+
+        } else {
+            //Insert
+            unset($form_fields_value['id']);
+            $invoiceId = $entityService->rawSqlInsert('Invoice', array('insert' => $form_fields_value));
         }
 
-        return $this->jsonResponse(array('data' => $arrData));
+        //Update Invoice Detail
+        $arrInvoiceDetail = $this->getEntityService()->getAllData(
+            'InvoiceDetail',
+            array(
+                'orderBy'    => array('id' => 'DESC'),
+                'conditions' => array('invoiceId' => $invoiceId = 2)
+            ));
+
+        if (count($grid_value) > 0) {
+            $arrInsert = array();
+            $arrUpdate = array();
+            $arrDelete = array();
+
+            foreach ($grid_value as $rowValue) {
+                $arrData = (array)$rowValue;
+                $arrData['invoiceType'] = 2;
+
+                if ($arrData['id'] == 0) {
+                    $arrInsert[] = $arrData;
+                }
+
+                if (count($arrInvoiceDetail) > 0 && $arrData['id']) {
+
+                    for ($i = 0; $i < count($arrInvoiceDetail); $i++){
+                        if ($arrInvoiceDetail[$i]['id'] == $arrData['id']) {
+                            $arrUpdate['id'] = $arrData;
+                        } else {
+                            $arrDelete['id'] = $arrInvoiceDetail[$i]['id'];
+                        }
+                    }
+
+                }
+            }
+
+            //Update
+            $entityService->dqlUpdate(
+                'InvoiceDetail',
+                array('update' => $arrUpdate,
+                    'conditions' => array('id' => $id = 0)
+                )
+            );
+
+            //Insert
+            $invoiceId = $entityService->rawSqlInsert('InvoiceDetail', array('insert' => $arrInsert));
+
+            //Delete
+            $entityService->delete('InvoiceDetail', $arrDelete);
+        }
+
+        return $this->jsonResponse(array('data' => array()));
     }
 
     /**
@@ -240,16 +337,30 @@ class InvoicesController extends BaseController
      */
     public function Output_DeleteAction()
     {
-        $arrEntity = $this->getEntityService()->getAllData(
+        $entityService = $this->getEntityService();
+
+        $params = $this->getJsonParams();
+
+        $entityService->dqlDelete(
+            'InvoiceDetail',
+            array(
+                'conditions' => array(
+                    'id'   => $params,
+                )
+            )
+        );
+
+        $entityService->dqlDelete(
             'Invoice',
-            array('orderBy' => array('id' => 'DESC')));
+            array(
+                'conditions' => array(
+                    'id'   => $params,
+                )
+            )
+        );
 
-        $arrData = array();
-        foreach($arrEntity as $entity){
-            unset($entity['createInvoiceDate']);
-            $arrData[] = $entity;
-        }
+        $entityService->completeTransaction();
 
-        return $this->jsonResponse(array('data' => $arrData));
+        return $this->jsonResponse(array('data' => $params));
     }
 }
