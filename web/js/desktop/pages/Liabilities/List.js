@@ -42,11 +42,6 @@ var storeLoadLiabilitiesCustomer = new Ext.data.JsonStore({
     autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
-console.log(pageSizeDefault);
-console.log(limitDefault);
-console.log(pageDefault);
-console.log(startDefault);
-
 Ext.define('SrcPageUrl.Liabilities.List', {
     extend: 'Ext.ux.desktop.Module',
     requires: [
@@ -187,26 +182,29 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                     region:'west',
                     xtype: 'panel',
                     margins: '5 0 5 5',
-                    width: 200,
+                    width: 235,
                     collapsible: true,
                     id: 'west-region-container',
                     layout: 'fit',
                     items: [{
                         border: false,
-                        xtype: 'grid',
+                        xtype: 'gridpanel',
                         id: 'grid-liabilities-customer-list',
                         store: storeLoadLiabilitiesCustomer,
                         loadMask: true,
+                        stripeRows : true,
+                        selModel: Ext.create('Ext.selection.RowModel'),
                         columns: columnsCustomerLiabilities,
-                        features: [{
-                            ftype: 'groupingsummary',
-                            groupHeaderTpl: '{name}',
-                            hideGroupedHeader: true,
-                            enableGroupingMenu: false
-                        }],
+                        trackMouseOver: true,
+                        viewConfig: {
+                            emptyText: 'No records found'
+                        },
                         listeners: {
                             beforerender: function () {
                                 this.store.load();
+                            },
+                            rowdblclick: function (grid, index){
+                                alert('dblclick');
                             }
                         }
                     }],
@@ -229,6 +227,9 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         selModel: rowModel,
                         plugins: rowEditing,
                         columns: columnsLiabilities,
+                        viewConfig: {
+                            emptyText: 'No records found'
+                        },
                         features: [{
                             ftype: 'groupingsummary',
                             groupHeaderTpl: '{name}',

@@ -16,13 +16,6 @@ class LiabilitiesController extends BaseController
      */
     public function Liabilities_LoadAction()
     {
-        $entityService = $this->getEntityService();
-//        $arrEntity = $entityService->selectOnDefault('Liabilities:getData', array('customerId' => 1));
-//
-//        print_r($arrEntity);
-//        die;
-
-
         $arr = array();
 
         for($i=0;$i<21;$i++) {
@@ -58,8 +51,8 @@ class LiabilitiesController extends BaseController
     public function Liabilities_Customer_LoadAction()
     {
         $entityService = $this->getEntityService();
-        $arrEntity = $entityService->selectOnDefault('Customer:getData');
+        $arrCustomer   = $entityService->selectOnDefault('Customer:getData');
 
-        return $this->jsonResponse(array('data' => $arrEntity), count($arrEntity));
+        return $this->jsonResponse(array('data' => $arrCustomer), count($arrCustomer));
     }
 }

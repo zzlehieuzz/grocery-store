@@ -81,8 +81,7 @@ Ext.define('MyDesktop.App', {
     },
 
     getDataForShortcutModel: function() {
-        var jsonModuleData = Ext.get('ModuleJson').getAttribute('data'),
-            moduleData     = JSON.parse(jsonModuleData);
+        var moduleData = JSON.parse(Ext.get('ModuleJson').getAttribute('data'));
 
         Ext.each(moduleData, function(value, key) {
             moduleData[key].name = moduleData[key].name.Translator('Module');
@@ -98,7 +97,7 @@ Ext.define('MyDesktop.App', {
         var me = this, ret = me.callParent(),
             jsonUserLoginData = Ext.get('UserLoginJson').getAttribute('data'),
             userLoginData     = Ext.JSON.decode(jsonUserLoginData);
-console.log(ret);
+
         return Ext.apply(ret, {
             title: userLoginData.userName,
             iconCls: 'user',

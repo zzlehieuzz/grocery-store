@@ -37,7 +37,8 @@ Locale.module('Module', {
     'profile': 'Hồ sơ',
     'invoices input': 'Phiếu nhập',
     'invoices output': 'Phiếu xuất',
-    'liabilities management': 'Quản lý công nợ'
+    'liabilities management': 'Quản lý công nợ',
+    'invoices management': 'Quản lý xuất/nhập'
 });
 
 Locale.module('Logout', {

@@ -53,8 +53,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
 
     init : function(){
         this.launcher = {
-            text: 'invoices list',
-//            text: 'invoice management'.Translator('Module'),
+            text: 'invoices management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
