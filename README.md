@@ -31,6 +31,7 @@ HELP:
   Update project:    php composer self-update
                      php composer update
   Update db:         php app/console doctrine:schema:update --em=default --force
+                     php -d memory_limit=200M app/console doctrine:schema:update --dump-sql
   Load data default: php app/console khepin:yamlfixtures:load dev
   Clear cache:       php app/console cache:clear
   
