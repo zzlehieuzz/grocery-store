@@ -285,6 +285,16 @@ class BaseController extends Controller implements FilterControllerInterface
     }
 
     /**
+     * @return Object
+     *
+     * @author HieuNLD 2014/06/13
+     */
+    protected function getRequestData()
+    {
+        return $this->get('request');
+    }
+
+    /**
      * @return JsonResponse
      *
      * @author HieuNLD 2014/06/13
@@ -297,6 +307,8 @@ class BaseController extends Controller implements FilterControllerInterface
         $params['limit'] = $request->get('limit');
         $params['page']  = $request->get('page');
         $params['start'] = $request->get('start');
+        $params['sort']  = $request->get('sort');
+        $params['group'] = $request->get('group');
 
         return $params;
     }

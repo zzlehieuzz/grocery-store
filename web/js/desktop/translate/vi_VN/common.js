@@ -13,7 +13,7 @@ Locale.module('Common', {
     'warning': 'Cảnh báo',
     'info': 'Thông tin',
     'question': 'Câu hỏi',
-    'No records found': 'Không có dữ liệu.',
+    'no records found': 'Không có dữ liệu.',
 
     'save successfully': 'Lưu thành công',
     'update successfully': 'Cập nhật thành công',

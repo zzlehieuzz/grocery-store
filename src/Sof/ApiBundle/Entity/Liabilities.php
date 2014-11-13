@@ -19,13 +19,13 @@ class Liabilities extends BaseEntity
      * @ORM\Column(name="id", type="integer", nullable=false, options={"comment" = "1:Id"})
      * @Assert\Type(type="integer")
      */
-     private $id;
+    private $id;
 
     /**
      * @ORM\Column(name="customer_id", type="string", nullable=false, options={"comment" = "2:customer_id"})
      * @Assert\Type(type="integer")
      */
-     private $customerId;
+    private $customerId;
 
     /**
      * @ORM\Column(name="invoice_id", type="string", nullable=false, options={"comment" = "3:invoice_id"})
@@ -33,24 +33,50 @@ class Liabilities extends BaseEntity
      */
     private $invoiceId;
 
+    /**
+     * @ORM\Column(name="name", type="string", nullable=false, options={"comment" = "4:name"})
+     * @Assert\Type(type="string")
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(name="amount", type="string", nullable=false, options={"comment" = "5:amount"})
+     * @Assert\Type(type="integer")
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(name="price", type="decimal", precision=16, scale=2, nullable=false, options={"comment" = "6:price"})
+     * @Assert\Type(type="decimal")
+     */
+    private $price;
+
+    /**
+     * @ORM\Column(name="description", type="string", nullable=true, options={"comment" = "7:description"})
+     * @Assert\Type(type="string")
+     */
+    private $description;
+
     public function __construct()
     {
+        $this->amount = 0;
+        $this->price  = 0;
     }
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getAmount()
     {
-        return $this->id;
+        return $this->amount;
     }
 
     /**
-     * @param mixed $id
+     * @param mixed $amount
      */
-    public function setId($id)
+    public function setAmount($amount)
     {
-        $this->id = $id;
+        $this->amount = $amount;
     }
 
     /**
@@ -72,6 +98,38 @@ class Liabilities extends BaseEntity
     /**
      * @return mixed
      */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getInvoiceId()
     {
         return $this->invoiceId;
@@ -83,5 +141,37 @@ class Liabilities extends BaseEntity
     public function setInvoiceId($invoiceId)
     {
         $this->invoiceId = $invoiceId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
     }
 }

@@ -2,14 +2,7 @@
 
 namespace Sof\ApiBundle\Entity;
 
-use Sof\ApiBundle\Lib\Config;
-
 use Sof\ApiBundle\Lib\SofUtil;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
 
 /**
  * CustomerRepository
@@ -19,6 +12,11 @@ use Doctrine\ORM\NoResultException;
  */
 class CustomerRepository extends BaseRepository
 {
+    /**
+     * @return Array
+     *
+     * @author HieuNLD 2014/11/13
+     */
     public function getData() {
         $query = $this->querySimpleEntities(array(
             'selects' => array('id', 'name'),

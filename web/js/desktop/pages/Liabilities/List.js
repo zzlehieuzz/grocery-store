@@ -27,9 +27,8 @@ var storeLoadLiabilities = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Liabilities_Load"),
         reader: readerJson
     }),
-    pageSize: pageSizeDefault,
     groupField: 'invoiceNumber',
-    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+    autoLoad: false
 });
 
 var storeLoadLiabilitiesCustomer = new Ext.data.JsonStore({
@@ -188,7 +187,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                     layout: 'fit',
                     items: [{
                         border: false,
-                        xtype: 'gridpanel',
+                        xtype: 'grid',
                         id: 'grid-liabilities-customer-list',
                         store: storeLoadLiabilitiesCustomer,
                         loadMask: true,
@@ -197,14 +196,17 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         columns: columnsCustomerLiabilities,
                         trackMouseOver: true,
                         viewConfig: {
-                            emptyText: 'No records found'
+                            emptyText: 'no records found'.Translator('Common')
                         },
                         listeners: {
                             beforerender: function () {
                                 this.store.load();
                             },
-                            rowdblclick: function (grid, index){
-                                alert('dblclick');
+                            itemdblclick: function (view, record, row, i, e) {
+                                var id = record.data.id;
+                                storeLoadLiabilities.load({
+                                    params: {id: id}
+                                });
                             }
                         }
                     }],
@@ -228,7 +230,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         plugins: rowEditing,
                         columns: columnsLiabilities,
                         viewConfig: {
-                            emptyText: 'No records found'
+                            emptyText: 'no records found'.Translator('Common')
                         },
                         features: [{
                             ftype: 'groupingsummary',

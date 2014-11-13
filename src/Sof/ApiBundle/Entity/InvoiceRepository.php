@@ -2,13 +2,8 @@
 
 namespace Sof\ApiBundle\Entity;
 
-use Sof\ApiBundle\Lib\Config;
-
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
+use Sof\ApiBundle\Lib\SofUtil;
 
 /**
  * InvoiceRepository
@@ -18,5 +13,22 @@ use Doctrine\ORM\NoResultException;
  */
 class InvoiceRepository extends BaseRepository
 {
+    /**
+     * @return Array
+     *
+     * @author HieuNLD 2014/11/13
+     */
+    public function getData($id) {
+        $query = $this->querySimpleEntities(array(
+            'selects' => array('invoiceNumber'),
+            'conditions' => array('subject'       => $id,
+                                  'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
+                                  'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+            )
+        ));
+        $query->addSelect('l.id, l.name, l.amount, l.price');
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Liabilities", 'l', 'WITH', "entity.subject = l.customerId AND entity.id = l.invoiceId");
 
+        return $query->getQuery()->getArrayResult();
+    }
 }
