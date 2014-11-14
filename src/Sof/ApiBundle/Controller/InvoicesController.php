@@ -30,13 +30,13 @@ class InvoicesController extends BaseController
             $arrCondition['invoiceType'] = $invoiceType;
         }
 
-//        if ($fromDate) {
-//            $arrCondition['createInvoiceDate'] >= $fromDate;
-//        }
-//
-//        if ($toDate) {
-//            $arrCondition['createInvoiceDate'] <= $toDate;
-//        }
+        if ($fromDate) {
+            $arrCondition['createInvoiceDate'] = array('>=' => $fromDate);
+        }
+
+        if ($toDate) {
+            $arrCondition['createInvoiceDate'] = array('<=' => $toDate);
+        }
 
         $arrEntity = $this->getEntityService()->getAllData(
             'Invoice',
