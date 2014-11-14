@@ -75,6 +75,18 @@ class Invoice extends BaseEntity
      */
     private $paymentStatus;
 
+    /**
+     * @ORM\Column(name="amount", type="integer", nullable=true, options={"comment" = "11:amount"})
+     * @Assert\Type(type="integer")
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(name="total_amount", type="integer", nullable=true, options={"comment" = "12:total_amount"})
+     * @Assert\Type(type="integer")
+     */
+    private $totalAmount;
+
   public function __construct()
   {
   }
@@ -237,6 +249,38 @@ class Invoice extends BaseEntity
     public function getPaymentStatus()
     {
         return $this->paymentStatus;
+    }
+
+    /**
+     * @param mixed $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param mixed $totalAmount
+     */
+    public function setTotalAmount($totalAmount)
+    {
+        $this->totalAmount = $totalAmount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalAmount()
+    {
+        return $this->totalAmount;
     }
 
 
