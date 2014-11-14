@@ -65,13 +65,6 @@ doctrine:
                 user:     "%database_user%"
                 password: "%database_password%"
                 charset:  UTF8
-                slaves:
-                    slave1:
-                        host:     %database_host%
-                        port:     %database_port%
-                        dbname:   %database_name%
-                        user:     %database_user%
-                        password: %database_password%
 
     orm:
         default_entity_manager:   default
