@@ -41,13 +41,9 @@ class LiabilitiesController extends BaseController
      */
     public function Liabilities_SaveAction()
     {
-        $params    = $this->getJsonParams();
-
+        $params        = $this->getJsonParams();
         $entityService = $this->getEntityService();
-        if (empty($params['id'])) {
-            $id = $entityService->rawSqlInsert('Liabilities', array('insert' => $params));
-        } else {
-            $id = $params['id'];
+        if (isset($params['id']) && ($id = $params['id'])) {
             unset($params['id']);
 
             $entityService->dqlUpdate(
@@ -56,6 +52,17 @@ class LiabilitiesController extends BaseController
                     'conditions' => array('id' => $id)
                 )
             );
+        } else {
+            $extraData = $this->getJsonParams('extraData');
+            print_r($params);
+            print_r($extraData);
+            if ($extraData) {
+
+            }
+            echo 1;die;
+            return $this->jsonResponse(array('data' => $params));
+
+            $id = $entityService->rawSqlInsert('Liabilities', array('insert' => $params));
         }
         $entityService->completeTransaction();
         $params['id'] = $id;
