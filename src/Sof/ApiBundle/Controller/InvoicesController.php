@@ -17,14 +17,71 @@ class InvoicesController extends BaseController
      */
     public function Invoice_LoadAction()
     {
+        $request = $this->getRequestData();
+
+        //Search condition
+        $arrCondition = array();
+
+        $invoiceType = $request->get('invoiceType');
+        $fromDate = $request->get('fromDate');
+        $toDate = $request->get('toDate');
+
+        if ($invoiceType == 1 || $invoiceType == 2) {
+            $arrCondition['invoiceType'] = $invoiceType;
+        }
+
+//        if ($fromDate) {
+//            $arrCondition['createInvoiceDate'] >= $fromDate;
+//        }
+//
+//        if ($toDate) {
+//            $arrCondition['createInvoiceDate'] <= $toDate;
+//        }
+
         $arrEntity = $this->getEntityService()->getAllData(
             'Invoice',
-            array('orderBy' => array('id' => 'DESC')));
+            array('conditions'  => $arrCondition,
+                  'orderBy'     => array('id' => 'DESC')));
 
         $arrData = array();
-        foreach($arrEntity as $entity){
-            unset($entity['createInvoiceDate']);
-            $arrData[] = $entity;
+        foreach($arrEntity as $key=>$entity){
+            $subjectName = "";
+            if ($entity['invoiceType'] == 1) {
+                $entitySubject = $this->getEntityService()->getAllData(
+                    'Distributor',
+                    array(
+                        'conditions'  => array('id' => $entity['subject'])
+                    ));
+
+            } else {
+                $entitySubject = $this->getEntityService()->getAllData(
+                    'Customer',
+                    array(
+                        'conditions'  => array('id' => $entity['subject'])
+                    ));
+            }
+
+            if (count($entitySubject) > 0) {
+                $subjectName = $entitySubject[0]['name'];
+            }
+
+            $paymentStatus = "";
+            if ($entity['invoiceType'] == 2) {
+                if ($entity['paymentStatus'] == 1) {
+                    $paymentStatus = 'Đã Giao Hàng';
+                } else {
+                    $paymentStatus = 'Chưa Giao Hàng';
+                }
+            }
+
+            $arrData[$key]['id'] = $entity['id'];
+            $arrData[$key]['subjectName'] = $subjectName;
+            $arrData[$key]['invoiceType'] = $entity['invoiceType'];
+            $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
+            $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
+            $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d-m-Y') : null;
+            $arrData[$key]['paymentStatus'] = $paymentStatus;
+            $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
         }
 
         return $this->jsonResponse(array('data' => $arrData));
