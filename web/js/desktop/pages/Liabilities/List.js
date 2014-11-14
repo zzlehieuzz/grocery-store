@@ -9,6 +9,7 @@ var readerJson = {
 };
 
 var objectField = [{name: 'id',            type: 'int'},
+                   {name: 'customerId',    type: 'int'},
                    {name: 'invoiceId',     type: 'int'},
                    {name: 'invoiceNumber', type: 'string'},
                    {name: 'name',          type: 'string'},
@@ -62,34 +63,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
     },
 
     createWindow : function (){
-        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            listeners: {
-                'edit': function (editor,e) {
-                    var record = e.record.data;
-
-                    Ext.Ajax.request({
-                        url: MyUtil.Path.getPathAction("Unit_Update"),
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        waitTitle: 'processing'.Translator('Common'),
-                        waitMsg: 'sending data'.Translator('Common'),
-                        jsonData: {'params': record},
-                        scope: this,
-                        success: function(msg) {
-                            if (msg.status) {
-                                storeLoadUnit.reload();
-                                console.log('success');
-                            }
-                        },
-                        failure: function(msg) {
-                            console.log('failure');
-                        }
-                    });
-                }
-            }
-        });
+        var invoiceSelectId = '', customerSelectId = '';
 
         var rowModel = Ext.create('Ext.selection.RowModel', {
             mode : "MULTI",
@@ -164,6 +138,122 @@ Ext.define('SrcPageUrl.Liabilities.List', {
             }
         ];
 
+        var addFormLiabilities = Ext.widget({
+            xtype: 'form',
+            layout: 'form',
+            frame: true,
+            border: false,
+            style: 'border: 0;',
+            width: 350,
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 60
+            },
+            items: [{
+                fieldLabel: 'name'.Translator('Common'),
+                xtype: 'textfield',
+                name: 'liabilitiesName',
+                id: 'liabilitiesName',
+                allowBlank: false
+            }, {
+                fieldLabel: 'amount'.Translator('Common'),
+                name: 'liabilitiesAmount',
+                id: 'liabilitiesAmount',
+                xtype: 'numberfield',
+                decimalPrecision: 0,
+                allowBlank: false
+            }, {
+                fieldLabel: 'price'.Translator('Common'),
+                name: 'liabilitiesPrice',
+                id: 'liabilitiesPrice',
+                allowBlank: false,
+                xtype: 'numberfield',
+                decimalPrecision: decimalPrecision
+            }],
+            buttons: [{
+                text: 'save'.Translator('Common'),
+                handler: function() {
+                    var isValid = this.up('form').getForm().isValid();
+                    if (isValid) {
+                        var arrInsert = {
+                            invoiceId  : invoiceSelectId,
+                            customerId : customerSelectId,
+                            name       : Ext.getCmp('liabilitiesName').value,
+                            amount     : Ext.getCmp('liabilitiesAmount').value,
+                            price      : Ext.getCmp('liabilitiesPrice').value
+                        };
+
+                        if (arrInsert) {
+                            Ext.Ajax.request({
+                                url: MyUtil.Path.getPathAction("Liabilities_Save"),
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                jsonData: {'params' : arrInsert},
+                                waitTitle: 'processing'.Translator('Common'),
+                                waitMsg: 'sending data'.Translator('Common'),
+                                scope: this,
+                                success: function(msg) {
+                                    if (msg.status) {
+                                        console.log('success');
+                                        this.up('form').getForm().reset();
+                                        storeLoadLiabilities.reload();
+                                        popupAddNewLiabilitiesForm.hide();
+                                    }
+                                },
+                                failure: function(msg) {
+                                    console.log('failure');
+                                }
+                            });
+                        }
+                    }
+                }
+            }, {
+                text: 'cancel'.Translator('Common'),
+                handler: function() {
+                    this.up('form').getForm().reset();
+                    popupAddNewLiabilitiesForm.hide();
+                }
+            }]
+        });
+
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            listeners: {
+                'edit': function (editor,e) {
+                    var record = e.record.data;
+
+                    Ext.Ajax.request({
+                        url: MyUtil.Path.getPathAction("Liabilities_Save"),
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
+                        jsonData: {'params': record, 'extraData' : {invoiceId  : invoiceSelectId, customerId : customerSelectId}},
+                        scope: this,
+                        success: function(msg) {
+                            if (msg.status) {
+                                storeLoadLiabilities.reload();
+                                console.log('success');
+                            }
+                        },
+                        failure: function(msg) {
+                            console.log('failure');
+                        }
+                    });
+                }
+            }
+        });
+
+        var popupAddNewLiabilitiesForm = new Ext.Window({
+            title: 'add new liabilities'.Translator('Liabilities')
+            , autoWidth: true
+            , autoHeight: true
+            , border: true
+            , modal: true
+            , items: addFormLiabilities
+        });
+
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
         if(!win){
@@ -234,13 +324,14 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         },
                         features: [{
                             ftype: 'groupingsummary',
-                            groupHeaderTpl: '{name}',
+                            groupHeaderTpl: Ext.create('Ext.XTemplate', '<input type="radio" name="rdoInvoiceId" class="rdoInvoiceId" customerId="' + '{[values.rows[0].data.customerId]}' + '" value="' + '{[values.rows[0].data.invoiceId]}' + '">' + '<label>' + 'invoice number'.Translator('Invoice') + ': {name}' + '</label>'),
                             hideGroupedHeader: true,
-                            enableGroupingMenu: false
+                            enableGroupingMenu: true,
+                            collapsible: false
                         }],
                         listeners: {
                             beforerender: function () {
-                                //this.store.load();
+                                storeLoadLiabilities.loadData([],false);
                             }
                         }
                     }],
@@ -249,18 +340,17 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         tooltip:'add'.Translator('Common'),
                         iconCls:'add',
                         handler : function() {
-                            rowEditing.cancelEdit();
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked"),
+                                selection    = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
 
-                            // Create a model instance
-                            var r = Ext.create('Unit', {
-                                id: '',
-                                name: '',
-                                code: '',
-                                unit: ''
-                            });
+                            if (rdoInvoiceId.length == 1) {
+                                invoiceSelectId  = rdoInvoiceId[0].value;
+                                customerSelectId = selection[0].data.id;
 
-                            storeLoadUnit.insert(0, r);
-                            rowEditing.startEdit(0, 0);
+                                popupAddNewLiabilitiesForm.show();
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
+                            }
                         }
                     }, '-',{
                         text:'remove'.Translator('Common'),
@@ -271,7 +361,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                 var selection = Ext.getCmp('grid-liabilities-list').getView().getSelectionModel().getSelection();
 
                                 if (selection.length > 0) {
-                                    Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
+                                    Ext.MessageBox.confirm('delete'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
                                         if(btn === 'yes') {
                                             var arrId = [];
                                             Ext.each(selection, function(v, k) {
@@ -279,7 +369,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                             });
 
                                             Ext.Ajax.request({
-                                                url: MyUtil.Path.getPathAction("Unit_Delete"),
+                                                url: MyUtil.Path.getPathAction("Liabilities_Delete"),
                                                 method: 'POST',
                                                 headers: { 'Content-Type': 'application/json' },
                                                 jsonData: {'params' : arrId},
@@ -288,7 +378,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                                 scope: this,
                                                 success: function(msg) {
                                                     if (msg.status) {
-                                                        storeLoadUnit.reload();
+                                                        storeLoadLiabilities.reload();
                                                         console.log('success');
                                                     }
                                                 },
@@ -299,109 +389,13 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                         }
                                     });
                                 } else {
-                                    MyUtil.Message.MessageError();
+                                    MyUtil.Message.MessageWarning('please choose 1 record to delete'.Translator('Common'));
                                 }
                             }
                         }
                     }]
                 }]
             });
-
-
-            //win = desktop.createWindow({
-            //    id: 'liabilities-list',
-            //    title: 'liabilities management'.Translator('Module'),
-            //    width: width_600,
-            //    height: height_600,
-            //    iconCls: 'icon-grid',
-            //    animCollapse: false,
-            //    constrainHeader: true,
-            //    layout: 'fit',
-            //    items:
-            //        [
-            //            {
-            //            border: false,
-            //            xtype: 'grid',
-            //            id: 'grid-liabilities-list',
-            //            store: storeLoadLiabilities,
-            //            loadMask: true,
-            //            selModel: rowModel,
-            //            plugins: rowEditing,
-            //            columns: columnsLiabilities,
-            //            features: [{
-            //                ftype: 'groupingsummary',
-            //                groupHeaderTpl: '{name}',
-            //                hideGroupedHeader: true,
-            //                enableGroupingMenu: false
-            //            }],
-            //            listeners:{
-            //                beforerender: function () {
-            //                    this.store.load();
-            //                }
-            //            }
-            //        }
-            //    ],
-            //    tbar:[{
-            //        text:'add'.Translator('Common'),
-            //        tooltip:'add'.Translator('Common'),
-            //        iconCls:'add',
-            //        handler : function() {
-            //          rowEditing.cancelEdit();
-            //
-            //          // Create a model instance
-            //          var r = Ext.create('Unit', {
-            //            id: '',
-            //            name: '',
-            //            code: '',
-            //            unit: ''
-            //          });
-            //
-            //          storeLoadUnit.insert(0, r);
-            //          rowEditing.startEdit(0, 0);
-            //        }
-            //    }, '-',{
-            //        text:'remove'.Translator('Common'),
-            //        tooltip:'remove'.Translator('Common'),
-            //        iconCls:'remove',
-            //        listeners: {
-            //            click: function () {
-            //                var selection = Ext.getCmp('grid-liabilities-list').getView().getSelectionModel().getSelection();
-            //
-            //                if (selection.length > 0) {
-            //                    Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
-            //                        if(btn === 'yes') {
-            //                            var arrId = [];
-            //                            Ext.each(selection, function(v, k) {
-            //                                arrId[k] = v.data.id;
-            //                            });
-            //
-            //                            Ext.Ajax.request({
-            //                                url: MyUtil.Path.getPathAction("Unit_Delete"),
-            //                                method: 'POST',
-            //                                headers: { 'Content-Type': 'application/json' },
-            //                                jsonData: {'params' : arrId},
-            //                                waitTitle: 'processing'.Translator('Common'),
-            //                                waitMsg: 'sending data'.Translator('Common'),
-            //                                scope: this,
-            //                                success: function(msg) {
-            //                                    if (msg.status) {
-            //                                        storeLoadUnit.reload();
-            //                                        console.log('success');
-            //                                    }
-            //                                },
-            //                                failure: function(msg) {
-            //                                    console.log('failure');
-            //                                }
-            //                            });
-            //                        }
-            //                    });
-            //                } else {
-            //                    MyUtil.Message.MessageError();
-            //                }
-            //            }
-            //        }
-            //    }]
-            //});
         }
         return win;
     },

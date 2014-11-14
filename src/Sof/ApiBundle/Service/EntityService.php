@@ -160,6 +160,7 @@ class EntityService
     {
         $params = func_get_args();
         array_shift($params);
+
         return $this->process($callback, $params, self::SLAVE);
     }
 
@@ -172,6 +173,7 @@ class EntityService
     {
         $params = func_get_args();
         array_shift($params);
+
         return $this->process($callback, $params, self::MASTER);
     }
 

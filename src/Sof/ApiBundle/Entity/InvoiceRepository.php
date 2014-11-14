@@ -20,15 +20,15 @@ class InvoiceRepository extends BaseRepository
      */
     public function getData($id) {
         $query = $this->querySimpleEntities(array(
-            'selects' => array('invoiceNumber'),
+            'selects' => array('id AS invoiceId', 'invoiceNumber'),
             'conditions' => array('subject'       => $id,
                                   'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
                                   'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
             )
         ));
-        $query->addSelect('l.id, l.name, l.amount, l.price');
+        $query->addSelect('l.id, l.name, l.amount, l.price, l.customerId');
         $query->leftJoin(self::ENTITY_BUNDLE . ":Liabilities", 'l', 'WITH', "entity.subject = l.customerId AND entity.id = l.invoiceId");
 
-        return $query->getQuery()->getArrayResult();
+        return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
     }
 }

@@ -22,7 +22,6 @@ class LiabilitiesController extends BaseController
         $entityService = $this->getEntityService();
         $arrCustomer   = $entityService->selectOnDefault('Invoice:getData', $id);
 
-
         return $this->jsonResponse(array('data' => $arrCustomer));
     }
 
@@ -35,5 +34,54 @@ class LiabilitiesController extends BaseController
         $arrCustomer   = $entityService->selectOnDefault('Customer:getData');
 
         return $this->jsonResponse(array('data' => $arrCustomer), count($arrCustomer));
+    }
+
+    /**
+     * @Route("/Liabilities_Save", name="Liabilities_Save")
+     */
+    public function Liabilities_SaveAction()
+    {
+        $params    = $this->getJsonParams();
+
+        $entityService = $this->getEntityService();
+        if (empty($params['id'])) {
+            $id = $entityService->rawSqlInsert('Liabilities', array('insert' => $params));
+        } else {
+            $id = $params['id'];
+            unset($params['id']);
+
+            $entityService->dqlUpdate(
+                'Liabilities',
+                array('update' => $params,
+                    'conditions' => array('id' => $id)
+                )
+            );
+        }
+        $entityService->completeTransaction();
+        $params['id'] = $id;
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
+    /**
+     * @Route("/Liabilities_Delete", name="Liabilities_Delete")
+     */
+    public function Liabilities_DeleteAction()
+    {
+        $entityService = $this->getEntityService();
+
+        $params = $this->getJsonParams();
+
+        $entityService->dqlDelete(
+            'Liabilities',
+            array(
+                'conditions' => array(
+                    'id'   => $params,
+                )
+            )
+        );
+        $entityService->completeTransaction();
+
+        return $this->jsonResponse(array('data' => $params));
     }
 }

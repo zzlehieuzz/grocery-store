@@ -304,7 +304,7 @@ abstract class BaseRepository extends EntityRepository
      * @param $args
      * @return QueryBuilder
      */
-    public function querySimpleEntities($args)
+    public function querySimpleEntities($args = array())
     {
         if (isset($args['alias'])) {
             $alias = $args['alias'];
@@ -340,7 +340,16 @@ abstract class BaseRepository extends EntityRepository
             $conditions = $args['conditions'];
 
             foreach ($conditions as $field => $values) {
-                if (!is_array($values)) {
+                if ($field == 'dqlMixQuery' && isset($values['query'])) {
+                    $this->query->andWhere($values['query']);
+                    if(isset($values['params']) && $values['params']) {
+                        if(isset($values['params']) && $values['params']) {
+                            foreach($values['params'] as $key => $value) {
+                                $this->query->setParameter($key, $value);
+                            }
+                        }
+                    }
+                } elseif (!is_array($values)) {
                     $this->addSearchString($conditions, $field);
                 } else {
                     if (ctype_digit(implode(array_keys($values)))) {
@@ -349,11 +358,11 @@ abstract class BaseRepository extends EntityRepository
                     } else {
                         $operatorIndex = 0;
                         foreach ($values as $operator => $value) {
-                            if (in_array($operator, array('>=', '<=', '>', '<', '<>', 'IN', 'NOT IN', '!='))) {
+                            if (in_array($operator, array('>=', '<=', '>', '<', '<>', 'IN', 'NOT IN', '!=', 'LIKE', 'NOT LIKE'))) {
                                 $operatorIndex++;
                                 $fieldName = $field . '_' . $operatorIndex;
                                 $this->query->andWhere(sprintf( $operator == 'IN' || $operator == 'NOT IN' ? '%s %s (:%s)' : '%s %s :%s',
-                                        $this->dbFieldName($field), $operator, $fieldName))
+                                    $this->dbFieldName($field), $operator, $fieldName))
                                     ->setParameter($fieldName, $value);
                             }
                         }

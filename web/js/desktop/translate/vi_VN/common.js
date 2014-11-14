@@ -22,6 +22,9 @@ Locale.module('Common', {
     'processing': 'Đang xử lý ...',
     'sending data': 'Chuyển dữ liệu ...',
 
+    'please choose 1 record has data': 'Chọn 1 dòng có dữ liệu.',
+    'please choose 1 record to delete': 'Chọn 1 dòng để xóa!',
+
     //label
     'name': 'Tên',
     'amount': 'Số lượng',
@@ -65,9 +68,7 @@ Locale.module('User', {
     'email': 'Email',
 
     //message
-    'Please choose 1 record to change password': 'Chọn 1 dòng để đổi mật khẩu !',
-    'Please choose 1 record has data': 'Chọn 1 dòng có dữ liệu.',
-    'Please choose 1 record to delete': 'Chọn 1 dòng để xóa!'
+    'please choose 1 record to change password': 'Chọn 1 dòng để đổi mật khẩu !'
 });
 
 Locale.module('Profile', {
@@ -106,5 +107,14 @@ Locale.module('Unit', {
 Locale.module('Liabilities', {
     //label
     'liabilities customer': 'Khách hàng còn nợ',
-    'liabilities output invoice': 'Phiếu còn nợ'
+    'liabilities output invoice': 'Phiếu còn nợ',
+    'add new liabilities': 'Tạo mới phiếu nợ',
+
+    //message
+    'please choice a invoice': 'Làm ơn chọn số phiếu.'
+});
+
+Locale.module('Invoice', {
+    //label
+    'invoice number': 'Số phiếu'
 });

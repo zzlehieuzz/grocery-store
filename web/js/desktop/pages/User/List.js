@@ -264,10 +264,10 @@ Ext.define('SrcPageUrl.User.List', {
                                     popupChangePasswordForm.show();
                                     changePasswordForm.getForm().setValues({ changeUserId: selection[0].data.id });
                                 } else {
-                                  MyUtil.Message.MessageWarning('Please choose 1 record has data'.Translator('User'));
+                                  MyUtil.Message.MessageWarning('please choose 1 record has data'.Translator('Common'));
                                 }
                             } else {
-                                MyUtil.Message.MessageWarning('Please choose 1 record to change password'.Translator('User'));
+                                MyUtil.Message.MessageWarning('please choose 1 record to change password'.Translator('User'));
                             }
                         }
                     }, '-',{
@@ -279,7 +279,7 @@ Ext.define('SrcPageUrl.User.List', {
                             var selection = Ext.getCmp('grid-user-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn) {
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn) {
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
@@ -308,7 +308,7 @@ Ext.define('SrcPageUrl.User.List', {
                                     }
                                 });
                             } else {
-                              MyUtil.Message.MessageWarning('Please choose 1 record to delete'.Translator('User'));
+                                MyUtil.Message.MessageWarning('please choose 1 record to delete'.Translator('Common'));
                             }
                         }
                     }

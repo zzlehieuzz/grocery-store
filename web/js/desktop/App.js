@@ -7,6 +7,10 @@
 Ext.define('MyDesktop.App', {
     extend: 'Ext.ux.desktop.App',
     requires: [
+        'MyUtil.Path',
+        'MyUtil.Message',
+        'MyUtil.Object',
+
         'Ext.window.MessageBox',
         'Ext.ux.desktop.ShortcutModel',
         //'MyDesktop.SystemStatus',
@@ -19,11 +23,6 @@ Ext.define('MyDesktop.App', {
         //'MyDesktop.BogusModule',
 //        'MyDesktop.Blockalanche',
         'MyDesktop.Settings',
-
-        'MyUtil.Path',
-        'MyUtil.Message',
-        'MyUtil.Object',
-
         'SrcPageUrl.User.List',
         'SrcPageUrl.Driver.List',
         'SrcPageUrl.Customer.List',
@@ -41,6 +40,9 @@ Ext.define('MyDesktop.App', {
     },
     getModules : function(){
         return [
+            new MyUtil.Path(),
+            new MyUtil.Message(),
+            new MyUtil.Object(),
             //new MyDesktop.VideoWindow(),
             //new MyDesktop.Blockalanche(),
             //new MyDesktop.SystemStatus(),
