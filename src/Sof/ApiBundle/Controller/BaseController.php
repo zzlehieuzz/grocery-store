@@ -325,25 +325,9 @@ class BaseController extends Controller implements FilterControllerInterface
         $content = $this->getRequestData()->getContent();
         if (!empty($content)) {
             $params = json_decode($content, true);
-            $params = $params[$key];
-        }
-
-        return $params;
-    }
-
-    /**
-     * @param string $key
-     * @return array
-     *
-     * @author HieuNLD 2014/10/08
-     */
-    public function getJsonExtraData($key = 'extraData')
-    {
-        $params = array();
-        $content = $this->getRequestData()->getContent();
-        if (!empty($content)) {
-            $params = json_decode($content, true);
-            $params = $params[$key];
+            if (isset($params[$key])) {
+                $params = $params[$key];
+            }
         }
 
         return $params;
