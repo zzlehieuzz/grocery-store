@@ -34,7 +34,9 @@ HELP:
                      php -d memory_limit=200M app/console doctrine:schema:update --dump-sql
   Load data default: php app/console khepin:yamlfixtures:load dev
   Clear cache:       php app/console cache:clear
-  
+                     php app/console cache:clear --env=prod
+                     php app/console cache:clear --env=dev
+         
 ########################################################
   SQL REF:
   
