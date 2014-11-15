@@ -136,7 +136,7 @@ Ext.define('SrcPageUrl.Distributor.List', {
             win = desktop.createWindow({
                 id: 'distributor-list',
 //                title:'distributor management'.Translator('Module'),
-                title:'distributor management',
+                title:'distributor management'.Translator('Module'),
                 width:800,
                 height:480,
                 iconCls: 'icon-grid',
