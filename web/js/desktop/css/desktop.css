@@ -344,17 +344,14 @@ div.ux-taskbar div.x-toolbar {
 .profile-shortcut-16 {
     background-image: url(../images/desktop/profile16x16.png); }
 
-.invoices-input-shortcut {
-    background-image: url(../images/desktop/invoices-input88x48.png); }
-
-.invoices-output-shortcut {
-    background-image: url(../images/desktop/invoices-output48x48.png); }
-
 .invoices-shortcut {
     background-image: url(../images/desktop/invoices48x48.png); }
 
 .liabilities-shortcut {
     background-image: url(../images/desktop/liabilities48x48.png); }
+
+.distributor-shortcut {
+    background-image: url(../images/desktop/distributor48x48.png); }
 
 .win7-start {
     background-image: url(../images/taskbar/win7.png); }

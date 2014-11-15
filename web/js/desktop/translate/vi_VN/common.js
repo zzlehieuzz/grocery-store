@@ -41,7 +41,8 @@ Locale.module('Module', {
     'invoices input': 'Phiếu nhập',
     'invoices output': 'Phiếu xuất',
     'liabilities management': 'Quản lý công nợ',
-    'invoices management': 'Quản lý xuất/nhập'
+    'invoices management': 'Quản lý xuất/nhập',
+    'distributor management': 'Quản lý nhà phân phối'
 });
 
 Locale.module('Logout', {

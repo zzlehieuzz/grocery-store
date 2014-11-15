@@ -40,8 +40,7 @@ Ext.define('SrcPageUrl.Distributor.List', {
 
     init : function(){
         this.launcher = {
-//            text: 'distributor management'.Translator('Module'),
-            text: 'distributor management',
+            text: 'distributor management'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
