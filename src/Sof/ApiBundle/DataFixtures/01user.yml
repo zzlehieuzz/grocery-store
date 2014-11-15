@@ -4,7 +4,7 @@ fixtures:
     user1:
         roleId: 0
         userName: admin
-        name: Admin
+        name: Ngô Lê Duy Hiếu
         password: 123456
         email: "zzlehieu@gmail.com"
 #        created_at: '2014-10-22 14:37:14'

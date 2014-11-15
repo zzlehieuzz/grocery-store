@@ -53,15 +53,8 @@ class LiabilitiesController extends BaseController
                 )
             );
         } else {
-            $extraData = $this->getJsonParams('extraData');
-            print_r($params);
-            print_r($extraData);
-            if ($extraData) {
-
-            }
-            echo 1;die;
-            return $this->jsonResponse(array('data' => $params));
-
+            if (isset($params['id'])) unset($params['id']);
+            if (isset($params['invoiceNumber']))  unset($params['invoiceNumber']);
             $id = $entityService->rawSqlInsert('Liabilities', array('insert' => $params));
         }
         $entityService->completeTransaction();

@@ -221,7 +221,12 @@ Ext.define('SrcPageUrl.Liabilities.List', {
             autoCancel: false,
             listeners: {
                 'edit': function (editor,e) {
-                    var record = e.record.data;
+                    var record    = e.record.data,
+                        selection = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+
+                    if (selection.length == 1) {
+                        record.customerId = selection[0].data.id;
+                    }
 
                     Ext.Ajax.request({
                         url: MyUtil.Path.getPathAction("Liabilities_Save"),
@@ -229,7 +234,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         headers: { 'Content-Type': 'application/json' },
                         waitTitle: 'processing'.Translator('Common'),
                         waitMsg: 'sending data'.Translator('Common'),
-                        jsonData: {'params': record, 'extraData' : {invoiceId  : invoiceSelectId, customerId : customerSelectId}},
+                        jsonData: {'params': record},
                         scope: this,
                         success: function(msg) {
                             if (msg.status) {

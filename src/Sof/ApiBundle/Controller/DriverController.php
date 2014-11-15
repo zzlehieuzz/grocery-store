@@ -29,26 +29,23 @@ class DriverController extends BaseController
     public function Driver_UpdateAction()
     {
         $entityService = $this->getEntityService();
-        $params        = array();
-        $request       = $this->get('request');
-
-        $params['id']       = $request->get('id');
-        $params['name']     = $request->get('name');
-        $params['numberPlate'] = $request->get('numberPlate');
-
-        if ($params['id'] != 0) {
+        $params        = $this->getJsonParams();
+        $id            = $params['id'];
+        unset($params['id']);
+        if ($id) {
             $entityService->dqlUpdate(
                 'Driver',
                 array('update' => $params,
-                      'conditions' => array('id' => $params['id'])
+                    'conditions' => array('id' => $id)
                 )
             );
-            $entityService->completeTransaction();
         } else {
             $entityService->rawSqlInsert('Driver', array('insert' => $params));
         }
+        $params['id'] = $id;
+        $entityService->completeTransaction();
 
-        return $this->jsonResponse(array('data' => 1));
+        return $this->jsonResponse(array('data' => $params));
     }
     /**
      * @Route("/Driver_Delete", name="Driver_Delete")

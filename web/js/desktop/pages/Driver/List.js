@@ -24,34 +24,6 @@ var storeLoadDriver = new Ext.data.JsonStore({
     autoLoad: ({params: {limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
-var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-    clicksToMoveEditor: 1,
-    autoCancel: false,
-    listeners: {
-        'edit': function (editor, e) {
-            var record = e.record.data;
-            Ext.Ajax.request({
-                url: MyUtil.Path.getPathAction("Driver_Update"),
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                waitTitle: 'processing'.Translator('Common'),
-                waitMsg: 'sending data'.Translator('Common'),
-                scope: this,
-                jsonData: {'params' : record},
-                success: function (msg) {
-                    if (msg.status) {
-                        storeLoadDriver.reload();
-                        console.log('success');
-                    }
-                },
-                failure: function(msg) {
-                    console.log('failure');
-                }
-            });
-        }
-    }
-});
-
 Ext.define('SrcPageUrl.Driver.List', {
     extend: 'Ext.ux.desktop.Module',
 
@@ -72,6 +44,33 @@ Ext.define('SrcPageUrl.Driver.List', {
     },
 
     createWindow: function () {
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            listeners: {
+                edit: function (editor, e) {
+                    var record = e.record.data;
+                    Ext.Ajax.request({
+                        url: MyUtil.Path.getPathAction("Driver_Update"),
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        waitTitle: 'processing'.Translator('Common'),
+                        waitMsg: 'sending data'.Translator('Common'),
+                        scope: this,
+                        jsonData: {'params' : record},
+                        success: function (msg) {
+                            if (msg.status) {
+                                storeLoadDriver.reload();
+                                console.log('success');
+                            }
+                        },
+                        failure: function(msg) {
+                            console.log('failure');
+                        }
+                    });
+                }
+            }
+        });
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
 
@@ -82,6 +81,7 @@ Ext.define('SrcPageUrl.Driver.List', {
                 width: 300,
                 dataIndex: 'name',
                 editor: {
+                    xtype: 'textfield',
                     allowBlank: true
                 }
             }, {
@@ -89,6 +89,7 @@ Ext.define('SrcPageUrl.Driver.List', {
                 flex: 1,
                 dataIndex: 'numberPlate',
                 editor: {
+                    xtype: 'textfield',
                     allowBlank: true
                 }
             }
