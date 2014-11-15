@@ -29,8 +29,6 @@ Ext.define('MyDesktop.App', {
         'SrcPageUrl.Product.List',
         'SrcPageUrl.Unit.List',
         'SrcPageUrl.Profile.Form',
-        'SrcPageUrl.Invoices.Input',
-        'SrcPageUrl.Invoices.Output',
         'SrcPageUrl.Liabilities.List',
         'SrcPageUrl.Invoices.List',
         'SrcPageUrl.Distributor.List'
@@ -60,8 +58,6 @@ Ext.define('MyDesktop.App', {
             new SrcPageUrl.Unit.List(),
             new SrcPageUrl.Profile.Form(),
             new SrcPageUrl.Liabilities.List(),
-            new SrcPageUrl.Invoices.Input(),
-            new SrcPageUrl.Invoices.Output(),
             new SrcPageUrl.Invoices.List(),
             new SrcPageUrl.Distributor.List()
         ];
