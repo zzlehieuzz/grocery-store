@@ -279,6 +279,9 @@ div.ux-taskbar div.x-toolbar {
 .edit {
     background-image:url(../images/gird-window/edit.png) !important; }
 
+.print {
+    background-image:url(../images/gird-window/printer.png) !important; }
+
 /*----------------------------------------------------
  * icon in form
  */

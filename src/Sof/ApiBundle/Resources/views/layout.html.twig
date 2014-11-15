@@ -10,6 +10,7 @@
         {% set extUrl          = asset('js/ext-js') %}
         {% set desktopUrl      = asset('js/desktop/js') %}
         {% set utilUrl         = asset('js/desktop/util') %}
+        {% set uxUrl           = asset('js/desktop/ux') %}
         {% set myDesktopUrl    = asset('js/desktop') %}
         {% set srcPageUrl      = asset('js/desktop/pages') %}
         {% set srcTranslateUrl = asset('js/desktop/translate') %}
@@ -27,6 +28,7 @@
         <script>
             var url              = "{{ desktopUrl }}",
                 utilUrl          = "{{ utilUrl }}",
+                uxUrl            = "{{ uxUrl }}",
                 myDesktopUrl     = "{{ myDesktopUrl }}",
                 srcPageUrl       = "{{ srcPageUrl }}",
 
@@ -51,6 +53,7 @@
             Ext.Loader.setPath({
                 'Ext.ux.desktop': url,
                 MyUtil          : utilUrl,
+                MyUx            : uxUrl,
                 MyDesktop       : myDesktopUrl,
                 SrcPageUrl      : srcPageUrl
             });

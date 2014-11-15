@@ -50,7 +50,8 @@ Ext.define('SrcPageUrl.Liabilities.List', {
         'Ext.data.ArrayStore',
         'Ext.util.Format',
         'Ext.form.field.Number',
-        'Ext.form.field.Date'
+        'Ext.form.field.Date',
+        'MyUx.grid.Printer'
     ],
 
     id:'liabilities-list',
@@ -297,7 +298,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                             beforerender: function () {
                                 this.store.load();
                             },
-                            itemdblclick: function (view, record, row, i, e) {
+                            itemclick: function (view, record, row, i, e) {
                                 var id = record.data.id;
                                 storeLoadLiabilities.load({
                                     params: {id: id}
@@ -395,6 +396,22 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                     });
                                 } else {
                                     MyUtil.Message.MessageWarning('please choose 1 record to delete'.Translator('Common'));
+                                }
+                            }
+                        }
+                    }, '-',{
+                        text: 'print'.Translator('Common'),
+                        tooltip: 'print'.Translator('Common'),
+                        iconCls: 'print',
+                        listeners: {
+                            click: function () {
+                                var selection = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+                                if (selection.length > 0) {
+                                    var grid = Ext.getCmp('grid-liabilities-list');
+                                    MyUx.grid.Printer.printAutomatically = false;
+                                    MyUx.grid.Printer.print(grid);
+                                } else {
+                                    MyUtil.Message.MessageWarning('no records found'.Translator('Common'));
                                 }
                             }
                         }

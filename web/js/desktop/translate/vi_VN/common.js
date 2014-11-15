@@ -5,7 +5,9 @@ Locale.module('Common', {
     'remove': 'Xóa',
     'save': 'Lưu',
     'cancel': 'Hủy',
+    'close': 'Đóng',
     'delete': 'Xóa',
+    'print': 'In',
     'total': 'Tổng',
 
     //message
@@ -26,6 +28,7 @@ Locale.module('Common', {
     'please choose 1 record to delete': 'Chọn 1 dòng để xóa!',
 
     //label
+    'preview': 'Xem lại',
     'name': 'Tên',
     'amount': 'Số lượng',
     'price': 'Giá'
