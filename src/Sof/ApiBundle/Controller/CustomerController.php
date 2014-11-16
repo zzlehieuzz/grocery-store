@@ -18,11 +18,12 @@ class CustomerController extends BaseController
     {
         $params = $this->getPagingParams();
 
-        $arrEntity = $this->getEntityService()->getDataForPaging('Customer',
+        $params = $this->getPagingParams();
+        $arrEntity = $this->getEntityService()->getDataForPaging(
+            'Customer',
             array('orderBy' => array('id' => 'DESC'),
-//                  'firstResult' => $params['start'],
-//                  'maxResults' => $params['limit']
-            ));
+                'firstResult' => $params['start'],
+                'maxResults' => $params['limit']));
 
         return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
     }
