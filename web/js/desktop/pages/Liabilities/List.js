@@ -67,10 +67,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
         var invoiceSelectId = '', customerSelectId = '';
 
         var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI",
-            onKeyPress: function(e, t) {
-                console.log(e);
-            }
+            mode : "MULTI"
         });
 
         var columnsLiabilities = [
@@ -195,7 +192,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                 scope: this,
                                 success: function(msg) {
                                     if (msg.status) {
-                                        console.log('success');
                                         this.up('form').getForm().reset();
                                         storeLoadLiabilities.reload();
                                         popupAddNewLiabilitiesForm.hide();
@@ -240,7 +236,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         success: function(msg) {
                             if (msg.status) {
                                 storeLoadLiabilities.reload();
-                                console.log('success');
                             }
                         },
                         failure: function(msg) {
@@ -298,11 +293,8 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                             beforerender: function () {
                                 this.store.load();
                             },
-                            itemclick: function (view, record, row, i, e) {
-                                var id = record.data.id;
-                                storeLoadLiabilities.load({
-                                    params: {id: id}
-                                });
+                            itemclick: function (view, record) {
+                                storeLoadLiabilities.load();
                             }
                         }
                     }],
@@ -352,7 +344,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                             if (rdoInvoiceId.length == 1) {
                                 invoiceSelectId  = rdoInvoiceId[0].value;
                                 customerSelectId = selection[0].data.id;
-
                                 popupAddNewLiabilitiesForm.show();
                             } else {
                                 MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
@@ -385,7 +376,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                                 success: function(msg) {
                                                     if (msg.status) {
                                                         storeLoadLiabilities.reload();
-                                                        console.log('success');
                                                     }
                                                 },
                                                 failure: function(msg) {
@@ -400,6 +390,25 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                             }
                         }
                     }, '-',{
+                        id: 'searchInvoiceName',
+                        width: 200,
+                        labelWidth: 50,
+                        emptyText: 'invoice number'.Translator('Invoice'),
+                        xtype: 'textfield'
+                    }, {
+                        text: 'find'.Translator('Common'),
+                        tooltip: 'find'.Translator('Common'),
+                        iconCls: 'find',
+                        handler: function () {
+                            var selection = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+
+                            if (selection.length == 1) {
+                                storeLoadLiabilities.reload();
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a customer'.Translator('Liabilities'));
+                            }
+                        }
+                    }, '->',{
                         text: 'print'.Translator('Common'),
                         tooltip: 'print'.Translator('Common'),
                         iconCls: 'print',
@@ -411,7 +420,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                     MyUx.grid.Printer.printAutomatically = false;
                                     MyUx.grid.Printer.print(grid);
                                 } else {
-                                    MyUtil.Message.MessageWarning('no records found'.Translator('Common'));
+                                    MyUtil.Message.MessageWarning('please choice a customer'.Translator('Liabilities'));
                                 }
                             }
                         }
@@ -419,6 +428,14 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                 }]
             });
         }
+
+        storeLoadLiabilities.on('beforeload', function() {
+            var selection = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+            if (selection.length == 1) {
+                this.proxy.extraParams = {id: selection[0].data.id, searchInvoiceName:Ext.getCmp('searchInvoiceName').getValue()};
+            }
+        });
+
         return win;
     },
 

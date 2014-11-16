@@ -14,6 +14,8 @@ use Sof\ApiBundle\Lib\SofUtil;
 class InvoiceRepository extends BaseRepository
 {
     /**
+     * @param $id
+     * @param $searchInvoiceName
      * @return Array
      *
      * @author HieuNLD 2014/11/13
@@ -32,6 +34,28 @@ class InvoiceRepository extends BaseRepository
         if ($searchInvoiceName) {
             $query->andWhere('entity.invoiceNumber LIKE :invoiceNumber')
                   ->setParameter('invoiceNumber', '%'.$searchInvoiceName.'%');
+        }
+
+        return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
+    }
+
+    /**
+     * @param $arrDriverInvoice
+     * @return Array
+     *
+     * @author HieuNLD 2014/11/13
+     */
+    public function getDataInvoice_Delivery($arrDriverInvoice = array()) {
+        $query = $this->querySimpleEntities(array(
+                'selects' => array('id', 'invoiceNumber'),
+//                'conditions' => array(
+//                    'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
+//                    'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+//                )
+            ));
+        if ($arrDriverInvoice) {
+            $query->andWhere('entity.id NOT IN(:arrInvoiceId)')
+                  ->setParameter('arrInvoiceId', $arrDriverInvoice);
         }
 
         return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
