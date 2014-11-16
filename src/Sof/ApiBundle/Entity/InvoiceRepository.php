@@ -18,7 +18,7 @@ class InvoiceRepository extends BaseRepository
      *
      * @author HieuNLD 2014/11/13
      */
-    public function getData($id) {
+    public function getData($id, $searchInvoiceName) {
         $query = $this->querySimpleEntities(array(
             'selects' => array('id AS invoiceId', 'invoiceNumber'),
             'conditions' => array('subject'       => $id,
@@ -28,6 +28,11 @@ class InvoiceRepository extends BaseRepository
         ));
         $query->addSelect('l.id, l.name, l.amount, l.price, l.customerId');
         $query->leftJoin(self::ENTITY_BUNDLE . ":Liabilities", 'l', 'WITH', "entity.subject = l.customerId AND entity.id = l.invoiceId");
+
+        if ($searchInvoiceName) {
+            $query->andWhere('entity.invoiceNumber LIKE :invoiceNumber')
+                  ->setParameter('invoiceNumber', '%'.$searchInvoiceName.'%');
+        }
 
         return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
     }
