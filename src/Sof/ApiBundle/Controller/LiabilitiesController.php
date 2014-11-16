@@ -17,10 +17,11 @@ class LiabilitiesController extends BaseController
     public function Liabilities_LoadAction()
     {
         $request = $this->getRequestData();
-        $id      = $request->get('id');
+        $id                = $request->get('id');
+        $searchInvoiceName = $request->get('searchInvoiceName');
 
         $entityService = $this->getEntityService();
-        $arrCustomer   = $entityService->selectOnDefault('Invoice:getData', $id);
+        $arrCustomer   = $entityService->selectOnDefault('Invoice:getData', $id, $searchInvoiceName);
 
         return $this->jsonResponse(array('data' => $arrCustomer));
     }
