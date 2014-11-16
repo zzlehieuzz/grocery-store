@@ -8,6 +8,7 @@ Locale.module('Common', {
     'close': 'Đóng',
     'delete': 'Xóa',
     'print': 'In',
+    'find': 'Tìm',
     'total': 'Tổng',
 
     //message
@@ -45,7 +46,8 @@ Locale.module('Module', {
     'invoices output': 'Phiếu xuất',
     'liabilities management': 'Quản lý công nợ',
     'invoices management': 'Quản lý xuất/nhập',
-    'distributor management': 'Quản lý nhà phân phối'
+    'distributor management': 'Quản lý nhà phân phối',
+    'delivery management': 'Quản lý giao hàng'
 });
 
 Locale.module('Logout', {
@@ -83,7 +85,8 @@ Locale.module('Profile', {
 
 Locale.module('Driver', {
     //label
-    'number plate': 'Biển số'
+    'number plate': 'Biển số',
+    'driver': 'Tài xế'
 });
 
 Locale.module('Customer', {
@@ -115,10 +118,23 @@ Locale.module('Liabilities', {
     'add new liabilities': 'Tạo mới phiếu nợ',
 
     //message
-    'please choice a invoice': 'Làm ơn chọn số phiếu.'
+    'please choice a invoice': 'Làm ơn chọn số phiếu.',
+    'please choice a customer': 'Làm ơn chọn khách hàng.'
 });
 
 Locale.module('Invoice', {
     //label
-    'invoice number': 'Số phiếu'
+    'invoice number': 'Số phiếu',
+    'create invoice date': 'Ngày tạo',
+    'address': 'Địa chỉ',
+    'phone number': 'Số điện thoại'
+});
+
+Locale.module('Delivery', {
+    //label
+    'invoice list output': 'Danh sách phiếu xuất',
+    'select invoice output': 'Chọn phiếu xuất',
+
+    //message
+    'please choose invoice': 'Làm ơn chọn phiếu xuất.'
 });

@@ -16,11 +16,14 @@ class DriverController extends BaseController
      */
     public function Driver_LoadAction()
     {
-        $arrEntity = $this->getEntityService()->getAllData(
+        $params = $this->getPagingParams();
+        $arrEntity = $this->getEntityService()->getDataForPaging(
             'Driver',
-            array('orderBy' => array('id' => 'DESC')));
+            array('orderBy' => array('id' => 'DESC'),
+                  'firstResult' => $params['start'],
+                 'maxResults' => $params['limit']));
 
-        return $this->jsonResponse(array('data' => $arrEntity));
+        return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
     }
 
     /**

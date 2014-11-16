@@ -282,6 +282,9 @@ div.ux-taskbar div.x-toolbar {
 .print {
     background-image:url(../images/gird-window/printer.png) !important; }
 
+.find {
+    background-image:url(../images/gird-window/find.png) !important; }
+
 /*----------------------------------------------------
  * icon in form
  */
