@@ -121,26 +121,26 @@ class InvoicesController extends BaseController
         $entityInvoice = array();
 
         if ($invoiceId) {
-
             $entityInvoice = $this->getEntityService()->getAllData(
                 'Invoice',
                 array(
                       'orderBy'     => array('id' => 'DESC'),
                       'conditions'  => array('id' => $invoiceId)
-                ))[0];
+                ));
+            if (isset($entityInvoice[0]) && ($entityInvoice = $entityInvoice[0])) {
+                if ($entityInvoice['createInvoiceDate'] != "") {
+                    $entityInvoice['createInvoiceDate'] = $entityInvoice['createInvoiceDate']->format('d/m/Y');
+                } else {
+                    $entityInvoice['createInvoiceDate'] = null;
+                }
 
-            if ($entityInvoice['createInvoiceDate'] != "") {
-                $entityInvoice['createInvoiceDate'] = $entityInvoice['createInvoiceDate']->format('d/m/Y');
-            } else {
-                $entityInvoice['createInvoiceDate'] = null;
-            }
-
-            $arrInvoiceDetail = $this->getEntityService()->getAllData(
+                $arrInvoiceDetail = $this->getEntityService()->getAllData(
                 'InvoiceDetail',
                 array(
-                    'orderBy'    => array('id' => 'DESC'),
+                    'orderBy' => array('id' => 'DESC'),
                     'conditions' => array('invoiceId' => $invoiceId)
                 ));
+            }
         }
 
         return $this->jsonResponse(array('grid_data' => $arrInvoiceDetail, 'form_data' => $entityInvoice));
@@ -324,17 +324,19 @@ class InvoicesController extends BaseController
                 array(
                     'orderBy'     => array('id' => 'DESC'),
                     'conditions'  => array('id' => $invoiceId)
-                ))[0];
-
-            $arrInvoiceDetail = $this->getEntityService()->getAllData(
-                'InvoiceDetail',
-                array(
-                    'orderBy'    => array('id' => 'DESC'),
-                    'conditions' => array('invoiceId' => $invoiceId)
                 ));
 
-            foreach($arrInvoiceDetail as $entity){
-                $arrData[] = $entity;
+            if (isset($entityInvoice[0]) && ($entityInvoice = $entityInvoice[0])) {
+                $arrInvoiceDetail = $this->getEntityService()->getAllData(
+                    'InvoiceDetail',
+                    array(
+                        'orderBy'    => array('id' => 'DESC'),
+                        'conditions' => array('invoiceId' => $invoiceId)
+                    ));
+
+                foreach($arrInvoiceDetail as $entity){
+                    $arrData[] = $entity;
+                }
             }
         }
 
