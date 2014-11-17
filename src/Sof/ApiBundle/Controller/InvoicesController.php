@@ -47,14 +47,14 @@ class InvoicesController extends BaseController
         foreach($arrEntity as $key=>$entity){
             $subjectName = "";
             if ($entity['invoiceType'] == 1) {
-                $entitySubject = $this->getEntityService()->getAllData(
+                $entitySubject = $this->getEntityService()->getFirstData(
                     'Distributor',
                     array(
                         'conditions'  => array('id' => $entity['subject'])
                     ));
 
             } else {
-                $entitySubject = $this->getEntityService()->getAllData(
+                $entitySubject = $this->getEntityService()->getFirstData(
                     'Customer',
                     array(
                         'conditions'  => array('id' => $entity['subject'])
@@ -62,7 +62,7 @@ class InvoicesController extends BaseController
             }
 
             if (count($entitySubject) > 0) {
-                $subjectName = $entitySubject[0]['name'];
+                $subjectName = $entitySubject['name'];
             }
 
             $paymentStatus = "";
@@ -121,12 +121,12 @@ class InvoicesController extends BaseController
         $entityInvoice = array();
 
         if ($invoiceId) {
-            $entityInvoice = $this->getEntityService()->getAllData(
+            $entityInvoice = $this->getEntityService()->getFirstData(
                 'Invoice',
                 array(
                       'orderBy'     => array('id' => 'DESC'),
                       'conditions'  => array('id' => $invoiceId)
-                ))[0];
+                ));
 
             if ($entityInvoice['createInvoiceDate'] != "") {
                 $entityInvoice['createInvoiceDate'] = $entityInvoice['createInvoiceDate']->format('d/m/Y');
@@ -165,14 +165,14 @@ class InvoicesController extends BaseController
         $grid_value = (array)$params->grid_value;
 
         if ($form_fields_value['invoiceNumber'] != "") {
-            $arrCheckInvoice = $this->getEntityService()->getAllData(
+            $arrCheckInvoice = $this->getEntityService()->getFirstData(
                 'Invoice',
                 array(
                     'conditions' => array('invoiceNumber' => $form_fields_value['invoiceNumber'])
                 ));
 
             if ($arrCheckInvoice) {
-                $invoiceId = $arrCheckInvoice[0]['id'];
+                $invoiceId = $arrCheckInvoice['id'];
             }
         }
 
@@ -310,157 +310,6 @@ class InvoicesController extends BaseController
         return $this->jsonResponse(array('data' => $params));
     }
 
-    //PHIEU XUAT
-    /**
-     * @Route("/Output_Load", name="Output_Load")
-     */
-    public function Output_LoadAction()
-    {
-        //Phiếu Xuất: type= 2
-        $arrData = array();
-        $entityInvoice = array();
-
-        if (!isset($arrGet['id'])) {
-//            $invoiceId = $arrGet['id'];
-            $invoiceId = 2;
-
-            $entityInvoice = $this->getEntityService()->getAllData(
-                'Invoice',
-                array(
-                    'orderBy'     => array('id' => 'DESC'),
-                    'conditions'  => array('id' => $invoiceId)
-                ))[0];
-
-            $arrInvoiceDetail = $this->getEntityService()->getAllData(
-                'InvoiceDetail',
-                array(
-                    'orderBy'    => array('id' => 'DESC'),
-                    'conditions' => array('invoiceId' => $invoiceId)
-                ));
-
-            foreach($arrInvoiceDetail as $entity){
-                $arrData[] = $entity;
-            }
-        }
-
-        return $this->jsonResponse(array('grid_data' => $arrData, 'form_data' => $entityInvoice));
-    }
-
-    /**
-     * @Route("/Output_Update", name="Output_Update")
-     */
-    public function Output_UpdateAction()
-    {
-        $entityService = $this->getEntityService();
-
-        $params        =  $this->get('request')->getContent();
-        $params = json_decode($params);
-        $form_fields_value = (array)$params->form_fields_value;
-        $grid_value = (array)$params->grid_value;
-
-        if ($form_fields_value['id'] != "") {
-            //Update
-
-            $invoiceId = $form_fields_value['id'];
-            unset($form_fields_value['id']);
-
-            $entityService->dqlUpdate(
-                'Invoice',
-                array('update' => $form_fields_value,
-                    'conditions' => array('id' => $invoiceId)
-                )
-            );
-
-        } else {
-            //Insert
-            unset($form_fields_value['id']);
-            $invoiceId = $entityService->rawSqlInsert('Invoice', array('insert' => $form_fields_value));
-        }
-
-        //Update Invoice Detail
-        $arrInvoiceDetail = $this->getEntityService()->getAllData(
-            'InvoiceDetail',
-            array(
-                'orderBy'    => array('id' => 'DESC'),
-                'conditions' => array('invoiceId' => $invoiceId = 2)
-            ));
-
-        if (count($grid_value) > 0) {
-            $arrInsert = array();
-            $arrUpdate = array();
-            $arrDelete = array();
-
-            foreach ($grid_value as $rowValue) {
-                $arrData = (array)$rowValue;
-                $arrData['invoiceType'] = 2;
-
-                if ($arrData['id'] == 0) {
-                    $arrInsert[] = $arrData;
-                }
-
-                if (count($arrInvoiceDetail) > 0 && $arrData['id']) {
-
-                    for ($i = 0; $i < count($arrInvoiceDetail); $i++){
-                        if ($arrInvoiceDetail[$i]['id'] == $arrData['id']) {
-                            $arrUpdate['id'] = $arrData;
-                        } else {
-                            $arrDelete['id'] = $arrInvoiceDetail[$i]['id'];
-                        }
-                    }
-
-                }
-            }
-
-            //Update
-            $entityService->dqlUpdate(
-                'InvoiceDetail',
-                array('update' => $arrUpdate,
-                    'conditions' => array('id' => $id = 0)
-                )
-            );
-
-            //Insert
-            $invoiceId = $entityService->rawSqlInsert('InvoiceDetail', array('insert' => $arrInsert));
-
-            //Delete
-            $entityService->delete('InvoiceDetail', $arrDelete);
-        }
-
-        return $this->jsonResponse(array('data' => array()));
-    }
-
-    /**
-     * @Route("/Output_Delete", name="Output_Delete")
-     */
-    public function Output_DeleteAction()
-    {
-        $entityService = $this->getEntityService();
-
-        $params = $this->getJsonParams();
-
-        $entityService->dqlDelete(
-            'InvoiceDetail',
-            array(
-                'conditions' => array(
-                    'id'   => $params,
-                )
-            )
-        );
-
-        $entityService->dqlDelete(
-            'Invoice',
-            array(
-                'conditions' => array(
-                    'id'   => $params,
-                )
-            )
-        );
-
-        $entityService->completeTransaction();
-
-        return $this->jsonResponse(array('data' => $params));
-    }
-
     private function generatingInvoiceNumber($invoiceType){
         $dateCurrent = (new \DateTime())->format('Ymd');
 
@@ -470,12 +319,12 @@ class InvoicesController extends BaseController
             $invoiceNumber = 'PX';
         }
 
-        $entityInvoice = $this->getEntityService()->getAllData(
+        $entityInvoice = $this->getEntityService()->getFirstData(
             'Invoice',
             array(
                 'orderBy'     => array('id' => 'DESC'),
                 'conditions'  => array('invoiceType' => $invoiceType)
-            ))[0];
+            ));
 
         if (count($entityInvoice) > 0) {
             $oldInvoiceNumber = $entityInvoice['invoiceNumber'];
