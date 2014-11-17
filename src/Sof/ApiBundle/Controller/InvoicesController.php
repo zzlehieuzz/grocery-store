@@ -31,11 +31,11 @@ class InvoicesController extends BaseController
         }
 
         if ($fromDate) {
-            $arrCondition['createInvoiceDate'] = array('>=' => $fromDate);
+            $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d H:i:s'));
         }
 
         if ($toDate) {
-            $arrCondition['createInvoiceDate'] = array('<=' => $toDate);
+            $arrCondition['createInvoiceDate'] = array('<=' => (new \DateTime($toDate))->format('Y-m-d H:i:s'));
         }
 
         $arrEntity = $this->getEntityService()->getAllData(
