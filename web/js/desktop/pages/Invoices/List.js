@@ -29,6 +29,13 @@ var readerJsonCommon = {
     totalProperty: 'total'
 };
 
+var readerJsonInvoiceNumber = {
+    type: 'json',
+    root: 'invoice_number',
+    id  : 'id',
+    totalProperty: 'total'
+};
+
 var objectField = [{name: 'id',   type: 'int'},
                    {name: 'subjectName', type: 'string'},
                    {name: 'invoiceType', type: 'int'},
@@ -88,10 +95,13 @@ var objectProductField = [{name: 'id',   type: 'int'},
     {name: 'productUnitId', type: 'int'}
 ];
 
+var objectInvoiceNumber = [{name: 'input',   type: 'string'}, {name: 'output',   type: 'string'}];
+
 MyUtil.Object.defineModel('Input', objectGridField);
 MyUtil.Object.defineModel('DistributorCmb', objectDistributorField);
 MyUtil.Object.defineModel('CustomerCmb', objectDistributorField);
 MyUtil.Object.defineModel('ProductCmb', objectProductField);
+MyUtil.Object.defineModel('InvoiceNumber', objectInvoiceNumber);
 
 var storeLoadInput = new Ext.data.JsonStore({
     model: 'Input',
@@ -108,6 +118,15 @@ var storeLoadDistributorCmb = new Ext.data.JsonStore({
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Distributor_Load"),
         reader: readerJsonCommon
+    }),
+    autoLoad: true
+});
+
+var storeLoadInvoiceNumber2 = new Ext.data.JsonStore({
+    model: 'InvoiceNumber',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Input_Load"),
+        reader: readerJsonInvoiceNumber
     }),
     autoLoad: true
 });
@@ -149,7 +168,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
     init : function(){
         this.launcher = {
             text: 'invoices management'.Translator('Module'),
-//            text: 'Quản lý nhập xuất',
             iconCls:'icon-grid'
         };
     },
@@ -170,15 +188,15 @@ Ext.define('SrcPageUrl.Invoices.List', {
             items: [{
                 xtype: 'radiogroup',
                 anchor: '80%',
-                fieldLabel: 'Loại Phiếu',
+                fieldLabel: 'invoice type'.Translator('Invoice'),
                 columns: 3,
                 name: 'invoiceTypeRadio',
                 id: 'invoiceTypeRadio',
                 vertical: true,
                 items: [
-                    {boxLabel: 'All', name: 'rb', inputValue: '0', checked: true},
-                    {boxLabel: 'Phiếu Nhập', name: 'rb', inputValue: '1'},
-                    {boxLabel: 'Phiếu Xuất', name: 'rb', inputValue: '2'}
+                    {boxLabel: 'all'.Translator('Invoice'), name: 'rb', inputValue: '0', checked: true},
+                    {boxLabel: 'invoice input'.Translator('Invoice'), name: 'rb', inputValue: '1'},
+                    {boxLabel: 'invoice output'.Translator('Invoice'), name: 'rb', inputValue: '2'}
                 ]
             },{
                 xtype: 'container',
@@ -189,7 +207,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     padding: '0 5 5 0',
                     layout: 'anchor',
                     items: [  {
-                        fieldLabel: 'Từ Ngày',
+                        fieldLabel: 'from date'.Translator('Invoice'),
                         xtype: 'datefield',
                         name: 'fromDate',
                         id: 'fromDate',
@@ -199,7 +217,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     xtype: 'container',
                     layout: 'anchor',
                     items: [ {
-                        fieldLabel: 'Đến Ngày',
+                        fieldLabel: 'to date'.Translator('Invoice'),
                         name: 'toDate',
                         id: 'toDate',
                         xtype: 'datefield',
@@ -217,9 +235,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     layout: 'anchor',
                     items: [ {
                         xtype: 'button',
-                        text: 'Tìm',
+                        text: 'find'.Translator('Invoice'),
                         width: 50,
-//                        anchor: '30%',
                         handler : function() {
 
                             var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
@@ -234,13 +251,13 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     layout: 'anchor',
                     items: [ {
                         xtype: 'button',
-                        text: 'Tạo Mới Phiếu',
+                        text: 'create new invoice'.Translator('Invoice'),
                         width: 100,
                         handler : function() {
 
                             var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
                             if (invoiceType == 0) {
-                                alert("Vui lòng chọn loại phiếu cần tạo");
+                                MyUtil.Message.MessageInfo("please choose invoice type".Translator('Invoice'));
                             } else {
                                 createPopupInvoiceForm(null, invoiceType);
                             }
@@ -255,40 +272,35 @@ Ext.define('SrcPageUrl.Invoices.List', {
         var columnsInvoice = [
             new Ext.grid.RowNumberer(),
             {
-//                text: "subject".Translator('Common'),
-                text: "Tên Khách Hàng",
+                text: "customer name".Translator('Invoice'),
                 width: 100,
                 dataIndex: 'subjectName',
                 editor: {
                     allowBlank: true
                 }
             }, {
-//                text: "create_invoice_date".Translator('Invoice'),
-                text: "Ngày",
+                text: "date".Translator('Invoice'),
                 flex: 1,
                 dataIndex: 'createInvoiceDate',
                 editor: {
                     allowBlank: true
                 }
             }, {
-//                text: "create_invoice_date".Translator('Invoice'),
-                text: "Thành Tiền",
+                text: "amount".Translator('Invoice'),
                 flex: 1,
                 dataIndex: 'amount',
                 editor: {
                     allowBlank: true
                 }
             }, {
-//                text: "create_invoice_date".Translator('Invoice'),
-                text: "Loại Phiếu",
+                text: "invoice type".Translator('Invoice'),
                 flex: 1,
                 dataIndex: 'invoiceTypeText',
                 editor: {
                     allowBlank: true
                 }
             }, {
-//                text: "create_invoice_date".Translator('Invoice'),
-                text: "Số Phiếu",
+                text: "invoice number".Translator('Invoice'),
                 flex: 2,
                 dataIndex: 'invoiceNumber',
                 editor: {
@@ -302,7 +314,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     Ext.defer(function() {
                         Ext.widget('button', {
                             renderTo: id,
-                            text: 'Xem Chi Tiết',
+                            text: 'view detail'.Translator('Invoice'),
                             scale: 'small',
                             handler: function() {
                                 var invoiceId = rec.data.id;
@@ -315,8 +327,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     return Ext.String.format('<div id="{0}"></div>', id);
                 }
             }, {
-//                text: "create_invoice_date".Translator('Invoice'),
-                text: "Trạng Thái",
+                text: "state".Translator('Invoice'),
                 flex: 2,
                 dataIndex: 'paymentStatus',
                 editor: {
@@ -335,14 +346,12 @@ Ext.define('SrcPageUrl.Invoices.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'invoice-list',
-//                title:'invoice management'.Translator('Module'),
-                title:'Quản lý nhập xuất',
+                title:'invoices management'.Translator('Module'),
                 width:600,
                 height:500,
                 iconCls: 'icon-grid',
                 animCollapse:false,
                 constrainHeader:true,
-//                layout: 'fit',
                 items: [
                     formFieldsList,
                   {
@@ -385,17 +394,17 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
     var date_format = 'd/m/Y';
 
     if (invoiceType == 1) {
-        invoiceTitle = "Phiếu Nhập";
-        subjectT = 'Nhà Phân Phối';
-        deliveryReceiver = 'Người Giao Hàng';
-        addressSubject = 'Địa Chỉ Nhà PP';
-        phoneSubject = 'Điện Thoại Nhà PP';
+        invoiceTitle = "invoice input".Translator('Invoice');
+        subjectT = 'distributor'.Translator('Invoice');
+        deliveryReceiver = 'delivery man'.Translator('Invoice');
+        addressSubject = 'distributor address'.Translator('Invoice');
+        phoneSubject = 'distributor phone'.Translator('Invoice');
     } else {
-        invoiceTitle = "Phiếu Xuất";
-        subjectT = 'Khách Hàng';
-        deliveryReceiver = 'Người Nhận Hàng';
-        addressSubject = 'Địa Chỉ Khách Hàng';
-        phoneSubject = 'Điện Thoại Khách Hàng';
+        invoiceTitle = "invoice output".Translator('Invoice');
+        subjectT = 'customer'.Translator('Invoice');
+        deliveryReceiver = 'receiver man'.Translator('Invoice');
+        addressSubject = 'customer address'.Translator('Invoice');
+        phoneSubject = 'customer phone'.Translator('Invoice');
         storeLoadDistributorCmb = storeLoadCustomerCmb;
     }
 
@@ -408,10 +417,23 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
         autoLoad: false
     });
 
+    storeLoadInvoiceNumber2.load({
+        params:{limit: 5, page: 1, start: 1, id: invoiceId},
+        callback : function(records, options, success) {
+            if (storeLoadInvoiceNumber2.data.items[0]) {
+                formData = storeLoadInvoiceNumber2.data.items[0].data;
+
+                if (invoiceType == 1) {
+                    Ext.getCmp('invoice_number').setValue(formData.input);
+                } else {
+                    Ext.getCmp('invoice_number').setValue(formData.output);
+                }
+            }
+        }});
+
     //Default value
     var formData = { 'id' : '',
-                    'invoiceNumber' : '',
-            //                'createInvoiceDate': new Date('d-m-Y'),
+//                    'invoiceNumber' : '',
                     'createInvoiceDate': '',
                     'subject': 1,
                     'createInvoiceMan': '',
@@ -460,13 +482,13 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                     id:'invoiceTypeHidden',
                     value: invoiceType
                 },{
-                    fieldLabel: 'Số Phiếu',
+                    fieldLabel: 'invoice number'.Translator('Invoice'),
                     labelWidth: 150,
                     xtype:'textfield',
                     name: 'invoice_number',
                     id: 'invoice_number'
                 }, {
-                    fieldLabel: 'Ngày Lập Phiếu',
+                    fieldLabel: 'create invoice date'.Translator('Invoice'),
                     labelWidth: 150,
                     name: 'create_invoice_date',
                     id: 'create_invoice_date',
@@ -505,7 +527,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 flex: 1,
                 layout: 'anchor',
                 items: [ {
-                    fieldLabel: 'Người Lập',
+                    fieldLabel: 'create invoice man'.Translator('Invoice'),
                     labelWidth: 150,
                     xtype:'textfield',
                     name: 'create_invoice_man',
@@ -529,9 +551,9 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
     };
 
     var columnsInvoicePopup = [
-        { xtype : 'rownumberer', text : 'STT', width : 30 },
+        { xtype : 'rownumberer', text : 'order'.Translator('Invoice'), width : 30 },
         {
-            header: 'Tên Sản Phẩm',
+            header: 'product name'.Translator('Product'),
             dataIndex: 'productId',
             editor:
             {
@@ -541,7 +563,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 valueField: 'id'
             }
         }, {
-            header: 'Mã Sản Phẩm',
+            header: 'product code'.Translator('Product'),
             dataIndex: 'productId',
             editor:
             {
@@ -552,7 +574,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
             }
         }
         ,{
-            text: "Đơn Vị Tính",
+            text: "unit".Translator('Product'),
             flex: 2,
             dataIndex: 'unit',
 //            summaryType: 'sum',
@@ -563,7 +585,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 allowBlank: true
             }
         }, {
-            text: "Số lượng",
+            text: "quantity".Translator('Product'),
             flex: 2,
             dataIndex: 'quantity',
 //            summaryType: 'sum',
@@ -591,7 +613,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 }
             }
         }, {
-            text: "Đơn giá",
+            text: "price".Translator('Product'),
             flex: 2,
             dataIndex: 'price',
 //            summaryType: 'sum',
@@ -618,7 +640,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 }
             }
         }, {
-            text: "Thành Tiền",
+            text: "amount".Translator('Product'),
             width: 150,
             flex: 1,
             dataIndex: 'amount',
@@ -650,7 +672,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                             layout: 'anchor',
                             items: [ {
                                 xtype: 'button',
-                                text: 'Thêm Sản Phẩm',
+                                text: 'add product'.Translator('Invoice'),
                                 width: 100,
                                 handler : function() {
                                     cellEditing.cancelEdit();
@@ -675,7 +697,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                             layout: 'anchor',
                             items: [ {
                                 xtype: 'button',
-                                text: 'Xóa Sản Phẩm',
+                                text: 'remove product'.Translator('Invoice'),
                                 width: 100,
                                 listeners:  {
                                     click: function () {
@@ -724,7 +746,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
 
         buttons: [{
             xtype: 'button',
-            text: 'Thêm',
+            text: 'add'.Translator('Invoice'),
             width: 30,
             handler : function() {
                 Ext.getCmp('invoice_number').setValue('');
@@ -737,7 +759,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
             }
         },{
             xtype: 'button',
-            text: 'Lưu',
+            text: 'save'.Translator('Invoice'),
             width: 30,
             handler : function() {
 
@@ -775,7 +797,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 var params = {'form_fields_value': form_fields_value, 'grid_value': gridData};
 
                 if (invoice_number == "") {
-                   alert("Vui lòng nhập số phiếu.");
+                    MyUtil.Message.MessageInfo("please input invoice number".Translator('Invoice'));
                 } else {
                     Ext.Ajax.request({
                         url: MyUtil.Path.getPathAction("Input_Update")
@@ -793,7 +815,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
             }
         },{
             xtype: 'button',
-            text: 'Xóa',
+            text: 'delete'.Translator('Invoice'),
             width: 30,
             handler : function() {
                 Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){

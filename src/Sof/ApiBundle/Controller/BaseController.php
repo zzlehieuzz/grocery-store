@@ -277,6 +277,10 @@ class BaseController extends Controller implements FilterControllerInterface
             $result['form_data'] = $data['form_data'];
         }
 
+        if (isset($data['invoice_number']) && $data['invoice_number']) {
+            $result['invoice_number'] = $data['invoice_number'];
+        }
+
         if (isset($data['error']) && $data['error']) {
             $result['error'] = $data['error'];
         }

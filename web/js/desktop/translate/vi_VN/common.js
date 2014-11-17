@@ -98,11 +98,16 @@ Locale.module('Customer', {
 
 Locale.module('Product', {
     //label
+    'product name': 'Tên sản phẩm',
     'product code': 'Mã sản phẩm',
     'original price': 'Giá gốc',
+    'price': 'Đơn giá',
+    'quantity': 'Số lượng',
     'sale price': 'Giá bán',
+    'unit': 'Đơn vị tính',
     'unit 1': 'Đơn vị 1',
     'unit 2': 'Đơn vị 2',
+    'amount': 'Thành Tiền',
     'convert amount': 'Số lượng chuyển đổi'
 });
 
@@ -125,9 +130,39 @@ Locale.module('Liabilities', {
 Locale.module('Invoice', {
     //label
     'invoice number': 'Số phiếu',
-    'create invoice date': 'Ngày tạo',
+    'invoice type': 'Loại Phiếu',
+    'create invoice date': 'Ngày Lập Phiếu',
+    'create invoice man': 'Người Lập',
     'address': 'Địa chỉ',
-    'phone number': 'Số điện thoại'
+    'phone number': 'Số điện thoại',
+    'all': 'Tất cả',
+    'invoice input': 'Phiếu Nhập',
+    'invoice output': 'Phiếu Xuất',
+    'from date': 'Từ Ngày',
+    'to date': 'Đến Ngày',
+    'add': 'Thêm',
+    'find': 'Tìm',
+    'save': 'Lưu',
+    'delete': 'Xóa',
+    'create new invoice': 'Tạo Mới Phiếu',
+    'please choose invoice type': 'Vui lòng chọn loại phiếu cần tạo',
+    'please input invoice number': 'Vui lòng nhập số phiếu.',
+    'customer name': 'Tên Khách Hàng',
+    'date': 'Ngày',
+    'amount': 'Thành Tiền',
+    'view detail': 'Xem Chi Tiết',
+    'state': 'Trạng Thái',
+    'distributor': 'Nhà Phân Phối',
+    'delivery man': 'Người Giao Hàng',
+    'distributor address': 'Địa Chỉ Nhà PP',
+    'distributor phone': 'Điện Thoại Nhà PP',
+    'customer': 'Khách Hàng',
+    'receiver man': 'Người Nhận Hàng',
+    'customer address': 'Địa Chỉ Khách Hàng',
+    'customer phone': 'Điện Thoại Khách Hàng',
+    'add product': 'Thêm Sản Phẩm',
+    'remove product': 'Xóa Sản Phẩm',
+    'order': 'STT'
 });
 
 Locale.module('Delivery', {
