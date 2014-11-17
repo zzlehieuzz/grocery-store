@@ -460,4 +460,34 @@ class InvoicesController extends BaseController
 
         return $this->jsonResponse(array('data' => $params));
     }
+
+    private function generatingInvoiceNumber($invoiceType){
+        $dateCurrent = (new \DateTime())->format('Ymd');
+
+        if ($invoiceType == 1) {
+            $invoiceNumber = 'PN';
+        } else {
+            $invoiceNumber = 'PX';
+        }
+
+        $entityInvoice = $this->getEntityService()->getAllData(
+            'Invoice',
+            array(
+                'orderBy'     => array('id' => 'DESC'),
+                'conditions'  => array('invoiceType' => $invoiceType)
+            ))[0];
+
+        if (count($entityInvoice) > 0) {
+            $oldInvoiceNumber = $entityInvoice['invoiceNumber'];
+            $arrTemp = explode('/', $oldInvoiceNumber);
+            $newNum = (int)$arrTemp[2] + 1;
+
+            $invoiceNumberNew = $invoiceNumber.'/'.$dateCurrent.'/'.$newNum;
+        } else {
+            $invoiceNumberNew = $invoiceNumber.'/'.$dateCurrent.'/1';
+        }
+
+        return $invoiceNumberNew;
+
+    }
 }
