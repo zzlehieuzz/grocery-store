@@ -45,7 +45,7 @@ var storeLoadDriver = new Ext.data.JsonStore({
     autoLoad: ({params: {limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
-var storeLoadInvoice = new Ext.data.JsonStore({
+var storeDeliveryInvoice = new Ext.data.JsonStore({
     model: 'Invoice',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Delivery_InvoiceLoad"),
@@ -165,7 +165,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                             },
                             itemclick: function () {
                                 storeLoadDriverInvoice.load();
-                                storeLoadInvoice.load();
+                                storeDeliveryInvoice.load();
                             }
                         }
                     }],
@@ -225,7 +225,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                                     success: function(msg) {
                                         if (msg.status) {
                                             storeLoadDriverInvoice.reload();
-                                            storeLoadInvoice.reload();
+                                            storeDeliveryInvoice.reload();
                                             Ext.getCmp('listAddInvoiceOutput').setValue('');
                                         }
                                     },
@@ -262,7 +262,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                                                 success: function(msg) {
                                                     if (msg.status) {
                                                         storeLoadDriverInvoice.reload();
-                                                        storeLoadInvoice.reload();
+                                                        storeDeliveryInvoice.reload();
                                                         Ext.getCmp('listAddInvoiceOutput').setValue('');
                                                     }
                                                 },
@@ -285,7 +285,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         valueField: 'id',
                         width: 300,
                         labelWidth: 90,
-                        store:storeLoadInvoice,
+                        store:storeDeliveryInvoice,
                         typeAhead: true,
                         queryMode: 'local'
                     })]

@@ -561,6 +561,14 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 store: storeLoadProductCmb,
                 displayField: 'name',
                 valueField: 'id'
+            },
+            renderer: function(value){
+                if(value != 0 && value != "") {
+                    if(storeLoadProductCmb.findRecord("id", value) != null)
+                        return storeLoadProductCmb.findRecord("id", value).get('name');
+                    else
+                        return value;
+                } else return "";
             }
         }, {
             header: 'product code'.Translator('Product'),
@@ -571,6 +579,14 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
                 store: storeLoadProductCmb,
                 displayField: 'code',
                 valueField: 'id'
+            },
+            renderer: function(value){
+                if(value != 0 && value != "") {
+                    if(storeLoadProductCmb.findRecord("id", value) != null)
+                        return storeLoadProductCmb.findRecord("id", value).get('code');
+                    else
+                        return value;
+                } else return "";
             }
         }
         ,{
@@ -582,7 +598,19 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
 //                return ((value === 0 || value > 1) ? '(' + 'total'.Translator('Common') + ': ' + value + ')' : '(' + 'total'.Translator('Common') + ': 1)');
 //            },
             editor: {
-                allowBlank: true
+                allowBlank: true,
+                xtype: 'combobox',
+                store: storeLoadUnit1,
+                displayField: 'name',
+                valueField: 'unit'
+            },
+            renderer: function(value){
+                if(value != 0 && value != "") {
+                    if(storeLoadUnit1.findRecord("id", value) != null)
+                        return storeLoadUnit1.findRecord("id", value).get('name');
+                    else
+                        return value;
+                } else return "";
             }
         }, {
             text: "quantity".Translator('Product'),
