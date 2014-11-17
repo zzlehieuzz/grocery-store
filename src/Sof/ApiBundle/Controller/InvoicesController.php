@@ -326,7 +326,7 @@ class InvoicesController extends BaseController
                 'conditions'  => array('invoiceType' => $invoiceType)
             ));
 
-        if (count($entityInvoice) > 0) {
+        if ($entityInvoice) {
             $oldInvoiceNumber = $entityInvoice['invoiceNumber'];
             $arrTemp = explode('/', $oldInvoiceNumber);
             $newNum = (int)$arrTemp[2] + 1;

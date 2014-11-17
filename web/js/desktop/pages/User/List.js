@@ -62,7 +62,7 @@ Ext.define('SrcPageUrl.User.List', {
                         scope: this,
                         success: function(msg) {
                             if (msg.status) {
-                                console.log('success');
+                                storeLoadUser.reload();
                             }
                         },
                         failure: function(msg) {
@@ -139,7 +139,6 @@ Ext.define('SrcPageUrl.User.List', {
                                 scope: this,
                                 success: function(msg) {
                                     if (msg.status) {
-                                        console.log('success');
                                         this.up('form').getForm().reset();
                                         popupChangePasswordForm.hide();
                                     }
@@ -296,9 +295,7 @@ Ext.define('SrcPageUrl.User.List', {
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {
-                                                    //storeLoadUser.remove(selection);
                                                     storeLoadUser.reload();
-                                                    console.log('success');
                                                 }
                                             },
                                             failure: function(msg) {

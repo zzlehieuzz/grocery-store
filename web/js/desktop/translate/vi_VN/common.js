@@ -10,6 +10,10 @@ Locale.module('Common', {
     'print': 'In',
     'find': 'Tìm',
     'total': 'Tổng',
+    'page': 'Trang',
+    'of': 'của',
+    'refresh': 'Cập nhật lại',
+    'displaying': 'Đang hiển thị',
 
     //message
     'error': 'Lỗi',
@@ -163,6 +167,12 @@ Locale.module('Invoice', {
     'add product': 'Thêm Sản Phẩm',
     'remove product': 'Xóa Sản Phẩm',
     'order': 'STT'
+});
+
+Locale.module('Distributor', {
+    'distributor address': 'Địa chỉ nhà PP',
+    'distributor code': 'Mã nhà PP',
+    'distributor phone': 'Điện thoại nhà PP'
 });
 
 Locale.module('Delivery', {

@@ -1,31 +1,6 @@
 /*
  * @author HieuNLD 2014/06/27
  */
-var readerJson = {
-    type: 'json',
-    root: 'data',
-    id  : 'id',
-    totalProperty: 'total'
-};
-
-var objectField = [{name: 'id',           type: 'int'},
-                   {name: 'name',         type: 'string'},
-                   {name: 'code',         type: 'string'},
-                   {name: 'phoneNumber',  type: 'string'},
-                   {name: 'address',      type: 'string'},
-                   {name: 'labels',       type: 'string'}];
-
-MyUtil.Object.defineModel('Distributor', objectField);
-
-var storeLoadDistributor = new Ext.data.JsonStore({
-    model: 'Distributor',
-    proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Distributor_Load"),
-        reader: readerJson
-    }),
-    pageSize: limitDefault,
-    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
-});
 
 Ext.define('SrcPageUrl.Distributor.List', {
     extend: 'Ext.ux.desktop.Module',
@@ -45,7 +20,32 @@ Ext.define('SrcPageUrl.Distributor.List', {
         };
     },
 
-    createWindow : function(){
+    createWindow : function() {
+        var readerJson = {
+            type: 'json',
+            root: 'data',
+            id  : 'id',
+            totalProperty: 'total'
+        };
+
+        var objectField = [{name: 'id',          type: 'int'},
+                           {name: 'name',        type: 'string'},
+                           {name: 'code',        type: 'string'},
+                           {name: 'phoneNumber', type: 'string'},
+                           {name: 'address',     type: 'string'},
+                           {name: 'labels',      type: 'string'}];
+
+        MyUtil.Object.defineModel('Distributor', objectField);
+        var storeLoadDistributor = new Ext.data.JsonStore({
+            model: 'Distributor',
+            proxy: new Ext.data.HttpProxy({
+                url: MyUtil.Path.getPathAction("Distributor_Load"),
+                reader: readerJson
+            }),
+            pageSize: limitDefault,
+            autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+        });
+
         var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -64,7 +64,6 @@ Ext.define('SrcPageUrl.Distributor.List', {
                         success: function(msg) {
                             if (msg.status) {
                                 storeLoadDistributor.reload();
-                                console.log('success');
                             }
                         },
                         failure: function(msg) {
@@ -75,55 +74,43 @@ Ext.define('SrcPageUrl.Distributor.List', {
             }
         });
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI",
-            onKeyPress: function(e, t) {
-                console.log(e);
-            }
-        });
-
         var columnsDistributor = [
             new Ext.grid.RowNumberer(),
             {
                 dataIndex: 'id',
                 hidden : true
             }, {
-//                text: "name".Translator("Common"),
-                text: "name",
-                width: 200,
+                text: "name".Translator("Common"),
+                width: 150,
                 dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-//                text: "distributor code".Translator("Distributor"),
-                text: "distributor code",
+                text: "distributor code".Translator("Distributor"),
                 width: 100,
                 dataIndex: 'code',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-//                text: "phone".Translator("Distributor"),
-                text: "phone",
-                width: 200,
+                text: "distributor phone".Translator("Distributor"),
+                width: 100,
                 dataIndex: 'phoneNumber',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-//                text: "address".Translator("Distributor"),
-                text: "address",
-                flex: 1,
-                dataIndex: 'address',
+                text: "Mặt Hàng",
+                width: 100,
+                dataIndex: 'labels',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-//                text: "labels".Translator("Distributor"),
-                text: "Mặt Hàng",
+                text: "distributor address".Translator("Distributor"),
                 flex: 1,
-                dataIndex: 'labels',
+                dataIndex: 'address',
                 editor: {
                     xtype: 'textfield'
                 }
@@ -135,7 +122,6 @@ Ext.define('SrcPageUrl.Distributor.List', {
         if(!win){
             win = desktop.createWindow({
                 id: 'distributor-list',
-//                title:'distributor management'.Translator('Module'),
                 title:'distributor management'.Translator('Module'),
                 width:800,
                 height:480,
@@ -149,8 +135,8 @@ Ext.define('SrcPageUrl.Distributor.List', {
                         xtype: 'grid',
                         id: 'grid-distributor-list',
                         store: storeLoadDistributor,
-                        loadMask:true,
-                        selModel: rowModel,
+                        loadMask: true,
+                        selModel: Ext.create('Ext.selection.RowModel', {mode : "MULTI"}),
                         plugins: rowEditing,
                         columns: columnsDistributor,
                         listeners:{
@@ -167,7 +153,6 @@ Ext.define('SrcPageUrl.Distributor.List', {
                     handler : function() {
                       rowEditing.cancelEdit();
 
-                      // Create a model instance
                       var r = Ext.create('Distributor', {
                         id: '',
                         name: '',
@@ -189,7 +174,7 @@ Ext.define('SrcPageUrl.Distributor.List', {
                             var selection = Ext.getCmp('grid-distributor-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
@@ -206,9 +191,9 @@ Ext.define('SrcPageUrl.Distributor.List', {
                                             scope: this,
                                             success: function(msg) {
                                                 if (msg.status) {
-                                                    //storeLoadDistributor.remove(selection);
-                                                    storeLoadDistributor.reload();
-                                                    console.log('success');
+                                                    storeLoadDistributor.load();
+                                                    var currentPage = storeLoadDistributor.currentPage;
+                                                    console.log(currentPage);
                                                 }
                                             },
                                             failure: function(msg) {
@@ -225,6 +210,12 @@ Ext.define('SrcPageUrl.Distributor.List', {
                 }],
                 bbar: new Ext.PagingToolbar({
                     store: storeLoadDistributor,
+                    pageSize: limitDefault,
+                    emptyMsg : 'no records found'.Translator('Common'),
+                    beforePageText : 'page'.Translator('Common'),
+                    afterPageText : 'of'.Translator('Common') + ' {0}',
+                    refreshText : 'refresh'.Translator('Common'),
+                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
                     displayInfo:true
                 })
             });

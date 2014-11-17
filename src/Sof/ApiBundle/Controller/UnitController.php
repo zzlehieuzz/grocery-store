@@ -20,8 +20,8 @@ class UnitController extends BaseController
 
         $arrEntity = $this->getEntityService()->getDataForPaging('Unit',
             array('orderBy' => array('id' => 'DESC'),
-//                  'firstResult' => $params['start'],
-//                  'maxResults' => $params['limit']
+                  'firstResult' => $params['start'],
+                  'maxResults' => $params['limit']
             ));
 
         return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
