@@ -1,6 +1,8 @@
 /*
  * @author HieuNLD 2014/06/27
  */
+var date_format = 'd/m/Y';
+
 var readerJson = {
     type: 'json',
     root: 'data',
@@ -42,7 +44,7 @@ var objectField = [{name: 'id',   type: 'int'},
                    {name: 'invoiceTypeText', type: 'string'},
                    {name: 'invoiceNumber', type: 'string'},
                    {name: 'paymentStatus', type: 'string'},
-                   {name: 'amount', type: 'INT'},
+                   {name: 'amount', type: 'int'},
                    {name: 'createInvoiceDate', type: 'string'}];
 
 MyUtil.Object.defineModel('Invoice', objectField);
@@ -209,6 +211,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     items: [  {
                         fieldLabel: 'from date'.Translator('Invoice'),
                         xtype: 'datefield',
+                        format: date_format,
+                        altFormats: date_format,
                         name: 'fromDate',
                         id: 'fromDate',
                         anchor: '50%'
@@ -221,6 +225,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         name: 'toDate',
                         id: 'toDate',
                         xtype: 'datefield',
+                        format: date_format,
+                        altFormats: date_format,
                         anchor: '50%'
                     }]
                 }
@@ -291,6 +297,11 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 dataIndex: 'amount',
                 editor: {
                     allowBlank: true
+                },
+                renderer: function(value){
+                    if (value) {
+                        return value;
+                    } else return 0;
                 }
             }, {
                 text: "invoice type".Translator('Invoice'),
@@ -391,7 +402,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType){
     var deliveryReceiver = "";
     var addressSubject = "";
     var phoneSubject = "";
-    var date_format = 'd/m/Y';
 
     if (invoiceType == 1) {
         invoiceTitle = "invoice input".Translator('Invoice');

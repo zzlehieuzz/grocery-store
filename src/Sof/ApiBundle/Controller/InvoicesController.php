@@ -79,7 +79,7 @@ class InvoicesController extends BaseController
             $arrData[$key]['invoiceType'] = $entity['invoiceType'];
             $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
             $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
-            $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d-m-Y') : null;
+            $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
             $arrData[$key]['paymentStatus'] = $paymentStatus;
             $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
         }
