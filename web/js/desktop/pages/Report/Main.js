@@ -23,9 +23,9 @@ Ext.define('SrcPageUrl.Report.Main', {
 
     createWindow : function (){
         var tabPanel = Ext.widget('tabpanel', {
-            activeTab: 0,
+            activeTab: 3,
             width: 900,
-            height: 600,
+            height: 500,
             plain:true,
             defaults :{
                 autoScroll: true
@@ -41,7 +41,7 @@ Ext.define('SrcPageUrl.Report.Main', {
                 html: "I am tab 4's content. I also have an event listener attached."
             }, {
                 title: 'inventory'.Translator('Report'),
-                items:  new SrcPageUrl.Report.Inventory().create()
+                items: new SrcPageUrl.Report.Inventory().create()
 
             }]
         });
@@ -53,7 +53,7 @@ Ext.define('SrcPageUrl.Report.Main', {
                 id: 'report-tab',
                 title: 'report'.Translator('Module'),
                 width: 910,
-                height: 630,
+                height: 530,
                 iconCls: 'icon-grid',
                 animCollapse: false,
                 constrainHeader: true,

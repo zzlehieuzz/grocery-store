@@ -57,6 +57,30 @@ Ext.define('SrcPageUrl.Report.Inventory', {
     },
 
     create : function (){
+        var tBar =[{
+            text: 'add'.Translator('Common'),
+            tooltip: 'add'.Translator('Common'),
+            iconCls:'add',
+            handler : function() {
+
+            }
+        }, '-', {
+            text:'change-pass'.Translator('User'),
+            tooltip:'change-pass'.Translator('User'),
+            iconCls:'edit',
+            handler : function() {
+
+            }
+        }, '-',{
+            text: 'remove'.Translator('Common'),
+            tooltip: 'remove'.Translator('Common'),
+            iconCls:'remove',
+            listeners: {
+                click: function () {
+                }
+            }
+        }];
+
         var columnsProduct = [
             new Ext.grid.RowNumberer(),
             {
@@ -75,14 +99,17 @@ Ext.define('SrcPageUrl.Report.Inventory', {
             }, {
                 text: "original price".Translator('Product'),
                 width: 120,
-                renderer: Ext.util.Format.numberRenderer(moneyFormat),
                 dataIndex: 'originalPrice',
-                style: 'text-align:center;'
+                style: 'text-align:center;',
+                align: 'right',
+                renderer: Ext.util.Format.numberRenderer(moneyFormat)
             }, {
                 text: "sale price".Translator('Product'),
                 width: 120,
                 dataIndex: 'salePrice',
-                style: 'text-align:center;'
+                style: 'text-align:center;',
+                align: 'right',
+                renderer: Ext.util.Format.numberRenderer(moneyFormat)
             }, {
                 header: 'unit 1'.Translator('Product'),
                 dataIndex: 'unitId1',
@@ -90,10 +117,8 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 width: 100,
                 renderer: function(value){
                     if(value != 0 && value != "") {
-                        if(storeLoadUnit1.findRecord("id", value) != null)
-                            return storeLoadUnit1.findRecord("id", value).get('name');
-                        else
-                            return value;
+                        if(storeLoadUnit1.findRecord("id", value) != null) return storeLoadUnit1.findRecord("id", value).get('name');
+                        else return value;
                     } else return "";  // display nothing if value is empty
                 }
             }, {
@@ -124,10 +149,10 @@ Ext.define('SrcPageUrl.Report.Inventory', {
             store: storeLoadProduct,
             loadMask: true,
             columns: columnsProduct,
+            tbar: tBar,
             listeners: {
                 beforerender: function () {
-                    //this.store.load();
-                    //storeLoadUnit1.load();
+                    this.store.load();
                 }
             }
         });
