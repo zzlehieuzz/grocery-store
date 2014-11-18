@@ -180,6 +180,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
 
         var formFieldsList = {
             xtype: 'fieldset',
+
             columnWidth: 0.4,
             labelWidth: 200,
             defaultType: 'textfield',
@@ -229,9 +230,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         altFormats: date_format,
                         anchor: '50%'
                     }]
-                }
-                ]
-            },,{
+                }]
+            },{
                 xtype: 'container',
                 anchor: '50%',
                 layout: 'hbox',
@@ -244,7 +244,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         text: 'find'.Translator('Invoice'),
                         width: 50,
                         handler : function() {
-
                             var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
                             var fromDate = Ext.util.Format.date(Ext.getCmp('fromDate').getValue(), 'Y-m-d');
                             var toDate = Ext.util.Format.date(Ext.getCmp('toDate').getValue(), 'Y-m-d');
@@ -260,7 +259,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         text: 'create new invoice'.Translator('Invoice'),
                         width: 100,
                         handler : function() {
-
                             var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
                             if (invoiceType == 0) {
                                 MyUtil.Message.MessageInfo("please choose invoice type".Translator('Invoice'));
@@ -269,10 +267,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                             }
                         }
                     }]
-                }
-                ]
+                }]
             }]
-
         };
 
         var columnsInvoice = [
@@ -358,13 +354,12 @@ Ext.define('SrcPageUrl.Invoices.List', {
             win = desktop.createWindow({
                 id: 'invoice-list',
                 title:'invoices management'.Translator('Module'),
-                width:600,
+                width:800,
                 height:500,
                 iconCls: 'icon-grid',
                 animCollapse:false,
                 constrainHeader:true,
-                items: [
-                    formFieldsList,
+                items: [formFieldsList,
                   {
                     border: false,
                     id: 'grid-invoice-list',
