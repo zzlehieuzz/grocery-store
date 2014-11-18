@@ -51,7 +51,8 @@ Locale.module('Module', {
     'liabilities management': 'Quản lý công nợ',
     'invoices management': 'Quản lý xuất/nhập',
     'distributor management': 'Quản lý nhà phân phối',
-    'delivery management': 'Quản lý giao hàng'
+    'delivery management': 'Quản lý giao hàng',
+    'report': 'Báo cáo'
 });
 
 Locale.module('Logout', {
@@ -182,4 +183,12 @@ Locale.module('Delivery', {
 
     //message
     'please choose invoice': 'Làm ơn chọn phiếu xuất.'
+});
+
+Locale.module('Report', {
+    //label
+    'invoice input': 'Phiếu nhập',
+    'invoice output': 'Phiếu xuất',
+    'revenue': 'Doanh thu',
+    'inventory': 'Tồn kho'
 });
