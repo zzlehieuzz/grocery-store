@@ -31,8 +31,8 @@ var storeLoadProduct = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJson
     }),
-    pageSize: pageSizeDefault,
-    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+    pageSize: pageSizeReport,
+    autoLoad: ({params:{limit: limitReport, page: pageDefault, start: startDefault}}, false)
 });
 
 var storeLoadUnit1 = new Ext.data.JsonStore({
@@ -57,29 +57,36 @@ Ext.define('SrcPageUrl.Report.Inventory', {
     },
 
     create : function (){
-        var tBar =[{
-            text: 'add'.Translator('Common'),
-            tooltip: 'add'.Translator('Common'),
-            iconCls:'add',
-            handler : function() {
-
-            }
-        }, '-', {
-            text:'change-pass'.Translator('User'),
-            tooltip:'change-pass'.Translator('User'),
-            iconCls:'edit',
-            handler : function() {
-
-            }
-        }, '-',{
-            text: 'remove'.Translator('Common'),
-            tooltip: 'remove'.Translator('Common'),
-            iconCls:'remove',
-            listeners: {
-                click: function () {
+        var tBar = new Ext.Toolbar({
+            items: [{
+                labelWidth: 80,
+                fieldLabel: 'from date'.Translator('Invoice'),
+                xtype: 'datefield',
+                format: date_format,
+                altFormats: date_format,
+                name: 'fromDate',
+                id: 'fromDate',
+                value: new Date()
+            }, {
+                fieldLabel: '~',
+                labelWidth: 5,
+                labelSeparator: '',
+                xtype: 'datefield',
+                format: date_format,
+                altFormats: date_format,
+                name: 'toDate',
+                id: 'toDate',
+                value: new Date()
+            }, '->',{
+                text: 'find'.Translator('Common'),
+                tooltip: 'find'.Translator('Common'),
+                iconCls:'find',
+                listeners: {
+                    click: function () {
+                    }
                 }
-            }
-        }];
+            }]
+        });
 
         var columnsProduct = [
             new Ext.grid.RowNumberer(),
@@ -143,7 +150,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
             }
         ];
 
-        return Ext.widget('grid', {
+        return Ext.widget('gridpanel', {
             border: false,
             id: 'grid-product-list',
             store: storeLoadProduct,
@@ -154,7 +161,17 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 beforerender: function () {
                     this.store.load();
                 }
-            }
+            },
+            bbar: new Ext.PagingToolbar({
+                store: storeLoadProduct,
+                pageSize: limitDefault,
+                emptyMsg : 'no records found'.Translator('Common'),
+                beforePageText : 'page'.Translator('Common'),
+                afterPageText : 'of'.Translator('Common') + ' {0}',
+                refreshText : 'refresh'.Translator('Common'),
+                displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
+                displayInfo:true
+            })
         });
     }
 });
