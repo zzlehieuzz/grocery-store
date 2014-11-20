@@ -41,7 +41,9 @@ class InvoicesController extends BaseController
         $arrEntity = $this->getEntityService()->getAllData(
             'Invoice',
             array('conditions'  => $arrCondition,
-                  'orderBy'     => array('id' => 'DESC')));
+                  'orderBy'     => array('id' => 'DESC'),
+                    'firstResult' => $request->get('start'),
+                    'maxResults' => $request->get('limit')));
 
         $arrData = array();
         foreach($arrEntity as $key=>$entity){
@@ -138,7 +140,9 @@ class InvoicesController extends BaseController
                 'InvoiceDetail',
                 array(
                     'orderBy'    => array('id' => 'DESC'),
-                    'conditions' => array('invoiceId' => $invoiceId)
+                    'conditions' => array('invoiceId' => $invoiceId),
+                    'firstResult' => $request->get('start'),
+                    'maxResults' => $request->get('limit')
                 ));
             
         } else {
