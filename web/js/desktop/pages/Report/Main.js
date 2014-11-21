@@ -32,17 +32,20 @@ Ext.define('SrcPageUrl.Report.Main', {
             },
             items: [{
                 title: 'invoice input'.Translator('Report'),
+                layout: 'fit',
                 html: "My content was added during construction."
             },{
                 title: 'invoice output'.Translator('Report'),
+                layout: 'fit',
                 html: "My content was added during construction."
             },{
                 title: 'revenue'.Translator('Report'),
+                layout: 'fit',
                 html: "I am tab 4's content. I also have an event listener attached."
             }, {
                 title: 'inventory'.Translator('Report'),
+                layout: 'fit',
                 items: new SrcPageUrl.Report.Inventory().create()
-
             }]
         });
 

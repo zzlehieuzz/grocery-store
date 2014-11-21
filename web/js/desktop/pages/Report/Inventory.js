@@ -28,7 +28,7 @@ MyUtil.Object.defineModel('Unit', objectUnitField);
 var storeLoadProduct = new Ext.data.JsonStore({
     model: 'Product',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Product_Load"),
+        url: MyUtil.Path.getPathAction("Report_InventoryLoad"),
         reader: readerJson
     }),
     pageSize: pageSizeReport,
@@ -52,21 +52,20 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         'Ext.util.Format',
         'Ext.tab.*'
     ],
-    init : function(){
-
-    },
 
     create : function (){
         var tBar = new Ext.Toolbar({
             items: [{
-                labelWidth: 80,
+                labelWidth: 50,
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
+                padding: '0 0 0 10px;',
                 format: date_format,
+                submitFormat: date_format,
                 altFormats: date_format,
                 name: 'fromDate',
                 id: 'fromDate',
-                value: new Date()
+                value: Ext.Date.format(new Date(),date_format)
             }, {
                 fieldLabel: '~',
                 labelWidth: 5,
@@ -76,16 +75,22 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 altFormats: date_format,
                 name: 'toDate',
                 id: 'toDate',
-                value: new Date()
+                value: Ext.Date.format(new Date(),date_format)
             }, '->',{
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
                 iconCls:'find',
                 listeners: {
                     click: function () {
+                        storeLoadProduct.reload();
                     }
                 }
             }]
+        });
+
+        storeLoadProduct.on('beforeload', function() {
+            this.proxy.extraParams = {fromDate: Ext.getCmp('fromDate').getValue(),
+                                      toDate: Ext.getCmp('toDate').getValue()};
         });
 
         var columnsProduct = [
@@ -152,7 +157,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
 
         return Ext.widget('gridpanel', {
             border: false,
-            id: 'grid-product-list',
+            id: 'grid-inventory',
             store: storeLoadProduct,
             loadMask: true,
             columns: columnsProduct,

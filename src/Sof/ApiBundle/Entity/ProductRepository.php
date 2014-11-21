@@ -2,13 +2,8 @@
 
 namespace Sof\ApiBundle\Entity;
 
-use Sof\ApiBundle\Lib\Config;
-
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
+use Sof\ApiBundle\Lib\SofUtil;
 
 /**
  * ProductRepository
@@ -19,4 +14,24 @@ use Doctrine\ORM\NoResultException;
 class ProductRepository extends BaseRepository
 {
 
+    /**
+     * @param $fromDate
+     * @param $toDate
+     * @return Array
+     *
+     * @author HieuNLD 2014/11/21
+     */
+    public function getData_ReportInventory($fromDate, $toDate) {
+        $query = $this->querySimpleEntities(array(
+            'selects' => array('id AS Id', 'name AS productName'),
+            'conditions' => array(
+                'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
+                'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+            )
+        ));
+        $query->addSelect('l.id, l.name, l.amount, l.price, l.customerId');
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'l', 'WITH', "entity.subject = l.customerId AND entity.id = l.invoiceId");
+
+        return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
+    }
 }
