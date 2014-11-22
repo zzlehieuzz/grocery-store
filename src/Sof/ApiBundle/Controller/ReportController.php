@@ -20,9 +20,7 @@ class ReportController extends BaseController
 
         $fromDate = $this->getRequestData()->get('fromDate');
         $toDate   = $this->getRequestData()->get('toDate');
-//        print_r($fromDate);
-//        print_r($toDate);
-//        die;
+
         $entityService = $this->getEntityService();
         $arrEntity = $this->getEntityService()->getDataForPaging('Product',
             array('orderBy' => array('id' => 'DESC'),
