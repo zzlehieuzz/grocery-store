@@ -167,7 +167,10 @@ Locale.module('Invoice', {
     'customer phone': 'Điện Thoại Khách Hàng',
     'add product': 'Thêm Sản Phẩm',
     'remove product': 'Xóa Sản Phẩm',
-    'order': 'STT'
+    'order': 'STT',
+    'description': 'Ghi Chú',
+    'total': 'Tổng Tiền:',
+    'print': 'In'
 });
 
 Locale.module('Distributor', {
