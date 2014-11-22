@@ -60,22 +60,21 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
                 padding: '0 0 0 10px;',
-                format: date_format,
-                submitFormat: date_format,
-                altFormats: date_format,
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
                 name: 'fromDate',
                 id: 'fromDate',
-                value: Ext.Date.format(new Date(),date_format)
+                value: Ext.Date.format(new Date(), dateFormat)
             }, {
                 fieldLabel: '~',
                 labelWidth: 5,
                 labelSeparator: '',
                 xtype: 'datefield',
-                format: date_format,
-                altFormats: date_format,
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
                 name: 'toDate',
                 id: 'toDate',
-                value: Ext.Date.format(new Date(),date_format)
+                value: Ext.Date.format(new Date(), dateFormat)
             }, '->',{
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
@@ -89,8 +88,8 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         });
 
         storeLoadProduct.on('beforeload', function() {
-            this.proxy.extraParams = {fromDate: Ext.getCmp('fromDate').getValue(),
-                                      toDate: Ext.getCmp('toDate').getValue()};
+            this.proxy.extraParams = {fromDate: Ext.getCmp('fromDate').getSubmitValue(),
+                                      toDate: Ext.getCmp('toDate').getSubmitValue()};
         });
 
         var columnsProduct = [
