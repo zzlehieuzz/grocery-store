@@ -87,6 +87,12 @@ class Invoice extends BaseEntity
      */
     private $totalAmount;
 
+    /**
+     * @ORM\Column(name="description", type="string", nullable=true, options={"comment" = "13:description"})
+     * @Assert\Type(type="string")
+     */
+    private $description;
+
   public function __construct()
   {
   }
@@ -281,6 +287,22 @@ class Invoice extends BaseEntity
     public function getTotalAmount()
     {
         return $this->totalAmount;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
 
