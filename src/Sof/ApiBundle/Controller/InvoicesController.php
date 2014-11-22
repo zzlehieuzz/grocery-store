@@ -83,6 +83,7 @@ class InvoicesController extends BaseController
             $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
             $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
             $arrData[$key]['paymentStatus'] = $paymentStatus;
+            $arrData[$key]['description'] = $entity['description'];
             $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
         }
 
@@ -141,10 +142,10 @@ class InvoicesController extends BaseController
                 array(
                     'orderBy'    => array('id' => 'DESC'),
                     'conditions' => array('invoiceId' => $invoiceId),
-                    'firstResult' => $request->get('start'),
-                    'maxResults' => $request->get('limit')
+//                    'firstResult' => $request->get('start'),
+//                    'maxResults' => $request->get('limit')
                 ));
-            
+
         } else {
             $invoiceNumberInput = $this->generatingInvoiceNumber(1);
             $invoiceNumberOutput = $this->generatingInvoiceNumber(2);
@@ -167,6 +168,15 @@ class InvoicesController extends BaseController
         $formParent = (array)$params->form_fields_value;
         $form_fields_value = (array)$formParent[0];
         $grid_value = (array)$params->grid_value;
+
+        $amount = 0;
+        if ($grid_value){
+            foreach ($grid_value as $rowValue) {
+                $arrData = (array)$rowValue;
+                $amount += $arrData['amount'];
+            }
+        }
+        $form_fields_value['amount'] = $amount;
 
         if ($form_fields_value['invoiceNumber'] != "") {
             $arrCheckInvoice = $this->getEntityService()->getFirstData(
@@ -228,7 +238,7 @@ class InvoicesController extends BaseController
                     $arrNewId[] = $arrData['id'];
                 }
 
-                if (count($arrInvoiceDetail) > 0 && $arrData['id']) {
+                if (count($arrInvoiceDetail) > 0 && isset($arrData['id']) && $arrData['id']) {
 
                     for ($i = 0; $i < count($arrInvoiceDetail); $i++){
                         if ($arrInvoiceDetail[$i]['id'] == $arrData['id']) {
@@ -273,7 +283,9 @@ class InvoicesController extends BaseController
 
             //Delete
             if (count($arrDelete)) {
-                $entityService->delete('InvoiceDetail', $arrDelete);
+                foreach ($arrDelete as $itemDel){
+                    $entityService->delete('InvoiceDetail', $itemDel);
+                }
             }
 
             $entityService->completeTransaction();
