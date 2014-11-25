@@ -145,28 +145,211 @@ Ext.define("MyUx.grid.Printer", {
                 '<link href="' + this.stylesheetPath + '" rel="stylesheet" type="text/css" />',
                 '<title>' + grid.title + '</title>',
                 '</head>',
+
                 '<body class="' + Ext.baseCSSPrefix + 'ux-grid-printer-body">',
-                '<div class="' + Ext.baseCSSPrefix + 'ux-grid-printer-noprint ' + Ext.baseCSSPrefix + 'ux-grid-printer-links">',
-                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkprint" href="javascript:void(0);" onclick="window.print();">' + this.printLinkText + '</a>',
-                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkclose" href="javascript:void(0);" onclick="window.close();">' + this.closeLinkText + '</a>',
-                '</div>',
-                '<h1>' + this.mainTitle + '</h1>',
-                '<table>',
-                '<tr>',
-                headings,
-                '</tr>',
-                '<tpl for=".">',
-                '<tr class="{[xindex % 2 === 0 ? "even" : "odd"]}">',
-                body,
-                '</tr>',
-                pluginsBodyMarkup.join(''),
-                '</tpl>',
-                '</table>',
+                    '<div class="' + Ext.baseCSSPrefix + 'ux-grid-printer-noprint ' + Ext.baseCSSPrefix + 'ux-grid-printer-links">',
+                        '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkprint" href="javascript:void(0);" onclick="window.print();">' + this.printLinkText + '</a>',
+                        '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkclose" href="javascript:void(0);" onclick="window.close();">' + this.closeLinkText + '</a>',
+                    '</div>',
+
+                    '<h1>' + this.mainTitle + '</h1>',
+
+                    '<table>',
+                        '<tr>',
+                        headings,
+                        '</tr>',
+
+                        '<tpl for=".">',
+                        '<tr class="{[xindex % 2 === 0 ? "even" : "odd"]}">',
+                        body,
+                        '</tr>',
+                        pluginsBodyMarkup.join(''),
+                        '</tpl>',
+
+                    '</table>',
+
                 '</body>',
                 '</html>'
             ];
 
             var html = Ext.create('Ext.XTemplate', htmlMarkup).apply(data),
+                win  = window.open('', '_blank', "height='100%',width='100%',status=yes,toolbar=no,menubar=yes,location=no,scrollbars=yes");
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+
+            if (this.printAutomatically){
+                win.print();
+            }
+
+            //Another way to set the closing of the main
+            if (this.closeAutomaticallyAfterPrint){
+                if(Ext.isIE){
+                    window.close();
+                } else {
+                    win.close();
+                }
+            }
+        },
+        printExt: function(grid, extData) {
+            //We generate an XTemplate here by using 2 intermediary XTemplates - one to create the header,
+            //the other to create the body (see the escaped {} below)
+            var columns = [];
+            //account for grouped columns
+            Ext.each(grid.columns, function(c) {
+                if(c.items.length > 0) {
+                    columns = columns.concat(c.items.items);
+                } else {
+                    columns.push(c);
+                }
+            });
+
+            //build a usable array of store data for the XTemplate
+            var data = [];
+            var total = 0;
+            grid.store.data.each(function(item, row) {
+                var convertedData = {};
+                //apply renderers from column model
+                for (var key in item.data) {
+                    var value = item.data[key];
+
+                    if (key == 'amount') {
+                        total += value;
+                    }
+
+                    Ext.each(columns, function(column, col) {
+                        if (column && column.dataIndex == key) {
+
+                            /*
+                             * TODO: add the meta to template
+                             */
+                            var meta = {item: '', tdAttr: '', style: ''};
+                            value = column.renderer ? column.renderer.call(grid, value, meta, item, row, col, grid.store, grid.view) : value;
+                            convertedData[Ext.String.createVarName(column.text)] = value;
+                        } else if (column && column.xtype === 'rownumberer'){
+                            convertedData['STT'] = row + 1;
+                        }
+                    }, this);
+                }
+
+                data.push(convertedData);
+            });
+
+            //remove columns that do not contains dataIndex or dataIndex is empty. for example: columns filter or columns button
+            var clearColumns = [];
+            Ext.each(columns, function (column, row) {
+                if (column && column.xtype === 'rownumberer'){
+                    column.text = 'STT';
+                    clearColumns.push(column);
+                }
+                else if ((column) && (!Ext.isEmpty(column.dataIndex) && !column.hidden)) {
+                    clearColumns.push(column);
+                }
+            });
+            columns = clearColumns;
+
+            //get Styles file relative location, if not supplied
+            if (this.stylesheetPath === null) {
+                var scriptPath = Ext.Loader.getPath('MyUx.grid.Printer');
+                this.stylesheetPath = scriptPath.substring(0, scriptPath.indexOf('Printer.js')) + 'gridPrinterCss/print.css';
+            }
+
+            //use the headerTpl and bodyTpl markups to create the main XTemplate below
+            var headings = Ext.create('Ext.XTemplate', this.headerTpl).apply(columns);
+            var body     = Ext.create('Ext.XTemplate', this.bodyTpl).apply(columns);
+            var pluginsBody = '',
+                pluginsBodyMarkup = [];
+
+            //add relevant plugins
+            Ext.each(grid.plugins, function(p) {
+                if (p.ptype == 'rowexpander') {
+                    pluginsBody += p.rowBodyTpl.join('');
+                }
+            });
+
+            if (pluginsBody != '') {
+                pluginsBodyMarkup = [
+                    '<tr class="{[xindex % 2 === 0 ? "even" : "odd"]}">',
+                    '<td colspan="' + columns.length + '">',
+                    pluginsBody,
+                    '</td></tr>'
+                ];
+            }
+
+            //Here because inline styles using CSS, the browser did not show the correct formatting of the data the first time that loaded
+
+            var contentNew = "";
+            if (extData.length) {
+                contentNew =   extData;
+            }
+
+            var htmlMarkupCustom = [
+                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+                '<html class="' + Ext.baseCSSPrefix + 'ux-grid-printer">',
+                '<head>',
+                '<title>Print</title>',
+                '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />',
+                '<link href="' + this.stylesheetPath + '" rel="stylesheet" type="text/css" />',
+                '<style type="text/css">'+
+                    '.no-border tr td{ border-style:none !important; }'+
+                    '.font-bold{ font-weight:bold !important; }'+
+
+                    'h1{'+
+                        'page-break-before: always;'+
+                    '}'+
+
+                    '@media print {'+
+                    '.page-break	{ display: block; page-break-before: always; }'+
+                    '}'+
+                '</style>',
+                '<title>' + grid.title + '</title>',
+                '</head>',
+
+                '<body class="' + Ext.baseCSSPrefix + 'ux-grid-printer-body">',
+                '<div class="' + Ext.baseCSSPrefix + 'ux-grid-printer-noprint ' + Ext.baseCSSPrefix + 'ux-grid-printer-links">',
+                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkprint" href="javascript:void(0);" onclick="window.print();">' + this.printLinkText + '</a>',
+                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkclose" href="javascript:void(0);" onclick="window.close();">' + this.closeLinkText + '</a>',
+                '</div>',
+
+                '<h1>' + this.mainTitle + '</h1>',
+
+                //Customize here
+                    contentNew,
+                '<br>' +
+                '<br>' +
+                //End Customize here
+
+                '<table class="page-break" border="0" cellpadding="0" cellspacing="0">',
+                    '<tr>',
+                        headings,
+                    '</tr>',
+
+                    '<tpl for=".">',
+                    '<tr class="{[xindex % 2 === 0 ? "even" : "odd"]}">',
+                    body,
+                    '</tr>',
+                        pluginsBodyMarkup.join(''),
+                    '</tpl>',
+
+                    //Row total
+                    '<tr>',
+                        '<td style="text-align: right;" colspan="' + (columns.length -1) + '">',
+                            '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>',
+                        '</td>',
+
+                        '<td>',
+                            total + 'currency'.Translator('Invoice'),
+                        '</td>',
+                    '</tr>',
+                    //End Row total
+
+                '</table>',
+
+                '</body>',
+                '</html>'
+            ];
+
+            var html = Ext.create('Ext.XTemplate', htmlMarkupCustom).apply(data),
                 win  = window.open('', '_blank', "height='100%',width='100%',status=yes,toolbar=no,menubar=yes,location=no,scrollbars=yes");
             win.document.open();
             win.document.write(html);
