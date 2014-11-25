@@ -88,6 +88,7 @@ MyUtil.Object.defineModel('Input2', objectFormField);
 //Distributor
 var objectDistributorField = [{name: 'id', type: 'int'},
     {name: 'name', type: 'string'},
+    {name: 'code', type: 'string'},
     {name: 'address', type: 'string'},
     {name: 'phoneNumber', type: 'string'}
 ];
@@ -918,46 +919,67 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 var grid = Ext.getCmp('grid-input-output');
                 MyUx.grid.Printer.printAutomatically = false;
 
+                var invoiceNum = Ext.getCmp('invoice_number').getValue();
                 var subject = Ext.getCmp('subject').getValue();
                 var address = Ext.getCmp('address').getValue();
                 var phone_number = Ext.getCmp('phone_number').getValue();
+                var description = Ext.getCmp('description').getValue();
 
-                var dataForm = '<table border="0px" style="width: 70%">'+
+                var customerName = storeLoadCustomerCmb.findRecord("id", subject).get('name');
+                var customerCode = storeLoadCustomerCmb.findRecord("id", subject).get('code');
+
+                var dataForm = '<table class="no-border" border="0px" style="width: 70%">'+
                                     '<tr>'+
-                                        '<td>'+
-                                            'Tên khách hàng'+
+                                        '<td class="font-bold">'+
+                                            'invoice number'.Translator('Invoice')+
                                         '</td>'+
 
                                         '<td>'+
-                                             'Nguyễn Văn A'+
+                                            invoiceNum+
+                                        '</td>'+
+
+                                        '<td class="font-bold">'+
+                                            'customer name'.Translator('Invoice')+
                                         '</td>'+
 
                                         '<td>'+
-                                            'Điện thoại'+
+                                            customerName+
                                         '</td>'+
 
-                                            '<td>'+
-                                                phone_number+
-                                            '</td>'+
+                                        '<td class="font-bold">'+
+                                            'phone number'.Translator('Invoice')+
+                                        '</td>'+
+
+                                        '<td>'+
+                                            phone_number+
+                                        '</td>'+
                                     '</tr>'+
 
-                                        '<tr>'+
-                                            '<td>'+
-                                            'Mã khách hàng'+
-                                            '</td>'+
+                                    '<tr>'+
+                                        '<td class="font-bold">'+
+                                            'customer code'.Translator('Invoice')+
+                                        '</td>'+
 
-                                            '<td>'+
-                                                'KH01'+
-                                            '</td>'+
+                                        '<td>'+
+                                            customerCode+
+                                        '</td>'+
 
-                                            '<td>'+
-                                            'Địa chỉ'+
-                                            '</td>'+
+                                        '<td class="font-bold">'+
+                                            'address'.Translator('Invoice')+
+                                        '</td>'+
 
-                                            '<td>'+
-                                                address+
-                                            '</td>'+
-                                        '</tr>'+
+                                        '<td>'+
+                                            address+
+                                        '</td>'+
+
+                                        '<td class="font-bold">'+
+                                            'description'.Translator('Invoice')+
+                                        '</td>'+
+
+                                        '<td>'+
+                                            description+
+                                        '</td>'+
+                                    '</tr>'+
 
                                 '</table>';
 

@@ -153,6 +153,7 @@ Locale.module('Invoice', {
     'please choose invoice type': 'Vui lòng chọn loại phiếu cần tạo',
     'please input invoice number': 'Vui lòng nhập số phiếu.',
     'customer name': 'Tên Khách Hàng',
+    'customer code': 'Mã Khách Hàng',
     'date': 'Ngày',
     'amount': 'Thành Tiền',
     'view detail': 'Xem Chi Tiết',
@@ -170,7 +171,8 @@ Locale.module('Invoice', {
     'order': 'STT',
     'description': 'Ghi Chú',
     'total': 'Tổng Tiền:',
-    'print': 'In'
+    'print': 'In',
+    'currency': 'VNĐ'
 });
 
 Locale.module('Distributor', {
