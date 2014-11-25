@@ -425,6 +425,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
     var addressSubject = "";
     var phoneSubject = "";
     var hiddenPrintButtom = true;
+    var storeObject = {};
 
     if (invoiceType == 1) {
         invoiceTitle = "invoice input".Translator('Invoice');
@@ -433,13 +434,14 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         addressSubject = 'distributor address'.Translator('Invoice');
         phoneSubject = 'distributor phone'.Translator('Invoice');
         hiddenPrintButtom = true;
+        storeObject = storeLoadDistributorCmb;
     } else {
         invoiceTitle = "invoice output".Translator('Invoice');
         subjectT = 'customer'.Translator('Invoice');
         deliveryReceiver = 'receiver man'.Translator('Invoice');
         addressSubject = 'customer address'.Translator('Invoice');
         phoneSubject = 'customer phone'.Translator('Invoice');
-        storeLoadDistributorCmb = storeLoadCustomerCmb;
+        storeObject = storeLoadCustomerCmb;
         hiddenPrintButtom = false;
     }
 
@@ -547,7 +549,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     typeAhead: true,
                     triggerAction: 'all',
                     selectOnTab: true,
-                    store: storeLoadDistributorCmb,
+                    store: storeObject,
                     displayField: 'name',
                     lazyRender: true,
                     queryMode: 'local',
