@@ -368,6 +368,247 @@ Ext.define("MyUx.grid.Printer", {
                 }
             }
         },
+        printExtList: function(extData) {
+            var columns = [];
+
+            //get Styles file relative location, if not supplied
+            if (this.stylesheetPath === null) {
+                var scriptPath = Ext.Loader.getPath('MyUx.grid.Printer');
+                this.stylesheetPath = scriptPath.substring(0, scriptPath.indexOf('Printer.js')) + 'gridPrinterCss/print.css';
+            }
+
+            //use the headerTpl and bodyTpl markups to create the main XTemplate below
+            var headings = Ext.create('Ext.XTemplate', this.headerTpl).apply(columns);
+            var body     = Ext.create('Ext.XTemplate', this.bodyTpl).apply(columns);
+            var pluginsBody = '',
+                pluginsBodyMarkup = [];
+
+            if (pluginsBody != '') {
+                pluginsBodyMarkup = [
+                    '<tr class="{[xindex % 2 === 0 ? "even" : "odd"]}">',
+                    '<td colspan="' + columns.length + '">',
+                    pluginsBody,
+                    '</td></tr>'
+                ];
+            }
+
+            var contentNew = "";
+            var dataForms = "";
+            var dataGrids = "";
+
+            if (extData) {
+
+                Ext.each(extData, function (record) {
+
+                dataForms = '<table class="no-border" border="0px" style="width: 70%">'+
+                    '<tr>'+
+                    '<td class="font-bold">'+
+                    'invoice number'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.invoiceNumber+
+                    '</td>'+
+
+                    '<td class="font-bold">'+
+                    'customer name'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.customerName+
+                    '</td>'+
+
+                    '<td class="font-bold">'+
+                    'phone number'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.phoneNumber+
+                    '</td>'+
+                    '</tr>'+
+
+                    '<tr>'+
+                    '<td class="font-bold">'+
+                    'customer code'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.customerCode+
+                    '</td>'+
+
+                    '<td class="font-bold">'+
+                    'address'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.address+
+                    '</td>'+
+
+                    '<td class="font-bold">'+
+                    'description'.Translator('Invoice')+
+                    '</td>'+
+
+                    '<td>'+
+                        record.data.description +
+                    '</td>'+
+                    '</tr>'+
+
+                    '</table>';
+
+                    var rowDetail = "";
+                    var total = 0;
+                    var order = 1;
+                    Ext.each(record.data.invoiceId, function (recordDetail) {
+                        total = total + recordDetail.amount;
+                        rowDetail = rowDetail + '<tr>'+
+                                                    '<td>'+
+                                                         order+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.productName+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.productCode+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.unitName+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.quantity+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.price+
+                                                    '</td>'+
+
+                                                    '<td>'+
+                                                        recordDetail.amount+
+                                                    '</td>'+
+
+                                                '</tr>';
+
+                                                order++;
+                                            });
+
+                    dataGrids = '<table>'+
+                        //Header
+                        '<tr>'+
+                            '<td>'+
+                                "order".Translator('Invoice')+
+                            '</td>'+
+
+                            '<td>'+
+                                'product name'.Translator('Product')+
+                            '</td>'+
+
+                            '<td>'+
+                                'product code'.Translator('Product')+
+                            '</td>'+
+
+                            '<td>'+
+                                'unit'.Translator('Product')+
+                            '</td>'+
+
+                            '<td>'+
+                                "quantity".Translator('Product')+
+                            '</td>'+
+
+                            '<td>'+
+                                "price".Translator('Product')+
+                            '</td>'+
+
+                            '<td>'+
+                                "amount".Translator('Product')+
+                            '</td>'+
+                        '</tr>'+
+
+                        //Row Content
+                        rowDetail +
+                        //End Row Content
+
+                        //Row total
+                        '<tr>'+
+                            '<td style="text-align: right;" colspan="6">'+
+                            '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                            '</td>'+
+
+                            '<td>'+
+                                total + 'currency'.Translator('Invoice')+
+                            '</td>'+
+                        '</tr>'+
+                        //End Row total
+
+                    '</table>'+
+
+                    '<br>' +  '<br>' +  '<br>' +  '<br>'+  '<br>';
+
+                     contentNew = contentNew + dataForms + '<br>' + '<br>' + dataGrids;
+                });
+            }
+
+            var htmlMarkupCustom = [
+                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+                '<html class="' + Ext.baseCSSPrefix + 'ux-grid-printer">',
+                '<head>',
+                '<title>Print</title>',
+                '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />',
+                '<link href="' + this.stylesheetPath + '" rel="stylesheet" type="text/css" />',
+                '<style type="text/css">'+
+                    '.no-border tr td{ border-style:none !important; }'+
+                    '.font-bold{ font-weight:bold !important; }'+
+
+                    'h1{'+
+                    'page-break-before: always;'+
+                    '}'+
+
+                    '@media print {'+
+                    '.page-break	{ display: block; page-break-before: always; }'+
+                    '}'+
+                    '</style>',
+                '<title>' + 'Danh sách phiếu xuất' + '</title>',
+                '</head>',
+
+                '<body class="' + Ext.baseCSSPrefix + 'ux-grid-printer-body">',
+                '<div class="' + Ext.baseCSSPrefix + 'ux-grid-printer-noprint ' + Ext.baseCSSPrefix + 'ux-grid-printer-links">',
+                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkprint" href="javascript:void(0);" onclick="window.print();">' + this.printLinkText + '</a>',
+                '<a class="' + Ext.baseCSSPrefix + 'ux-grid-printer-linkclose" href="javascript:void(0);" onclick="window.close();">' + this.closeLinkText + '</a>',
+                '</div>',
+
+                '<h1>' + this.mainTitle + '</h1>',
+
+                //Customize here
+                contentNew,
+                '<br>' +
+                 '<br>' +
+                //End Customize here
+
+                '</body>',
+                '</html>'
+            ];
+
+            var html = Ext.create('Ext.XTemplate', htmlMarkupCustom).apply([]),
+                win  = window.open('', '_blank', "height='100%',width='100%',status=yes,toolbar=no,menubar=yes,location=no,scrollbars=yes");
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+
+            if (this.printAutomatically){
+                win.print();
+            }
+
+            //Another way to set the closing of the main
+            if (this.closeAutomaticallyAfterPrint){
+                if(Ext.isIE){
+                    window.close();
+                } else {
+                    win.close();
+                }
+            }
+        },
 
         /**
          * @property stylesheetPath
