@@ -83,7 +83,22 @@ var objectFormField = [{name: 'id', type: 'int'},
     {name: 'paymentStatus', type: 'int'}
 ];
 
+//FormField
+var objectListOutput = [{name: 'id', type: 'int'},
+                        {name: 'invoiceNumber', type: 'string'},
+                        {name: 'createInvoiceDate', type: 'string'},
+                        {name: 'address', type: 'string'},
+                        {name: 'phoneNumber', type: 'string'},
+                        {name: 'invoiceType', type: 'int'},
+                        {name: 'totalAmount', type: 'string'},
+                        {name: 'description', type: 'string'},
+                        {name: 'customerCode', type: 'string'},
+                        {name: 'customerName', type: 'string'},
+                        {name: 'invoiceId'}
+                    ];
+
 MyUtil.Object.defineModel('Input2', objectFormField);
+MyUtil.Object.defineModel('List_Output', objectListOutput);
 
 //Distributor
 var objectDistributorField = [{name: 'id', type: 'int'},
@@ -127,6 +142,15 @@ var storeLoadInput = new Ext.data.JsonStore({
     }),
     pageSize: pageSizeDefault,
     autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+});
+
+var storeListOutput = new Ext.data.JsonStore({
+    model: 'List_Output',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("List_Output_Load"),
+        reader: readerJsonCommon
+    }),
+    autoLoad: true
 });
 
 var storeLoadDistributorCmb = new Ext.data.JsonStore({
@@ -294,9 +318,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 width: 50,
                 handler: function () {
 
-                    var grid = Ext.getCmp('grid-invoice-list');
                     MyUx.grid.Printer.printAutomatically = false;
-                    MyUx.grid.Printer.print(grid);
+                    MyUx.grid.Printer.printExtList(storeListOutput.data.items);
                 }
             }]
         };

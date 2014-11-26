@@ -355,4 +355,88 @@ class InvoicesController extends BaseController
         return $invoiceNumberNew;
 
     }
+
+    /**
+     * @Route("/List_Output_Load", name="List_Output_Load")
+     */
+    public function List_Output_LoadAction()
+    {
+        $listInvoice = array();
+
+        $entityInvoice = $this->getEntityService()->getAllData(
+            'Invoice',
+            array(
+                'orderBy'     => array('id' => 'DESC'),
+                'conditions'  => array('invoiceType' => 2)
+            ));
+
+        if (count($entityInvoice)){
+            foreach ($entityInvoice as $key=>$item) {
+
+                $listInvoice[$key]['id'] = $item['id'];
+                $listInvoice[$key]['invoiceNumber'] = $item['invoiceNumber'];
+
+                if ($item['createInvoiceDate'] != "") {
+                    $listInvoice[$key]['createInvoiceDate'] = $item['createInvoiceDate']->format('d/m/Y');
+                } else {
+                    $listInvoice[$key]['createInvoiceDate'] = null;
+                }
+
+                $listInvoice[$key]['address'] = $item['address'];
+                $listInvoice[$key]['phoneNumber'] = $item['phoneNumber'];
+                $listInvoice[$key]['invoiceType'] = $item['invoiceType'];
+                $listInvoice[$key]['totalAmount'] = $item['totalAmount'];
+                $listInvoice[$key]['description'] = $item['description'];
+
+                //Customer Info
+                $arrCustomer = $this->getEntityService()->getFirstData(
+                    'Customer',
+                    array(
+                        'orderBy'    => array('id' => 'DESC'),
+                        'conditions' => array('id' => $item['subject'])
+                    ));
+
+                $listInvoice[$key]['customerCode'] = $arrCustomer['code'];
+                $listInvoice[$key]['customerName'] = $arrCustomer['name'];
+
+                //InvoiceDetail Info
+                $arrInvoiceDetail = $this->getEntityService()->getAllData(
+                    'InvoiceDetail',
+                    array(
+                        'orderBy'    => array('id' => 'DESC'),
+                        'conditions' => array('invoiceId' => $item['id'])
+                    ));
+
+                foreach ($arrInvoiceDetail as $keyDetail => $itemDetail) {
+                    //Product Info
+                    $arrProduct = $this->getEntityService()->getFirstData(
+                        'Product',
+                        array(
+                            'orderBy'    => array('id' => 'DESC'),
+                            'conditions' => array('id' => $itemDetail['productId'])
+                        ));
+
+                    //Unit Info
+                    $arrUnit = $this->getEntityService()->getFirstData(
+                        'Unit',
+                        array(
+                            'orderBy'    => array('id' => 'DESC'),
+                            'conditions' => array('id' => $itemDetail['unit'])
+                        ));
+
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['unitCode'] = $arrUnit['code'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['unitName'] = $arrUnit['name'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['productCode'] = $arrProduct['code'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['productName'] = $arrProduct['name'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['quantity'] = $itemDetail['quantity'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['price'] = $itemDetail['price'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['amount'] = $itemDetail['amount'];
+                }
+
+
+            }
+        }
+
+        return $this->jsonResponse(array('data' => $listInvoice));
+    }
 }
