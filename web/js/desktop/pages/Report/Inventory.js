@@ -37,6 +37,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
     create : function (){
         var tBar = new Ext.Toolbar({
             items: [{
+                id: 'reportInventoryFromDate',
                 labelWidth: 50,
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
@@ -44,10 +45,9 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 padding: '0 0 0 10px;',
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
-                name: 'fromDate',
-                id: 'fromDate',
                 value: Ext.Date.format(new Date(), dateFormat)
             }, {
+                id: 'reportInventoryToDate',
                 fieldLabel: '~',
                 labelWidth: 5,
                 labelSeparator: '',
@@ -55,11 +55,9 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 width: 120,
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
-                name: 'toDate',
-                id: 'toDate',
                 value: Ext.Date.format(new Date(), dateFormat)
             }, '-',{
-                id: 'productName',
+                id: 'reportInventoryProductName',
                 width: 200,
                 labelWidth: 50,
                 emptyText: 'product name'.Translator('Report'),
@@ -77,9 +75,9 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         });
 
         storeLoadProduct.on('beforeload', function() {
-            this.proxy.extraParams = {fromDate   : Ext.getCmp('fromDate').getSubmitValue(),
-                                      toDate     : Ext.getCmp('toDate').getSubmitValue(),
-                                      productName: Ext.getCmp('productName').getSubmitValue()};
+            this.proxy.extraParams = {fromDate   : Ext.getCmp('reportInventoryFromDate').getSubmitValue(),
+                                      toDate     : Ext.getCmp('reportInventoryToDate').getSubmitValue(),
+                                      productName: Ext.getCmp('reportInventoryProductName').getSubmitValue()};
         });
 
         var columnsProduct = [
