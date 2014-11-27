@@ -359,5 +359,8 @@ div.ux-taskbar div.x-toolbar {
 .distributor-shortcut {
     background-image: url(../images/desktop/distributor48x48.png); }
 
+.report-shortcut {
+    background-image: url(../images/desktop/report48x48.png); }
+
 .win7-start {
     background-image: url(../images/taskbar/win7.png); }

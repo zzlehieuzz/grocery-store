@@ -8,22 +8,13 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',            type: 'int'},
-    {name: 'name',          type: 'string'},
-    {name: 'code',          type: 'string'},
-    {name: 'productUnitId', type: 'string'},
-    {name: 'originalPrice', type: 'string'},
-    {name: 'salePrice',     type: 'string'},
-    {name: 'unitId1',       type: 'string'},
-    {name: 'unitId2',       type: 'string'},
-    {name: 'convertAmount', type: 'string'}];
-
-var objectUnitField = [{name: 'id',       type: 'int'},
-    {name: 'name',     type: 'string'},
-    {name: 'code',     type: 'string'}];
+var objectField = [{name: 'id',             type: 'int'},
+                   {name: 'name',           type: 'string'},
+                   {name: 'remainQuantity', type: 'int'},
+                   {name: 'inputQuantity',  type: 'int'},
+                   {name: 'outputQuantity', type: 'int'}];
 
 MyUtil.Object.defineModel('Product', objectField);
-MyUtil.Object.defineModel('Unit', objectUnitField);
 
 var storeLoadProduct = new Ext.data.JsonStore({
     model: 'Product',
@@ -34,16 +25,6 @@ var storeLoadProduct = new Ext.data.JsonStore({
     pageSize: pageSizeReport,
     autoLoad: ({params:{limit: limitReport, page: pageDefault, start: startDefault}}, false)
 });
-
-var storeLoadUnit1 = new Ext.data.JsonStore({
-    model: 'Unit',
-    proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Unit_Load"),
-        reader: readerJson
-    }), autoLoad: false
-});
-
-var storeLoadUnit2 = storeLoadUnit1;
 
 Ext.define('SrcPageUrl.Report.Inventory', {
     requires: [
@@ -59,6 +40,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 labelWidth: 50,
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
+                width: 165,
                 padding: '0 0 0 10px;',
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
@@ -70,11 +52,18 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 labelWidth: 5,
                 labelSeparator: '',
                 xtype: 'datefield',
+                width: 120,
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
                 name: 'toDate',
                 id: 'toDate',
                 value: Ext.Date.format(new Date(), dateFormat)
+            }, '-',{
+                id: 'productName',
+                width: 200,
+                labelWidth: 50,
+                emptyText: 'product name'.Translator('Report'),
+                xtype: 'textfield'
             }, '->',{
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
@@ -88,8 +77,9 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         });
 
         storeLoadProduct.on('beforeload', function() {
-            this.proxy.extraParams = {fromDate: Ext.getCmp('fromDate').getSubmitValue(),
-                                      toDate: Ext.getCmp('toDate').getSubmitValue()};
+            this.proxy.extraParams = {fromDate   : Ext.getCmp('fromDate').getSubmitValue(),
+                                      toDate     : Ext.getCmp('toDate').getSubmitValue(),
+                                      productName: Ext.getCmp('productName').getSubmitValue()};
         });
 
         var columnsProduct = [
@@ -99,58 +89,30 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 hidden : true
             }, {
                 text: "name".Translator('Common'),
-                width: 160,
+                flex: 1,
                 dataIndex: 'name',
                 style: 'text-align:center;'
             }, {
-                text: "product code".Translator('Product'),
-                width: 140,
-                dataIndex: 'code',
-                style: 'text-align:center;'
-            }, {
-                text: "original price".Translator('Product'),
-                width: 120,
-                dataIndex: 'originalPrice',
+                text: "remain quantity".Translator('Report'),
+                width: 150,
+                dataIndex: 'remainQuantity',
                 style: 'text-align:center;',
                 align: 'right',
                 renderer: Ext.util.Format.numberRenderer(moneyFormat)
             }, {
-                text: "sale price".Translator('Product'),
-                width: 120,
-                dataIndex: 'salePrice',
+                text: "input quantity".Translator('Report'),
+                width: 150,
+                dataIndex: 'inputQuantity',
                 style: 'text-align:center;',
                 align: 'right',
                 renderer: Ext.util.Format.numberRenderer(moneyFormat)
             }, {
-                header: 'unit 1'.Translator('Product'),
-                dataIndex: 'unitId1',
+                text: "output quantity".Translator('Report'),
+                width: 150,
+                dataIndex: 'outputQuantity',
                 style: 'text-align:center;',
-                width: 100,
-                renderer: function(value){
-                    if(value != 0 && value != "") {
-                        if(storeLoadUnit1.findRecord("id", value) != null) return storeLoadUnit1.findRecord("id", value).get('name');
-                        else return value;
-                    } else return "";  // display nothing if value is empty
-                }
-            }, {
-                header: 'unit 2'.Translator('Product'),
-                dataIndex: 'unitId2',
-                width: 100,
-                style: 'text-align:center;',
-                renderer: function(value){
-                    if(value != 0 && value != "") {
-                        if(storeLoadUnit2.findRecord("id", value) != null)
-                            return storeLoadUnit2.findRecord("id", value).get('name');
-                        else
-                            return value;
-                    } else return "";  // display nothing if value is empty
-                }
-            }, {
-                text: "convert amount".Translator('Product'),
-                flex: 1,
-                dataIndex: 'convertAmount',
-                style: 'text-align:center;',
-                align: 'right'
+                align: 'right',
+                renderer: Ext.util.Format.numberRenderer(moneyFormat)
             }
         ];
 

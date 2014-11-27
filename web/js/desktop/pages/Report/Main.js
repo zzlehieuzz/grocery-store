@@ -25,7 +25,7 @@ Ext.define('SrcPageUrl.Report.Main', {
         var tabPanel = Ext.widget('tabpanel', {
             activeTab: 3,
             width: 900,
-            height: 500,
+            height: 550,
             plain:true,
             defaults :{
                 autoScroll: true
@@ -67,12 +67,6 @@ Ext.define('SrcPageUrl.Report.Main', {
         }
 
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 

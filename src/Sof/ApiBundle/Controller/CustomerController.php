@@ -17,8 +17,6 @@ class CustomerController extends BaseController
     public function Customer_LoadAction()
     {
         $params = $this->getPagingParams();
-
-        $params = $this->getPagingParams();
         $arrEntity = $this->getEntityService()->getDataForPaging(
             'Customer',
             array('orderBy' => array('id' => 'DESC'),

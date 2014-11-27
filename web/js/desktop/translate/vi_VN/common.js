@@ -195,5 +195,9 @@ Locale.module('Report', {
     'invoice input': 'Phiếu nhập',
     'invoice output': 'Phiếu xuất',
     'revenue': 'Doanh thu',
-    'inventory': 'Tồn kho'
+    'inventory': 'Tồn kho',
+    'remain quantity': 'Số lượng tồn',
+    'input quantity': 'Số lượng nhập',
+    'output quantity': 'Số lượng xuất',
+    'product name': 'Tên sản phẩm'
 });

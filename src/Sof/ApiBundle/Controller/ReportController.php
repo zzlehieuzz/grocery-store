@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\Product;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\DateUtil;
 
 class ReportController extends BaseController
@@ -16,48 +17,67 @@ class ReportController extends BaseController
      */
     public function Report_InventoryLoadAction()
     {
-        $params = $this->getPagingParams();
+        $params   = $this->getPagingParams();
+        $quantity = 0;
+        $result2  = array();
 
-        $fromDate = $this->getRequestData()->get('fromDate');
-        $toDate   = $this->getRequestData()->get('toDate');
+        $fromDate    = $this->getRequestData()->get('fromDate');
+        $toDate      = $this->getRequestData()->get('toDate');
+        $productName = $this->getRequestData()->get('productName');
 
-        $entityService = $this->getEntityService();
-        $arrEntity = $this->getEntityService()->getDataForPaging('Product',
-            array('orderBy' => array('id' => 'DESC'),
-                  'firstResult' => $params['start'],
-                  'maxResults' => $params['limit']
-            ));
-
-
-        $arrCustomer = $entityService->selectOnDefault('Product:getData_ReportInventory', $fromDate, $toDate);
-
-
-        $arrTemp = array();
-        foreach($arrEntity['data'] as $key=>$entity) {
-            $productUnitId = (int)$entity['productUnitId'];
-
-            if ($productUnitId != 0) {
-                $arrEntity0 = $this->getEntityService()->getAllData('ProductUnit', array('conditions' => array('id' => $productUnitId)));
-
-                if (isset($arrEntity0[0]) && count($arrEntity0) > 0) {
-                    $arrTemp[$key]['unitId1'] = $arrEntity0[0]['unitId1'];
-                    $arrTemp[$key]['unitId2'] = $arrEntity0[0]['unitId2'];;
-                    $arrTemp[$key]['convertAmount'] = $arrEntity0[0]['convertAmount'];
-                }
-            } else {
-                $arrTemp[$key]['unitId1'] = null;
-                $arrTemp[$key]['unitId2'] = null;
-                $arrTemp[$key]['convertAmount'] = null;
-            }
-
-            $arrTemp[$key]['id']            = $entity['id'];
-            $arrTemp[$key]['productUnitId'] = $productUnitId;
-            $arrTemp[$key]['name']          = $entity['name'];
-            $arrTemp[$key]['code']          = $entity['code'];
-            $arrTemp[$key]['originalPrice'] = $entity['originalPrice'];
-            $arrTemp[$key]['salePrice']     = $entity['salePrice'];
+        $conditions = array();
+        if ($productName) {
+            $conditions['name'] = array('LIKE' => '%' . $productName . '%');
         }
 
-        return $this->jsonResponse(array('data' => $arrTemp), $arrEntity['total']);
+        $entityService = $this->getEntityService();
+        $arrEntity = $entityService->getDataForPaging('Product',
+                      array('conditions'  => $conditions,
+                            'orderBy'     => array('id' => 'DESC'),
+                            'firstResult' => $params['start'],
+                            'maxResults'  => $params['limit']));
+
+        $arrInvoiceInput = $entityService->selectOnDefault(
+            'InvoiceDetail:getData_ReportInventory', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_1);
+
+        $arrInvoiceOutput = $entityService->selectOnDefault(
+            'InvoiceDetail:getData_ReportInventory', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_2);
+
+        $result1 = array();
+        if ($arrInvoiceOutput) {
+            foreach ($arrInvoiceOutput as $itemInvoiceOutput) {
+                $result1[$itemInvoiceOutput['productId']]['quantity'] = $itemInvoiceOutput['quantity'];
+            }
+        }
+
+        if ($arrInvoiceInput) {
+            foreach ($arrInvoiceInput as $invoiceInputItem) {
+                $inputQuantity  = $invoiceInputItem['quantity'];
+                $outputQuantity = $quantity;
+                if(isset($result1[$invoiceInputItem['productId']])) {
+                    $outputQuantity = $result1[$invoiceInputItem['productId']]['quantity'];
+                }
+                $remainQuantity = $inputQuantity - $outputQuantity;
+
+                $result2[$invoiceInputItem['productId']]['remainQuantity'] = $remainQuantity;
+                $result2[$invoiceInputItem['productId']]['inputQuantity']  = $inputQuantity;
+                $result2[$invoiceInputItem['productId']]['outputQuantity'] = $outputQuantity;
+            }
+        }
+        foreach ($arrEntity['data'] as $key => $arrEntityItem) {
+            $remainQuantity = $quantity;
+            $inputQuantity  = $quantity;
+            $outputQuantity = $quantity;
+            if(isset($result2[$arrEntityItem['id']])) {
+                $remainQuantity = $result2[$arrEntityItem['id']]['remainQuantity'];
+                $inputQuantity  = $result2[$arrEntityItem['id']]['inputQuantity'];
+                $outputQuantity = $result2[$arrEntityItem['id']]['outputQuantity'];
+            }
+            $arrEntity['data'][$key]['remainQuantity'] = $remainQuantity;
+            $arrEntity['data'][$key]['inputQuantity']  = $inputQuantity;
+            $arrEntity['data'][$key]['outputQuantity'] = $outputQuantity;
+        }
+
+        return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
     }
 }
