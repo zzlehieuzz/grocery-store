@@ -82,3 +82,21 @@ fixtures:
         created_by: 1
         updated_by: 1
         deleted_by: null
+    module10:
+        name: "delivery management"
+        icon_cls: 'delivery-shortcut'
+        sort: 10
+        module: 'delivery-list'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
+    module11:
+        name: "report"
+        icon_cls: 'report-shortcut'
+        sort: 11
+        module: 'report'
+        deleted_at: null
+        created_by: 1
+        updated_by: 1
+        deleted_by: null
