@@ -117,15 +117,7 @@ storeLoadInputForm.on('load', function(){
 
 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
   clicksToMoveEditor: 1,
-  autoCancel: false,
-  listeners:{
-//    'canceledit': function(rowEditing, context) {
-//
-//    },
-    'edit': function(rowEditing, context) {
-
-    }
-  }
+  autoCancel: false
 });
 
 Ext.define('SrcPageUrl.Invoices.Input', {
@@ -142,8 +134,7 @@ Ext.define('SrcPageUrl.Invoices.Input', {
 
     init : function(){
         this.launcher = {
-//            text: 'Phiếu Nhập',
-            text: 'invoices input',
+            text: 'invoices input'.Translator('Module'),
             iconCls:'icon-grid'
         };
     },
@@ -154,10 +145,10 @@ Ext.define('SrcPageUrl.Invoices.Input', {
 
         var formFields = {
             xtype: 'fieldset',
+            padding: '8 5 5 5',
+            border: false,
             columnWidth: 0.4,
             labelWidth: 200,
-//            title: 'Fieldset 1',
-//                        collapsible: true,
             defaultType: 'textfield',
             defaults: {
                 anchor: '60%'
@@ -210,7 +201,6 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 id: 'create_invoice_man',
                 value: formData.createInvoiceMan
             }, {
-//                labelWidth: 200,
                 fieldLabel: 'Địa Chỉ Nhà PP',
                 name: 'address',
                 id: 'address',
@@ -238,7 +228,6 @@ Ext.define('SrcPageUrl.Invoices.Input', {
                 text: 'Lưu',
                 width: 30,
                 handler : function() {
-
                     //Get value form
                     var id = Ext.getCmp('invoiceId').getValue();
                     var invoice_number = Ext.getCmp('invoice_number').getValue();
@@ -316,94 +305,94 @@ Ext.define('SrcPageUrl.Invoices.Input', {
 
         };
 
-            var columnsInvoice = [
-            { xtype : 'rownumberer', text : 'STT', width : 30 },
-            {
-                header: 'Tên Sản Phẩm',
-                dataIndex: 'productId',
-                editor:
-                {
-                    xtype: 'combobox',
-                    store: storeLoadProductCmb,
-                    displayField: 'name',
-                    valueField: 'id'
-                }
-            }, {
-                header: 'Mã Sản Phẩm',
-                dataIndex: 'productId',
-                editor:
-                {
-                    xtype: 'combobox',
-                    store: storeLoadProductCmb,
-                    displayField: 'code',
-                    valueField: 'id'
-                }
+        var columnsInvoice = [{
+            xtype : 'rownumberer',
+            text : 'STT',
+            width : 30
+        }, {
+            header: 'Tên Sản Phẩm',
+            dataIndex: 'productId',
+            flex: 1,
+            style: 'text-align:center;',
+            editor: {
+                xtype: 'combobox',
+                store: storeLoadProductCmb,
+                displayField: 'name',
+                valueField: 'id'
             }
-            ,{
-                text: "Đơn Vị Tính",
-                flex: 2,
-                dataIndex: 'unit',
-                editor: {
-                    allowBlank: true
-                }
-            }, {
-                text: "Số lượng",
-                flex: 2,
-                dataIndex: 'quantity',
-                editor: {
-                    allowBlank: true
-                }
-            }, {
-                text: "Đơn giá",
-                flex: 2,
-                dataIndex: 'price',
-                editor: {
-                    allowBlank: true
-                }
-            }, {
-                text: "Thành Tiền",
-                width: 150,
-                flex: 1,
-                dataIndex: 'amount',
-                editor: {
-                    allowBlank: true
-                }
+        }, {
+            header: 'Mã Sản Phẩm',
+            dataIndex: 'productId',
+            style: 'text-align:center;',
+            editor: {
+                xtype: 'combobox',
+                store: storeLoadProductCmb,
+                displayField: 'code',
+                valueField: 'id'
             }
-        ];
+        }, {
+            text: "Đơn Vị Tính",
+            width: 100,
+            style: 'text-align:center;',
+            dataIndex: 'unit',
+            editor: {
+                allowBlank: true
+            }
+        }, {
+            text: "Số lượng",
+            width: 150,
+            dataIndex: 'quantity',
+            style: 'text-align:center;',
+            align: 'right',
+            editor: {
+                allowBlank: true
+            }
+        }, {
+            text: "Đơn giá",
+            width: 150,
+            dataIndex: 'price',
+            style: 'text-align:center;',
+            align: 'right',
+            editor: {
+                allowBlank: true
+            }
+        }, {
+            text: "Thành Tiền",
+            width: 150,
+            style: 'text-align:center;',
+            align: 'right',
+            dataIndex: 'amount',
+            editor: {
+                allowBlank: true
+            }
+        }];
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI",
-            onKeyPress: function(e, t) {
-                console.log(e);
-            }
-        });
+        var rowModel = Ext.create('Ext.selection.RowModel', {mode : "MULTI"});
 
         if(!win){
             win = desktop.createWindow({
                 id: 'input-form',
-                title:'Phiếu Nhập',
+                title:'Phiếu nhập',
                 width:740,
                 height:500,
                 iconCls: 'icon-grid',
                 animCollapse:false,
                 constrainHeader:true,
-//                layout: 'fit',
-                items: [
-                    formFields,
-                  {
-                    border: false,
-                    id: 'grid-input',
-                    xtype: 'grid',
-                    store: storeLoadInput,
-                    selModel: rowModel,
-                    columns: columnsInvoice,
-                    plugins: [rowEditing],
-                    listeners: {
-                      beforerender: function () {
-                        this.store.load();
-                      }
+                layout: 'fit',
+                items: [formFields,
+                    {
+                        id: 'grid-input',
+                        xtype: 'grid',
+                        store: storeLoadInput,
+                        selModel: rowModel,
+                        columns: columnsInvoice,
+                        plugins: rowEditing,
+                        listeners: {
+                            beforerender: function () {
+                                this.store.load();
+                            }
+                        }
                     }
-                  }
                 ],
               tbar:[{
                 text:'Add',
@@ -446,12 +435,6 @@ Ext.define('SrcPageUrl.Invoices.Input', {
             });
         }
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 

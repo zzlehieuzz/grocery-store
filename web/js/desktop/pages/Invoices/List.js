@@ -240,7 +240,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         {boxLabel: 'invoice output'.Translator('Invoice'), name: 'rb', inputValue: '2'}],
                 listeners: {
                     change: function (field, newValue, oldValue) {
-
                         var printBtn = Ext.getCmp('print_btn');
                         if (newValue['rb'] == 2) {
                             printBtn.setVisible(true);
@@ -258,6 +257,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 items: [{
                         fieldLabel: 'from date'.Translator('Invoice'),
                         xtype: 'datefield',
+                        padding: '0 5px 0 0;',
                         format: date_format,
                         altFormats: date_format,
                         name: 'fromDate',
@@ -266,8 +266,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         anchor: '50%'
                     }, {
                         labelWidth: 0,
-                        fieldLabel: ' ~',
-                        style: 'padding: 5px;',
+                        fieldLabel: '~',
                         labelSeparator: '',
                         name: 'toDate',
                         id: 'toDate',
@@ -317,7 +316,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 text: 'print'.Translator('Invoice'),
                 width: 50,
                 handler: function () {
-
                     MyUx.grid.Printer.printAutomatically = false;
                     MyUx.grid.Printer.printExtList(storeListOutput.data.items);
                 }
@@ -328,25 +326,20 @@ Ext.define('SrcPageUrl.Invoices.List', {
             new Ext.grid.RowNumberer(),
             {
                 text: "customer name".Translator('Invoice'),
-                width: 100,
-                dataIndex: 'subjectName',
-                editor: {
-                    allowBlank: true
-                }
+                flex: 1,
+                style: 'text-align:center;',
+                dataIndex: 'subjectName'
             }, {
                 text: "date".Translator('Invoice'),
-                flex: 1,
                 dataIndex: 'createInvoiceDate',
-                editor: {
-                    allowBlank: true
-                }
+                style: 'text-align:center;',
+                width: 80
             }, {
                 text: "amount".Translator('Invoice'),
                 flex: 1,
+                style: 'text-align:center;',
+                align: 'right',
                 dataIndex: 'amount',
-                editor: {
-                    allowBlank: true
-                },
                 renderer: function (value) {
                     if (value) {
                         return value;
@@ -354,21 +347,17 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 }
             }, {
                 text: "invoice type".Translator('Invoice'),
-                flex: 1,
-                dataIndex: 'invoiceTypeText',
-                editor: {
-                    allowBlank: true
-                }
+                width: 80,
+                style: 'text-align:center;',
+                dataIndex: 'invoiceTypeText'
             }, {
                 text: "invoice number".Translator('Invoice'),
-                flex: 2,
-                dataIndex: 'invoiceNumber',
-                editor: {
-                    allowBlank: true
-                }
-            },
-            {
+                width: 100,
+                style: 'text-align:center;',
+                dataIndex: 'invoiceNumber'
+            }, {
                 text: '',
+                width: 80,
                 renderer: function (val, meta, rec) {
                     var id = Ext.id();
                     Ext.defer(function () {
@@ -388,11 +377,9 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 }
             }, {
                 text: "state".Translator('Invoice'),
-                flex: 2,
-                dataIndex: 'paymentStatus',
-                editor: {
-                    allowBlank: true
-                }
+                width: 100,
+                style: 'text-align:center;',
+                dataIndex: 'paymentStatus'
             }
         ];
 
@@ -428,16 +415,10 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         }
                     }
                 ]
-
             });
         }
-        return win;
-    },
 
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
+        return win;
     }
 });
 
@@ -524,17 +505,17 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
     });
 
     var formFieldsAll = {
-        xtype: 'fieldset',
+        xtype: 'form',
+        border: false,
         id: 'formFieldsAll',
         name: 'formFieldsAll',
-        padding: '8 5 5 5',
+        style: 'margin: 5px 5px 0 5px;',
         items: [{
             xtype: 'container',
             anchor: '100%',
             layout: 'hbox',
             items: [{
                 xtype: 'container',
-                style: 'padding-left: 10px;',
                 flex: 1,
                 layout: 'anchor',
                 items: [{
@@ -620,12 +601,49 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 }]
             }
             ]
+        }],
+        buttons: [{
+            xtype: 'button',
+            text: 'add product'.Translator('Invoice'),
+            width: 100,
+            handler: function () {
+                cellEditing.cancelEdit();
+
+                // Create a model instance
+                var r = Ext.create('Input', {
+                    id: '',
+                    invoiceId: '',
+                    productId: '',
+                    price: '',
+                    unit: '',
+                    quantity: '',
+                    amount: ''
+                });
+
+                storeLoadInput.insert(0, r);
+                cellEditing.startEdit(0, 0);
+            }
+        }, {
+            xtype: 'button',
+            text: 'remove product'.Translator('Invoice'),
+            width: 100,
+            listeners: {
+                click: function () {
+                    var selection = Ext.getCmp('grid-input-output').getView().getSelectionModel().getSelection()[0];
+                    if (selection) {
+                        storeLoadInput.remove(selection);
+                    }
+                }
+            }
         }]
     };
 
     var columnsInvoicePopup = [
-        {xtype: 'rownumberer', text: 'order'.Translator('Invoice'), width: 30},
         {
+            xtype: 'rownumberer',
+            text: 'order'.Translator('Invoice'),
+            width: 30
+        }, {
             header: 'product name'.Translator('Product'),
             dataIndex: 'productId',
             editor: {
@@ -728,7 +746,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }, {
             text: "amount".Translator('Product'),
             width: 150,
-            flex: 2,
             dataIndex: 'amount',
             summaryType: function(records){
                 var totals = 0;
@@ -743,9 +760,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             renderer: function (value) {
                 return value;
             },
-//            summaryRenderer: function (value) {
-//                return value;
-//            },
             editor: {
                 allowBlank: true
             }
@@ -753,84 +767,29 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
     ];
 
     var setting = new Ext.FormPanel({
-        frame: true,
+        border: false,
         items: [{
             layout: 'form',
-            items: [formFieldsAll,
-                {
-                    xtype: 'container',
-                    anchor: '50%',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'container',
-                        padding: '0 5 5 0',
-                        layout: 'anchor',
-                        items: [{
-                            xtype: 'button',
-                            text: 'add product'.Translator('Invoice'),
-                            width: 100,
-                            handler: function () {
-                                cellEditing.cancelEdit();
-
-                                // Create a model instance
-                                var r = Ext.create('Input', {
-                                    id: '',
-                                    invoiceId: '',
-                                    productId: '',
-                                    price: '',
-                                    unit: '',
-                                    quantity: '',
-                                    amount: ''
-                                });
-
-                                storeLoadInput.insert(0, r);
-                                cellEditing.startEdit(0, 0);
-                            }
-                        }]
-                    }, {
-                        xtype: 'container',
-                        layout: 'anchor',
-                        items: [{
-                            xtype: 'button',
-                            text: 'remove product'.Translator('Invoice'),
-                            width: 100,
-                            listeners: {
-                                click: function () {
-                                    var selection = Ext.getCmp('grid-input-output').getView().getSelectionModel().getSelection()[0];
-                                    if (selection) {
-                                        storeLoadInput.remove(selection);
-                                    }
-                                }
-                            }
-                        }]
-                    }
-                    ]
-                },
-                {
-                    border: false,
+            border: false,
+            items: [formFieldsAll
+                , {
                     id: 'grid-input-output',
                     xtype: 'grid',
-                    height: 240,
+                    height: 280,
+                    style: 'padding: 5px;',
                     store: storeLoadInput,
-                    selModel: Ext.create('Ext.selection.RowModel', {
-                        mode: "MULTI",
-                        onKeyPress: function (e, t) {
-                            console.log(e);
-                        }
-                    }),
+                    selModel: Ext.create('Ext.selection.RowModel', {mode: "MULTI"}),
                     columns: columnsInvoicePopup,
-                    plugins: [cellEditing],
-                    features: [{
-                        ftype: 'summary'
-                    }],
+                    plugins: cellEditing,
+                    features: [{ftype: 'summary'}],
                     listeners: {
                         beforerender: function () {
                             this.store.load({params: {limit: limitDefault, page: pageDefault, start: startDefault, id: invoiceId}});
                         }
                     }, bbar: new Ext.PagingToolbar({
-                    store: storeLoadInput,
-                    displayInfo: true
-                })
+                        store: storeLoadInput,
+                        displayInfo: true
+                    })
                 }]
         }],
 

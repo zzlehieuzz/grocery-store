@@ -72,7 +72,7 @@ Ext.define('MyDesktop.App', {
 
         return Ext.apply(ret, {
             //cls: 'ux-desktop-black',
-            contextMenuItems: [{ text: 'change settings'.Translator('Setting'), handler: me.onSettings, scope: me }],
+            contextMenuItems: [{ text: 'change settings'.Translator('Settings'), handler: me.onSettings, scope: me }],
             shortcuts: Ext.create('Ext.data.Store', {
                 model: 'Ext.ux.desktop.ShortcutModel',
                 data: this.getDataForShortcutModel()

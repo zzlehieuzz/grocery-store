@@ -316,7 +316,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
             { xtype : 'rownumberer', text : 'STT', width : 30 },
             {
                 header: 'Tên Sản Phẩm',
-                dataIndex: 'productId',
+                dataIndex: 'productId',style: 'text-align:center;',
                 editor:
                 {
                     xtype: 'combobox',
@@ -380,6 +380,7 @@ Ext.define('SrcPageUrl.Invoices.Output', {
                 title:'Phiếu Xuất',
                 width:740,
                 height:480,
+                border: false,
                 iconCls: 'icon-grid',
 //                animCollapse:false,
                 constrainHeader:true,
