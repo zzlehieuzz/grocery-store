@@ -26,22 +26,30 @@ Ext.define('SrcPageUrl.Report.Main', {
             activeTab: 3,
             width: 900,
             height: 550,
-            plain:true,
+            plain: true,
+            animCollapse: false,
+            forceFit:  true,
             defaults :{
-                autoScroll: true
+                layout: 'fit',
+                autoScroll: true,
+                autoWidth: true,
+                autoHeight: true
+            },
+            layoutConfig: {
+                deferredRender: true
             },
             items: [{
                 title: 'invoice input'.Translator('Report'),
                 layout: 'fit',
-                html: "My content was added during construction."
+                items: []
             },{
                 title: 'invoice output'.Translator('Report'),
                 layout: 'fit',
-                html: "My content was added during construction."
+                items: []
             },{
                 title: 'revenue'.Translator('Report'),
                 layout: 'fit',
-                html: "I am tab 4's content. I also have an event listener attached."
+                items: []
             }, {
                 title: 'inventory'.Translator('Report'),
                 layout: 'fit',

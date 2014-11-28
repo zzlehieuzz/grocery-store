@@ -121,6 +121,11 @@ Ext.define('SrcPageUrl.Report.Inventory', {
             loadMask: true,
             columns: columnsProduct,
             tbar: tBar,
+            autoWidth: true,
+            autoHeight: true,
+            viewConfig: {
+                emptyText: 'no records found'.Translator('Common')
+            },
             listeners: {
                 beforerender: function () {
                     this.store.load();

@@ -67,18 +67,15 @@ b15_15455114_grocery_store
 
 ########################################################
 
-link test: http://adorzhang.com/exp-grocery-store/web/Login
-link test: http://adorzhang.com/exp-grocery-store/web/Common_Index
-Cpanel Username:    adorzhang     
-Cpanel Password:    zhang1509   
+Cpanel Username:    adorzhang    
+Cpanel Password:    0937669567   
 Your URL:  http://adorzhang.com               
 FTP Server :   ftp.adorzhang.com       
-FTP Login :     adorzhang        
-FTP Password :  zhang1509        
+FTP Login :     test@adorzhang.com        
+FTP Password :  test123456        
 MySQL Database Name: adorzhang_store
 MySQL Username : adorzhang_store
 MySQL Password : test123456       
 MySQL Server: localhost          
 
-
-Cpanel URL:    http://adorzhang.com:7878 
+Cpanel URL: http://103.18.5.67:2222/

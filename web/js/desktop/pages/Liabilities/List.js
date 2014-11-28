@@ -64,13 +64,11 @@ Ext.define('SrcPageUrl.Liabilities.List', {
     },
 
     createWindow : function (){
-        var invoiceSelectId = '', customerSelectId = '';
+        var invoiceSelectId  = '',
+            customerSelectId = '',
+            rowModel         = Ext.create('Ext.selection.RowModel', {mode : "MULTI"}),
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI"
-        });
-
-        var columnsLiabilities = [
+            columnsLiabilities = [
             new Ext.grid.RowNumberer(),
             {
                 dataIndex: 'id',
@@ -437,12 +435,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
         });
 
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 
