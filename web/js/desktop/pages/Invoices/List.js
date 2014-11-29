@@ -117,14 +117,6 @@ var objectProductField = [{name: 'id', type: 'int'},
 
 var objectUnitInvoiceDetailField = [{name: 'id', type: 'int'},  {name: 'name', type: 'string'}];
 
-var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
-    model: 'Unit',
-    proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Unit_Load"),
-        reader: readerJson
-    }), autoLoad: true
-});
-
 var objectInvoiceNumber = [{name: 'input', type: 'string'}, {name: 'output', type: 'string'}];
 
 MyUtil.Object.defineModel('Input', objectGridField);
@@ -150,7 +142,15 @@ var storeListOutput = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("List_Output_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
+});
+
+var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
+    model: 'Unit',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Unit_Load"),
+        reader: readerJson
+    }), autoLoad: true
 });
 
 var storeLoadDistributorCmb = new Ext.data.JsonStore({
@@ -267,6 +267,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     }, {
                         labelWidth: 0,
                         fieldLabel: '~',
+                        padding: '0 10px 0 0;',
                         labelSeparator: '',
                         name: 'toDate',
                         id: 'toDate',
@@ -275,8 +276,23 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         altFormats: date_format,
                         value: new Date(),
                         anchor: '50%'
+                    }, {
+                        emptyText: 'customer name'.Translator('Invoice'),
+                        padding: '0 5px 0 10px;',
+                        xtype: 'textfield',
+                        name: 'customerNameForm',
+                        id: 'customerNameForm',
+                        anchor: '50%'
+                    },{
+                        emptyText: 'invoice number'.Translator('Invoice'),
+                        padding: '0 5px 0 10px;',
+                        xtype: 'textfield',
+                        name: 'invoiceNumberForm',
+                        id: 'invoiceNumberForm',
+                        anchor: '50%'
                     }]
-            }],
+                }],
+
             buttons: [{
                 xtype: 'button',
                 text: 'find'.Translator('Invoice'),
@@ -285,6 +301,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
                     var fromDate = Ext.util.Format.date(Ext.getCmp('fromDate').getValue(), 'Y-m-d');
                     var toDate = Ext.util.Format.date(Ext.getCmp('toDate').getValue(), 'Y-m-d');
+                    var customerNameForm = Ext.getCmp('customerNameForm').getValue();
+                    var invoiceNumberForm = Ext.getCmp('invoiceNumberForm').getValue();
 
                     storeLoadInvoice.reload({
                         params: {
@@ -293,7 +311,9 @@ Ext.define('SrcPageUrl.Invoices.List', {
                             start: startDefault,
                             invoiceType: invoiceType,
                             fromDate: fromDate,
-                            toDate: toDate
+                            toDate: toDate,
+                            customerName: customerNameForm,
+                            invoiceNumber: invoiceNumberForm,
                         }
                     });
                 }
@@ -423,6 +443,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
 });
 
 function createPopupInvoiceForm(invoiceId, invoiceType) {
+
     var invoiceTitle = "";
     var subjectT = "";
     var deliveryReceiver = "";
