@@ -53,7 +53,7 @@ Ext.define('SrcPageUrl.Report.Main', {
         var win = desktop.getWindow('report');
         if(!win){
             win = desktop.createWindow({
-                id: 'report-tab',
+                name: 'report-tab',
                 title: 'report'.Translator('Module'),
                 width: 910,
                 height: 530,
