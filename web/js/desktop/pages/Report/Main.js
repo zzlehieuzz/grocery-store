@@ -24,7 +24,7 @@ Ext.define('SrcPageUrl.Report.Main', {
 
     createWindow : function (){
         var tabPanel = Ext.widget('tabpanel', {
-            activeTab: 1,
+            activeTab: 0,
             width: 900,
             height: 550,
             plain: true,
