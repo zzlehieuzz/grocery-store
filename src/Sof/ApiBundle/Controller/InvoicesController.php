@@ -18,76 +18,159 @@ class InvoicesController extends BaseController
     public function Invoice_LoadAction()
     {
         $request = $this->getRequestData();
-
-        //Search condition
+        $params = $this->getPagingParams();
+        $arrSubject = array();
         $arrCondition = array();
 
         $invoiceType = $request->get('invoiceType');
         $fromDate = $request->get('fromDate');
         $toDate = $request->get('toDate');
+        $customerName = '%' .$request->get('customerName').'%';
+        $invoiceNumber = $request->get('invoiceNumber');
 
-        if ($invoiceType == 1 || $invoiceType == 2) {
-            $arrCondition['invoiceType'] = $invoiceType;
-        }
+        if ($fromDate && $toDate) {
 
-        if ($fromDate) {
-            $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d H:i:s'));
-        }
+            $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d'), '<=' => (new \DateTime($toDate))->format('Y-m-d'));
 
-        if ($toDate) {
-            $arrCondition['createInvoiceDate'] = array('<=' => (new \DateTime($toDate))->format('Y-m-d H:i:s'));
-        }
-
-        $arrEntity = $this->getEntityService()->getAllData(
-            'Invoice',
-            array('conditions'  => $arrCondition,
-                  'orderBy'     => array('id' => 'DESC'),
-                    'firstResult' => $request->get('start'),
-                    'maxResults' => $request->get('limit')));
-
-        $arrData = array();
-        foreach($arrEntity as $key=>$entity){
-            $subjectName = "";
-            if ($entity['invoiceType'] == 1) {
-                $entitySubject = $this->getEntityService()->getFirstData(
-                    'Distributor',
-                    array(
-                        'conditions'  => array('id' => $entity['subject'])
-                    ));
-
-            } else {
-                $entitySubject = $this->getEntityService()->getFirstData(
-                    'Customer',
-                    array(
-                        'conditions'  => array('id' => $entity['subject'])
-                    ));
+        } else {
+            if ($fromDate) {
+                $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d'));
             }
 
-            if (count($entitySubject) > 0) {
-                $subjectName = $entitySubject['name'];
+            if ($toDate) {
+                $arrCondition['createInvoiceDate'] = array('<=' => (new \DateTime($toDate))->format('Y-m-d'));
             }
+        }
 
-            $paymentStatus = "";
-            if ($entity['invoiceType'] == 2) {
-                if ($entity['paymentStatus'] == 1) {
-                    $paymentStatus = 'Đã Giao Hàng';
-                } else {
-                    $paymentStatus = 'Chưa Giao Hàng';
+        if ($invoiceNumber != "") {
+            $arrCondition['invoiceNumber'] = array('LIKE' => '%' . $invoiceNumber . '%');
+        }
+
+        if ($request->get('customerName') != "") {
+            $arrDistributorId = $this->getEntityService()->getAllData(
+                'Distributor',
+                array(
+                    'selects'    => array('id'),
+                    'orderBy'    => array('id' => 'DESC'),
+                    'conditions' => array('name' => array('LIKE' => $customerName))
+                ));
+
+            if ($arrDistributorId) {
+                foreach($arrDistributorId as $dis){
+                    $arrSubject['invoiceType1'][] = ($dis['id']);
                 }
             }
 
-            $arrData[$key]['id'] = $entity['id'];
-            $arrData[$key]['subjectName'] = $subjectName;
-            $arrData[$key]['invoiceType'] = $entity['invoiceType'];
-            $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
-            $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
-            $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
-            $arrData[$key]['paymentStatus'] = $paymentStatus;
-            $arrData[$key]['description'] = $entity['description'];
-            $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
+            $arrCustomerId = $this->getEntityService()->getAllData(
+                'Customer',
+                array(
+                    'selects'    => array('id'),
+                    'orderBy'    => array('id' => 'DESC'),
+                    'conditions' => array('name' => array('LIKE' => $customerName))
+                ));
+
+            if ($arrCustomerId) {
+                foreach($arrCustomerId as $cus){
+                    $arrSubject['invoiceType2'][] = ($cus['id']);
+                }
+            }
+
+            $arrEntity['data'] = array();
+
+            if (isset($arrSubject['invoiceType1']) &&  $arrSubject['invoiceType1'] && $invoiceType != 2) {
+                $arrCondition['invoiceType'] = 1;
+                $arrCondition['subject'] = array('IN' => $arrSubject['invoiceType1']);
+
+                $arrEntity0 = $this->getEntityService()->getDataForPaging(
+                    'Invoice',
+                    array('conditions'  => $arrCondition,
+                        'orderBy'     => array('id' => 'DESC'),
+                        'firstResult' => $params['start'],
+                        'maxResults' => $params['limit']
+                    ));
+
+                if ($arrEntity0['data']) {
+                    $arrEntity['data'] = array_merge ($arrEntity['data'], $arrEntity0['data']);
+                }
+            }
+
+            if (isset($arrSubject['invoiceType2']) && $arrSubject['invoiceType2'] && $invoiceType != 1) {
+                $arrCondition['invoiceType'] = 2;
+                $arrCondition['subject'] = array('IN' => $arrSubject['invoiceType2']);
+
+                $arrEntity1 = $this->getEntityService()->getDataForPaging(
+                    'Invoice',
+                    array('conditions'  => $arrCondition,
+                        'orderBy'     => array('id' => 'DESC'),
+                        'firstResult' => $params['start'],
+                        'maxResults' => $params['limit']
+                    ));
+
+
+                if ($arrEntity1['data']) {
+                    $arrEntity['data'] = array_merge ($arrEntity['data'], $arrEntity1['data']);
+                }
+            }
+
+        } else {
+            if ($invoiceType == 1 || $invoiceType == 2) {
+                $arrCondition['invoiceType'] = $invoiceType;
+            }
+
+            $arrEntity = $this->getEntityService()->getDataForPaging(
+                'Invoice',
+                array('conditions'  => $arrCondition,
+                    'orderBy'     => array('id' => 'DESC'),
+                    'firstResult' => $params['start'],
+                    'maxResults' => $params['limit']
+                ));
         }
 
-        return $this->jsonResponse(array('data' => $arrData));
+        $arrData = array();
+        if ($arrEntity['data']) {
+            foreach($arrEntity['data'] as $key=>$entity){
+                $subjectName = "";
+                if ($entity['invoiceType'] == 1) {
+                    $entitySubject = $this->getEntityService()->getFirstData(
+                        'Distributor',
+                        array(
+                            'conditions'  => array('id' => $entity['subject'])
+                        ));
+
+                } else {
+                    $entitySubject = $this->getEntityService()->getFirstData(
+                        'Customer',
+                        array(
+                            'conditions'  => array('id' => $entity['subject'])
+                        ));
+                }
+
+                if (count($entitySubject) > 0) {
+                    $subjectName = $entitySubject['name'];
+                }
+
+                $paymentStatus = "";
+                if ($entity['invoiceType'] == 2) {
+                    if ($entity['paymentStatus'] == 1) {
+                        $paymentStatus = 'Đã Giao Hàng';
+                    } else {
+                        $paymentStatus = 'Chưa Giao Hàng';
+                    }
+                }
+
+                $arrData[$key]['id'] = $entity['id'];
+                $arrData[$key]['subjectName'] = $subjectName;
+                $arrData[$key]['invoiceType'] = $entity['invoiceType'];
+                $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
+                $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
+                $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
+                $arrData[$key]['paymentStatus'] = $paymentStatus;
+                $arrData[$key]['description'] = $entity['description'];
+                $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
+            }
+        }
+
+        return $this->jsonResponse(array('data' => $arrData, 'total' => count($arrEntity)));
     }
 
     /**
