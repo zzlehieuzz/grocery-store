@@ -225,8 +225,8 @@ class InvoicesController extends BaseController
                 array(
                     'orderBy'    => array('id' => 'DESC'),
                     'conditions' => array('invoiceId' => $invoiceId),
-//                    'firstResult' => $request->get('start'),
-//                    'maxResults' => $request->get('limit')
+                    'firstResult' => $request->get('start'),
+                    'maxResults' => $request->get('limit')
                 ));
 
         } else {
@@ -236,7 +236,7 @@ class InvoicesController extends BaseController
             return $this->jsonResponse(array('invoice_number' => array('input' => $invoiceNumberInput, 'output' => $invoiceNumberOutput)));
         }
 
-        return $this->jsonResponse(array('grid_data' => $arrInvoiceDetail, 'form_data' => $entityInvoice));
+        return $this->jsonResponse(array('grid_data' => $arrInvoiceDetail, 'form_data' => $entityInvoice, 'total' => count($arrInvoiceDetail)));
     }
 
     /**
