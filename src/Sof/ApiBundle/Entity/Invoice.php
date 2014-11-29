@@ -28,8 +28,8 @@ class Invoice extends BaseEntity
   private $invoiceNumber;
 
     /**
-     * @ORM\Column(name="create_invoice_date", type="datetime", nullable=true)
-     * @Assert\Type(type="datetime")
+     * @ORM\Column(name="create_invoice_date", type="date", nullable=true)
+     * @Assert\Type(type="date")
      */
     private $createInvoiceDate;
 
