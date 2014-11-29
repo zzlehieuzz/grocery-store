@@ -990,12 +990,23 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
 
                 MyUx.grid.Printer.printExt(grid, dataForm);
             }
+        }, {
+            xtype: 'button',
+            text: 'close'.Translator('Common'),
+            width: 30,
+            handler: function () {
+                Ext.MessageBox.confirm('Close', 'Are you sure ?', function (btn) {
+                    if (btn === 'yes') {
+                        editWindow.close();
+                    }
+                });
+            }
         }]
     });
 
     var editWindow = new Ext.Window({
         title: invoiceTitle,
-        width: 700,
+        width: 800,
         height: 500,
         closable: true,
         closeAction: 'destroy',
