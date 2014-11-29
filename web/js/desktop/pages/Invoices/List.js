@@ -670,6 +670,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             editor: {
                 xtype: 'combobox',
                 store: storeLoadProductCmb,
+                listConfig: {minWidth: 180},
                 displayField: 'name',
                 valueField: 'id'
             },
@@ -686,6 +687,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             dataIndex: 'productId',
             editor: {
                 xtype: 'combobox',
+                listConfig: {minWidth: 100},
                 store: storeLoadProductCmb,
                 displayField: 'code',
                 valueField: 'id'
@@ -700,7 +702,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             }
         }, {
             text: "unit".Translator('Product'),
-            flex: 2,
+            flex: 1,
             dataIndex: 'unit',
             editor: {
                 allowBlank: true,
