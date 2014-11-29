@@ -9,7 +9,8 @@ Ext.define('SrcPageUrl.Report.Main', {
         'Ext.data.ArrayStore',
         'Ext.util.Format',
         'Ext.tab.*',
-        'SrcPageUrl.Report.Inventory'
+        'SrcPageUrl.Report.Inventory',
+        'SrcPageUrl.Report.Revenue'
     ],
 
     id:'report',
@@ -23,12 +24,11 @@ Ext.define('SrcPageUrl.Report.Main', {
 
     createWindow : function (){
         var tabPanel = Ext.widget('tabpanel', {
-            activeTab: 3,
+            activeTab: 1,
             width: 900,
             height: 550,
             plain: true,
             animCollapse: false,
-            forceFit:  true,
             defaults :{
                 layout: 'fit',
                 autoScroll: true,
@@ -39,17 +39,9 @@ Ext.define('SrcPageUrl.Report.Main', {
                 deferredRender: true
             },
             items: [{
-                title: 'invoice input'.Translator('Report'),
-                layout: 'fit',
-                items: []
-            },{
-                title: 'invoice output'.Translator('Report'),
-                layout: 'fit',
-                items: []
-            },{
                 title: 'revenue'.Translator('Report'),
                 layout: 'fit',
-                items: []
+                items: new SrcPageUrl.Report.Revenue().create()
             }, {
                 title: 'inventory'.Translator('Report'),
                 layout: 'fit',

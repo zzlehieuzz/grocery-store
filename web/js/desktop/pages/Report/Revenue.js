@@ -26,7 +26,7 @@ var storeLoadProduct = new Ext.data.JsonStore({
     autoLoad: ({params:{limit: limitReport, page: pageDefault, start: startDefault}}, false)
 });
 
-Ext.define('SrcPageUrl.Report.Inventory', {
+Ext.define('SrcPageUrl.Report.Revenue', {
     requires: [
         'Ext.data.*',
         'Ext.data.ArrayStore',
@@ -37,7 +37,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
     create : function (){
         var tBar = new Ext.Toolbar({
             items: [{
-                name: 'reportInventoryFromDate',
+                name: 'reportRevenueFromDate',
                 labelWidth: 50,
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
@@ -47,7 +47,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 submitFormat: dateSubmitFormat,
                 value: Ext.Date.format(new Date(), firstDateFormat)
             }, {
-                name: 'reportInventoryToDate',
+                name: 'reportRevenueToDate',
                 fieldLabel: '~',
                 labelWidth: 5,
                 labelSeparator: '',
@@ -56,12 +56,6 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
                 value: Ext.Date.format(new Date(), lastDateFormat)
-            }, '-',{
-                name: 'reportInventoryProductName',
-                width: 200,
-                labelWidth: 50,
-                emptyText: 'product name'.Translator('Report'),
-                xtype: 'textfield'
             }, '->',{
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
@@ -75,9 +69,8 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         });
 
         storeLoadProduct.on('beforeload', function() {
-            this.proxy.extraParams = {fromDate : Ext.ComponentQuery.query('[name=reportInventoryFromDate]', tBar),
-                                      toDate   : Ext.ComponentQuery.query('[name=reportInventoryToDate]', tBar),
-                                      productName   : Ext.ComponentQuery.query('[name=reportInventoryProductName]', tBar)};
+            this.proxy.extraParams = {fromDate : Ext.ComponentQuery.query('[name=reportRevenueFromDate]', tBar),
+                                      toDate   : Ext.ComponentQuery.query('[name=reportRevenueToDate]', tBar)};
         });
 
         var columnsProduct = [
@@ -116,7 +109,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
 
         return Ext.widget('gridpanel', {
             border: false,
-            name: 'grid-inventory',
+            name: 'grid-Revenue',
             store: storeLoadProduct,
             loadMask: true,
             columns: columnsProduct,
@@ -128,17 +121,7 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 beforerender: function () {
                     this.store.load();
                 }
-            },
-            bbar: new Ext.PagingToolbar({
-                store: storeLoadProduct,
-                pageSize: limitDefault,
-                emptyMsg : 'no records found'.Translator('Common'),
-                beforePageText : 'page'.Translator('Common'),
-                afterPageText : 'of'.Translator('Common') + ' {0}',
-                refreshText : 'refresh'.Translator('Common'),
-                displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
-                displayInfo:true
-            })
+            }
         });
     }
 });
