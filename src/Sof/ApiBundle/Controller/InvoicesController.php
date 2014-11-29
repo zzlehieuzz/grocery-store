@@ -170,7 +170,7 @@ class InvoicesController extends BaseController
             }
         }
 
-        return $this->jsonResponse(array('data' => $arrData, 'total' => count($arrEntity)));
+        return $this->jsonResponse(array('data' => $arrData, 'total' => count($arrData)));
     }
 
     /**
