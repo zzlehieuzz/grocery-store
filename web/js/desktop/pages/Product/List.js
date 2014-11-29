@@ -282,6 +282,12 @@ Ext.define('SrcPageUrl.Product.List', {
                 }],
                 bbar: new Ext.PagingToolbar({
                     store: storeLoadProduct,
+                    pageSize: limitDefault,
+                    emptyMsg : 'no records found'.Translator('Common'),
+                    beforePageText : 'page'.Translator('Common'),
+                    afterPageText : 'of'.Translator('Common') + ' {0}',
+                    refreshText : 'refresh'.Translator('Common'),
+                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
                     displayInfo:true
                 })
             });
