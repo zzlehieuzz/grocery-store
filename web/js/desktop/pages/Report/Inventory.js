@@ -15,10 +15,10 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         };
 
         var objectField = [{name: 'id',             type: 'int'},
-            {name: 'name',           type: 'string'},
-            {name: 'remainQuantity', type: 'int'},
-            {name: 'inputQuantity',  type: 'int'},
-            {name: 'outputQuantity', type: 'int'}];
+                           {name: 'name',           type: 'string'},
+                           {name: 'remainQuantity', type: 'int'},
+                           {name: 'inputQuantity',  type: 'int'},
+                           {name: 'outputQuantity', type: 'int'}];
 
         MyUtil.Object.defineModel('Product', objectField);
 
@@ -97,6 +97,46 @@ Ext.define('SrcPageUrl.Report.Inventory', {
                 displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
                 displayInfo:true
             })
+        });
+    },
+    createTbar : function (){
+        return new Ext.Toolbar({
+            items: [{
+                name: 'reportInventoryFromDate',
+                labelWidth: 50,
+                fieldLabel: 'from date'.Translator('Invoice'),
+                xtype: 'datefield',
+                width: 165,
+                padding: '0 0 0 10px;',
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
+                value: Ext.Date.format(new Date(), firstDateFormat)
+            }, {
+                name: 'reportInventoryToDate',
+                fieldLabel: '~',
+                labelWidth: 5,
+                labelSeparator: '',
+                xtype: 'datefield',
+                width: 120,
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
+                value: Ext.Date.format(new Date(), lastDateFormat)
+            }, '-',{
+                name: 'reportInventoryProductName',
+                width: 200,
+                labelWidth: 50,
+                emptyText: 'product name'.Translator('Report'),
+                xtype: 'textfield'
+            }, '->',{
+                text: 'find'.Translator('Common'),
+                tooltip: 'find'.Translator('Common'),
+                iconCls:'find',
+                listeners: {
+                    click: function () {
+                        this.storeReportInventoryLoad.reload();
+                    }
+                }
+            }]
         });
     }
 });

@@ -20,38 +20,7 @@ Ext.define('SrcPageUrl.Report.Revenue', {
             }
 
             return data;
-        },
-
-        initialize: function() {
-            this.store1();
         }
-    },
-    constructor: function (config) {
-        this.store1 = Ext.create('Ext.data.JsonStore', {
-            fields: ['name', 'input', 'data2', 'data3'],
-            data: this.self.getDummyData()
-        });
-console.log(this.self.getDummyData());
-        var readerJson = {
-            type: 'json',
-            root: 'data'
-        };
-
-        var objectField = [{name: 'name',  type: 'string'},
-                           {name: 'input', type: 'int'},
-                           {name: 'output', type: 'int'},
-                           {name: 'remain', type: 'int'}];
-
-        MyUtil.Object.defineModel('Revenue', objectField);
-
-        this.storeReportRevenueLoad = new Ext.data.JsonStore({
-            model: 'Revenue',
-            proxy: new Ext.data.HttpProxy({
-                url: MyUtil.Path.getPathAction("Report_RevenueLoad"),
-                reader: readerJson
-            }),
-            autoLoad: true
-        });
     },
     create : function (){
         //this.storeReportRevenueLoad.on('beforeload', function() {
@@ -59,11 +28,51 @@ console.log(this.self.getDummyData());
         //                              toDate   : Ext.ComponentQuery.query('[name=reportRevenueToDate]', this.tBarRevenue)[0].getSubmitValue()};
         //});
 
+        var objectField = [{name: 'name',   type: 'string'},
+                           {name: 'input',  type: 'int'},
+                           {name: 'output', type: 'int'},
+                           {name: 'remain', type: 'int'}];
+
+        MyUtil.Object.defineModel('Revenue', objectField);
+        var modelFields = [];
+
+        var storeReportRevenueLoadJson = new Ext.data.JsonStore({
+            model: 'Revenue',
+            proxy: new Ext.data.HttpProxy({
+                url: MyUtil.Path.getPathAction("Report_RevenueLoad"),
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    getData: function(data){
+                        Ext.each(data, function(rec) {
+                            modelFields.push(rec.data);
+                        });
+
+                        console.log(modelFields);
+                        return modelFields;
+                    }
+                }
+            }),
+            autoLoad: true
+        });
+
+        //Ext.each(storeReportRevenueLoadJson.getStore(), function (rec) {
+        //    modelFields.push(rec);
+        //});
+        console.log(modelFields);
+        console.log(SrcPageUrl.Report.Revenue.getDummyData());
+        var storeReportRevenueLoadArray = Ext.create('Ext.data.JsonStore', {
+            fields: ['name', 'input', 'output', 'remain'],
+            data: modelFields
+        });
+
+
+
         var chart = Ext.create('Ext.chart.Chart', {
             //style: 'background:#fff',
             animate: true,
             shadow: true,
-            store: this.storeReportRevenueLoad,
+            store: storeReportRevenueLoadJson,
             legend: {
                 position: 'right'
             },
@@ -121,6 +130,40 @@ console.log(this.self.getDummyData());
         });
 
         return chart;
+    },
+    createTbar : function (){
+        return new Ext.Toolbar({
+            items: [{
+                name: 'reportRevenueFromDate',
+                labelWidth: 50,
+                fieldLabel: 'from date'.Translator('Invoice'),
+                xtype: 'datefield',
+                width: 165,
+                padding: '0 0 0 10px;',
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
+                value: Ext.Date.format(new Date(), firstDateFormat)
+            }, {
+                name: 'reportRevenueToDate',
+                fieldLabel: '~',
+                labelWidth: 5,
+                labelSeparator: '',
+                xtype: 'datefield',
+                width: 120,
+                format: dateFormat,
+                submitFormat: dateSubmitFormat,
+                value: Ext.Date.format(new Date(), lastDateFormat)
+            }, '->', {
+                text: 'find'.Translator('Common'),
+                tooltip: 'find'.Translator('Common'),
+                iconCls: 'find',
+                listeners: {
+                    click: function () {
+                        this.storeReportRevenueLoad.reload();
+                    }
+                }
+            }]
+        });
     }
 });
 

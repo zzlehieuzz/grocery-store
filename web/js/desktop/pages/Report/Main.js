@@ -21,80 +21,6 @@ Ext.define('SrcPageUrl.Report.Main', {
             iconCls:'icon-grid'
         };
     },
-    constructor: function () {
-        this.tBarInventory = '', this.tBarRevenue = '';
-        this.tBarInventory = new Ext.Toolbar({
-            items: [{
-                name: 'reportInventoryFromDate',
-                labelWidth: 50,
-                fieldLabel: 'from date'.Translator('Invoice'),
-                xtype: 'datefield',
-                width: 165,
-                padding: '0 0 0 10px;',
-                format: dateFormat,
-                submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), firstDateFormat)
-            }, {
-                name: 'reportInventoryToDate',
-                fieldLabel: '~',
-                labelWidth: 5,
-                labelSeparator: '',
-                xtype: 'datefield',
-                width: 120,
-                format: dateFormat,
-                submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), lastDateFormat)
-            }, '-',{
-                name: 'reportInventoryProductName',
-                width: 200,
-                labelWidth: 50,
-                emptyText: 'product name'.Translator('Report'),
-                xtype: 'textfield'
-            }, '->',{
-                text: 'find'.Translator('Common'),
-                tooltip: 'find'.Translator('Common'),
-                iconCls:'find',
-                listeners: {
-                    click: function () {
-                        //storeReportInventoryLoad.reload();
-                    }
-                }
-            }]
-        });
-
-        this.tBarRevenue = new Ext.Toolbar({
-            items: [{
-                name: 'reportRevenueFromDate',
-                labelWidth: 50,
-                fieldLabel: 'from date'.Translator('Invoice'),
-                xtype: 'datefield',
-                width: 165,
-                padding: '0 0 0 10px;',
-                format: dateFormat,
-                submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), firstDateFormat)
-            }, {
-                name: 'reportRevenueToDate',
-                fieldLabel: '~',
-                labelWidth: 5,
-                labelSeparator: '',
-                xtype: 'datefield',
-                width: 120,
-                format: dateFormat,
-                submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), lastDateFormat)
-            }, '->',{
-                text: 'find'.Translator('Common'),
-                tooltip: 'find'.Translator('Common'),
-                iconCls:'find',
-                listeners: {
-                    click: function () {
-                        //storeReportInventoryLoad.reload();
-                    }
-                }
-            }]
-        });
-    },
     createWindow : function (){
         var tabPanel = Ext.widget('tabpanel', {
             activeTab: 0,
@@ -114,12 +40,12 @@ Ext.define('SrcPageUrl.Report.Main', {
             items: [{
                 title: 'revenue'.Translator('Report'),
                 layout: 'fit',
-                tbar: this.tBarRevenue,
+                tbar: new SrcPageUrl.Report.Revenue().createTbar(),
                 items: new SrcPageUrl.Report.Revenue().create()
             }, {
                 title: 'inventory'.Translator('Report'),
                 layout: 'fit',
-                tbar: this.tBarInventory,
+                tbar: new SrcPageUrl.Report.Inventory().createTbar(),
                 items: new SrcPageUrl.Report.Inventory().create()
             }]
         });
