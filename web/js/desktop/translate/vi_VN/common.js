@@ -199,5 +199,9 @@ Locale.module('Report', {
     'remain quantity': 'Số lượng tồn',
     'input quantity': 'Số lượng nhập',
     'output quantity': 'Số lượng xuất',
-    'product name': 'Tên sản phẩm'
+    'product name': 'Tên sản phẩm',
+    'month of the year': 'Tháng của năm',
+    'input': 'Nhập',
+    'output': 'Xuất',
+    'profit': 'Lợi nhuận'
 });

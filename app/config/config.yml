@@ -75,6 +75,7 @@ doctrine:
                     string_functions:
                         time: Sof\ApiBundle\DQL\MysqlTime
                         date: Sof\ApiBundle\DQL\MysqlDate
+                        date_format: Sof\ApiBundle\DQL\MysqlDateFormat
 
                 mappings:
                     SofApiBundle: ~
@@ -85,6 +86,7 @@ doctrine:
                     string_functions:
                         time: Sof\ApiBundle\DQL\MysqlTime
                         date: Sof\ApiBundle\DQL\MysqlDate
+                        date_format: Sof\ApiBundle\DQL\MysqlDateFormat
 
                 mappings:
                     SofApiBundle: ~

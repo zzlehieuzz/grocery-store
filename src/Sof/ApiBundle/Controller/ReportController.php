@@ -80,4 +80,66 @@ class ReportController extends BaseController
 
         return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
     }
+
+    /**
+     * @Route("/Report_RevenueLoad", name="Report_RevenueLoad")
+     */
+    public function Report_RevenueLoadAction()
+    {
+        $fromDate = $this->getRequestData()->get('fromDate');
+        $toDate   = $this->getRequestData()->get('toDate');
+
+        $entityService = $this->getEntityService();
+
+        $arrInvoiceInput = $entityService->selectOnDefault(
+            'InvoiceDetail:getData_ReportRevenue', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_1);
+
+        $arrInvoiceOutput = $entityService->selectOnDefault(
+            'InvoiceDetail:getData_ReportRevenue', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_2);
+
+//        print_r($arrInvoiceInput);
+//        print_r($arrInvoiceOutput);
+//        die;
+
+//        for (i = 0; i < (n || 12); i++) {
+//            data.push({
+//                    name: Ext.Date.monthNames[i % 12],
+//                    'input':100000000, 'data2':500050000, 'data3':(500050000-100000000), 'text': 'text' + i
+//                });
+//            }
+
+        $data = array();
+
+        $data[1]['name'] = '2014-01';
+        $data[1]['input'] = 1000000;
+        $data[1]['output'] = 3000000;
+        $data[1]['remain'] = 2000000;
+
+        $data[2]['name'] = '2014-02';
+        $data[2]['input'] = 1000000;
+        $data[2]['output'] = 3000000;
+        $data[2]['remain'] = 2000000;
+
+        $data[3]['name'] = '2014-03';
+        $data[3]['input'] = 1000000;
+        $data[3]['output'] = 3000000;
+        $data[3]['remain'] = 2000000;
+
+        $data[4]['name'] = '2014-04';
+        $data[4]['input'] = 1000000;
+        $data[4]['output'] = 3000000;
+        $data[4]['remain'] = 2000000;
+
+        $data[4]['name'] = '2014-05';
+        $data[4]['input'] = 1000000;
+        $data[4]['output'] = 3000000;
+        $data[4]['remain'] = 2000000;
+
+        $data[6]['name'] = '2014-06';
+        $data[6]['input'] = 1000000;
+        $data[6]['output'] = 3000000;
+        $data[6]['remain'] = 2000000;
+
+        return $this->jsonResponse(array('data' => $data), 0);
+    }
 }

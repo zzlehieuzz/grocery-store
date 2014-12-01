@@ -53,4 +53,29 @@ class InvoiceDetailRepository extends BaseRepository
 
         return $query->getQuery()->getArrayResult();
     }
+
+    public function getData_ReportRevenue($fromDate, $toDate, $invoiceType) {
+        $invoice = self::ENTITY_BUNDLE . ":Invoice";
+
+        $query = $this->querySimpleEntities(array(
+            'selects' => array("SUM(entity.quantity) AS quantity")
+        ));
+        $query->addSelect("DATE_FORMAT(invoice.createInvoiceDate, '%Y-%m') AS createInvoiceDate");
+        $query->leftJoin($invoice, 'invoice', 'WITH', "entity.invoiceId = invoice.id");
+        $query->groupBy('createInvoiceDate');
+//        if ($fromDate) {
+//            $query->andWhere('invoice.createInvoiceDate >= :fromDate')
+//                  ->setParameter('fromDate', $fromDate);
+//        }
+//        if ($toDate) {
+//            $query->andWhere('invoice.createInvoiceDate <= :toDate')
+//                  ->setParameter('toDate', $toDate);
+//        }
+        if ($invoiceType) {
+//            $query->andWhere('invoice.invoiceType = :invoiceType')
+//                  ->setParameter('invoiceType', $invoiceType);
+        }
+
+        return $query->getQuery()->getArrayResult();
+    }
 }
