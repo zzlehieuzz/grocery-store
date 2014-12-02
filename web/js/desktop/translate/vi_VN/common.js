@@ -143,6 +143,7 @@ Locale.module('Invoice', {
     'all': 'Tất cả',
     'invoice input': 'Phiếu nhập',
     'invoice output': 'Phiếu xuất',
+    'year': 'Năm',
     'from date': 'Từ ngày',
     'to date': 'Đến ngày',
     'add': 'Thêm',

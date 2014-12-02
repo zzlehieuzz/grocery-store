@@ -86,60 +86,60 @@ class ReportController extends BaseController
      */
     public function Report_RevenueLoadAction()
     {
-        $fromDate = $this->getRequestData()->get('fromDate');
-        $toDate   = $this->getRequestData()->get('toDate');
+        $fromYear = $this->getRequestData()->get('fromYear');
 
         $entityService = $this->getEntityService();
-
+        $arrYear = array();
+        for($i=1; $i <= 12; $i++) {
+            $arrYear[]['name'] = $fromYear . '-' . $i;
+        }
+        $fromDate = $fromYear.'/01/01';
+        $toDate   = $fromYear.'/12/31';
         $arrInvoiceInput = $entityService->selectOnDefault(
             'InvoiceDetail:getData_ReportRevenue', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_1);
 
         $arrInvoiceOutput = $entityService->selectOnDefault(
             'InvoiceDetail:getData_ReportRevenue', $fromDate, $toDate, InvoiceConst::INVOICE_TYPE_2);
 
-//        print_r($arrInvoiceInput);
-//        print_r($arrInvoiceOutput);
-//        die;
+        $result1 = array();
+        $result2 = array();
+        if ($arrInvoiceOutput) {
+            foreach ($arrInvoiceOutput as $key => $invoiceOutItem) {
+                $result1[$invoiceOutItem['createInvoiceDate']] = $invoiceOutItem;
+            }
+        }
 
-//        for (i = 0; i < (n || 12); i++) {
-//            data.push({
-//                    name: Ext.Date.monthNames[i % 12],
-//                    'input':100000000, 'data2':500050000, 'data3':(500050000-100000000), 'text': 'text' + i
-//                });
-//            }
+        $default = 0;
 
-        $data = array();
+        if ($arrInvoiceInput) {
+            foreach ($arrInvoiceInput as $invoiceInputItem) {
+                $input  = $invoiceInputItem['price'];
+                $output = $default;
+                if(isset($result1[$invoiceInputItem['createInvoiceDate']])) {
+                    $output = $result1[$invoiceInputItem['createInvoiceDate']]['price'];
+                }
+                $remain = $output - $input;
 
-        $data[1]['name'] = '2014-01';
-        $data[1]['input'] = 1000000;
-        $data[1]['output'] = 3000000;
-        $data[1]['remain'] = 2000000;
+                $result2[$invoiceInputItem['createInvoiceDate']]['remain'] = $remain;
+                $result2[$invoiceInputItem['createInvoiceDate']]['input']  = $input;
+                $result2[$invoiceInputItem['createInvoiceDate']]['output'] = $output;
+            }
+        }
 
-        $data[2]['name'] = '2014-02';
-        $data[2]['input'] = 1000000;
-        $data[2]['output'] = 3000000;
-        $data[2]['remain'] = 2000000;
+        foreach ($arrYear as $key => $arrEntityItem) {
+            $input  = $default;
+            $output = $default;
+            $remain = $default;
+            if(isset($result2[$arrEntityItem['name']])) {
+                $input  = $result2[$arrEntityItem['name']]['input'];
+                $output = $result2[$arrEntityItem['name']]['output'];
+                $remain = $result2[$arrEntityItem['name']]['remain'];
+            }
+            $arrYear[$key]['input']  = $input;
+            $arrYear[$key]['output'] = $output;
+            $arrYear[$key]['remain'] = $remain;
+        }
 
-        $data[3]['name'] = '2014-03';
-        $data[3]['input'] = 1000000;
-        $data[3]['output'] = 3000000;
-        $data[3]['remain'] = 2000000;
-
-        $data[4]['name'] = '2014-04';
-        $data[4]['input'] = 1000000;
-        $data[4]['output'] = 3000000;
-        $data[4]['remain'] = 2000000;
-
-        $data[4]['name'] = '2014-05';
-        $data[4]['input'] = 1000000;
-        $data[4]['output'] = 3000000;
-        $data[4]['remain'] = 2000000;
-
-        $data[6]['name'] = '2014-06';
-        $data[6]['input'] = 1000000;
-        $data[6]['output'] = 3000000;
-        $data[6]['remain'] = 2000000;
-
-        return $this->jsonResponse(array('data' => $data), 0);
+        return $this->jsonResponse(array('data' => $arrYear), 0);
     }
 }
