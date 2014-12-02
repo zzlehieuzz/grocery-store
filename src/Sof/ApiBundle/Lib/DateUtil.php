@@ -9,14 +9,15 @@ namespace Sof\ApiBundle\Lib;
 class DateUtil
 {
 
-    const FORMAT_DATE_HIS  = 'H:i:s';
-    const FORMAT_DATE_N    = 'N';
-    const FORMAT_DATE_YYYYMM = 'Ym';
-    const FORMAT_DATE_YMD  = 'Y-m-d';
-    const FORMAT_DATE_TIME = 'Y-m-d H:i:s';
-    const FORMAT_MONTH      = 'm';
-    const FORMAT_DAY        = 'm';
-    const FORMAT_LAST_DAY   = 't';
+    const FORMAT_DATE_HIS     = 'H:i:s';
+    const FORMAT_DATE_N       = 'N';
+    const FORMAT_DATE_YM_NOT  = 'Ym';
+    const FORMAT_DATE_YMD_NOT = 'Ymd';
+    const FORMAT_DATE_YMD     = 'Y-m-d';
+    const FORMAT_DATE_TIME    = 'Y-m-d H:i:s';
+    const FORMAT_MONTH        = 'm';
+    const FORMAT_DAY          = 'd';
+    const FORMAT_LAST_DAY     = 't';
 
     const DAYS    = 86400;
     const HOURS   = 3600;
@@ -52,6 +53,13 @@ class DateUtil
         return date($format, $value);
     }
 
+  /**
+   * @param null $value
+   * @param null $compareDate
+   * @param int $time
+   * @return \Datetime object
+   * @author Hieunld 2014/01/08
+   */
     public static function minusDate($value = null, $compareDate = null, $time = self::RETURN_SECONDS) {
         if (!$value) {
             $value = self::getTimeNow();
@@ -83,7 +91,7 @@ class DateUtil
         return $result;
     }
 
-    public static function modify($date,$string)
+    public static function modify($date, $string)
     {
         if($date instanceof \DateTime) {
             $date = clone $date;
@@ -93,13 +101,18 @@ class DateUtil
 
     public static function convertDateTimeToInsert($date)
     {
-        return new SofDateTime(date_format($date, 'Y-m-d H:i:s'));
+        return new SofDateTime(date_format($date, self::FORMAT_DATE_TIME));
     }
 
-    public static function validateDate($date, $format = 'Y-m-d H:i:s')
+    public static function validateDate($date, $format = self::FORMAT_DATE_TIME)
     {
         $d = \DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
+    }
+
+    public static function getCurrentDate($format = self::FORMAT_DATE_YMD)
+    {
+        return DateUtil::getDateFormat(self::getTimeNow(), $format);
     }
 }
 

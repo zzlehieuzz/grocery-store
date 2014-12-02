@@ -29,16 +29,16 @@ class InvoicesController extends BaseController
         $invoiceNumber = $request->get('invoiceNumber');
 
         if ($fromDate && $toDate) {
-
-            $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d'), '<=' => (new \DateTime($toDate))->format('Y-m-d'));
+            $arrCondition['createInvoiceDate'] = array('>=' => DateUtil::getCurrentDate(),
+                                                       '<=' => DateUtil::getCurrentDate());
 
         } else {
             if ($fromDate) {
-                $arrCondition['createInvoiceDate'] = array('>=' => (new \DateTime($fromDate))->format('Y-m-d'));
+                $arrCondition['createInvoiceDate'] = array('>=' => DateUtil::getCurrentDate());
             }
 
             if ($toDate) {
-                $arrCondition['createInvoiceDate'] = array('<=' => (new \DateTime($toDate))->format('Y-m-d'));
+                $arrCondition['createInvoiceDate'] = array('<=' => DateUtil::getCurrentDate());
             }
         }
 
@@ -410,7 +410,7 @@ class InvoicesController extends BaseController
     }
 
     private function generatingInvoiceNumber($invoiceType){
-        $dateCurrent = (new \DateTime())->format('Ymd');
+        $dateCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_YMD_NOT);
 
         if ($invoiceType == 1) {
             $invoiceNumber = 'PN';
