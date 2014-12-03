@@ -1,6 +1,27 @@
 /*
  * @author HieuNLD 2014/06/27
  */
+
+MyUtil.Object.defineModel('Revenue', [{name: 'name',   type: 'string'},
+                                      {name: 'input',  type: 'int'},
+                                      {name: 'output', type: 'int'},
+                                      {name: 'remain', type: 'int'}]);
+
+var storeReportRevenueLoadJson = new Ext.data.JsonStore({
+    model: 'Revenue',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Report_RevenueLoad"),
+        reader: {
+            type: 'json',
+            root: 'data',
+            getData: function(data){
+                return Object.keys(data.data).map(function (key) {return data.data[key]});
+            }
+        }
+    }),
+    autoLoad: false
+});
+
 Ext.define('SrcPageUrl.Report.Revenue', {
     requires: [
         'Ext.chart.*',
@@ -9,34 +30,11 @@ Ext.define('SrcPageUrl.Report.Revenue', {
         'Ext.layout.container.Fit'
     ],
     create : function (){
-        var objectField = [{name: 'name',   type: 'string'},
-                           {name: 'input',  type: 'int'},
-                           {name: 'output', type: 'int'},
-                           {name: 'remain', type: 'int'}];
-
-        MyUtil.Object.defineModel('Revenue', objectField);
-
-        var storeReportRevenueLoadJson = new Ext.data.JsonStore({
-            model: 'Revenue',
-            proxy: new Ext.data.HttpProxy({
-                url: MyUtil.Path.getPathAction("Report_RevenueLoad"),
-                reader: {
-                    type: 'json',
-                    root: 'data',
-                    getData: function(data){
-                        return Object.keys(data.data).map(function (key) {return data.data[key]});
-                    }
-                }
-            }),
-            autoLoad: true
-        });
-
-        storeReportRevenueLoadJson.on('beforeload', function() {
-            this.proxy.extraParams = {fromYear : Ext.ComponentQuery.query('[name=reportRevenueFromDate]', new SrcPageUrl.Report.Revenue().createTbar())[0].getSubmitValue()};
-        });
+        //storeReportRevenueLoadJson.load();
 
         var chart = Ext.create('Ext.chart.Chart', {
-            //style: 'background:#fff',
+            name: 'chartRevenue',
+            style: 'background:#fff',
             animate: true,
             shadow: true,
             store: storeReportRevenueLoadJson,
@@ -91,7 +89,16 @@ Ext.define('SrcPageUrl.Report.Revenue', {
                         this.setTitle(String(Ext.util.Format.currency(item.value[1], ' ', decimalPrecision)) + ' VND');
                     }
                 }
-            }]
+            }],
+            listeners: {
+            beforerender: function () {
+                this.store.load();
+            }
+        }
+        });
+
+        storeReportRevenueLoadJson.on('beforeload', function() {
+            this.proxy.extraParams = {fromYear : Ext.ComponentQuery.query('[name=reportRevenueFromDate]')[0].getSubmitValue()};
         });
 
         return chart;
@@ -114,7 +121,7 @@ Ext.define('SrcPageUrl.Report.Revenue', {
                 iconCls: 'find',
                 listeners: {
                     click: function () {
-                        this.storeReportRevenueLoad.reload();
+                        storeReportRevenueLoadJson.load();
                     }
                 }
             }]
