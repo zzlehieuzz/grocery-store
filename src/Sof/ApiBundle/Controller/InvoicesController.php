@@ -163,7 +163,7 @@ class InvoicesController extends BaseController
                 $arrData[$key]['invoiceType'] = $entity['invoiceType'];
                 $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
                 $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
-                $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
+                $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate'] : null;
                 $arrData[$key]['paymentStatus'] = $paymentStatus;
                 $arrData[$key]['description'] = $entity['description'];
                 $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
@@ -215,7 +215,6 @@ class InvoicesController extends BaseController
                 ));
 
             if ($entityInvoice['createInvoiceDate'] != "") {
-                $entityInvoice['createInvoiceDate'] = $entityInvoice['createInvoiceDate']->format('d/m/Y');
             } else {
                 $entityInvoice['createInvoiceDate'] = null;
             }
@@ -428,7 +427,10 @@ class InvoicesController extends BaseController
         if ($entityInvoice) {
             $oldInvoiceNumber = $entityInvoice['invoiceNumber'];
             $arrTemp = explode('/', $oldInvoiceNumber);
-            $newNum = (int)$arrTemp[2] + 1;
+            $newNum = 1;
+            if (isset($arrTemp[2])) {
+                $newNum = (int)$arrTemp[2] + 1;
+            }
 
             $invoiceNumberNew = $invoiceNumber.'/'.$dateCurrent.'/'.$newNum;
         } else {
@@ -460,7 +462,7 @@ class InvoicesController extends BaseController
                 $listInvoice[$key]['invoiceNumber'] = $item['invoiceNumber'];
 
                 if ($item['createInvoiceDate'] != "") {
-                    $listInvoice[$key]['createInvoiceDate'] = $item['createInvoiceDate']->format('d/m/Y');
+                    $listInvoice[$key]['createInvoiceDate'] = $item['createInvoiceDate'];
                 } else {
                     $listInvoice[$key]['createInvoiceDate'] = null;
                 }

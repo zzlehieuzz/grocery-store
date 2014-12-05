@@ -1,11 +1,11 @@
 /*
  * @author HieuNLD 2014/06/27
  */
-MyUtil.Object.defineModel('Product', {name: 'id',             type: 'int'},
-    {name: 'name',           type: 'string'},
-    {name: 'remainQuantity', type: 'int'},
-    {name: 'inputQuantity',  type: 'int'},
-    {name: 'outputQuantity', type: 'int'});
+MyUtil.Object.defineModel('Product', [{name: 'id',             type: 'int'},
+                                      {name: 'name',           type: 'string'},
+                                      {name: 'remainQuantity', type: 'int'},
+                                      {name: 'inputQuantity',  type: 'int'},
+                                      {name: 'outputQuantity', type: 'int'}]);
 
 var storeReportInventoryLoad = new Ext.data.JsonStore({
     model: 'Product',

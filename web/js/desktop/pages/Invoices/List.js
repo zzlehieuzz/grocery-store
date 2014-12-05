@@ -39,14 +39,14 @@ var readerJsonInvoiceNumber = {
 };
 
 var objectField = [{name: 'id', type: 'int'},
-    {name: 'subjectName', type: 'string'},
-    {name: 'invoiceType', type: 'int'},
-    {name: 'invoiceTypeText', type: 'string'},
-    {name: 'invoiceNumber', type: 'string'},
-    {name: 'paymentStatus', type: 'string'},
-    {name: 'amount', type: 'int'},
-    {name: 'description', type: 'string'},
-    {name: 'createInvoiceDate', type: 'string'}];
+                   {name: 'subjectName', type: 'string'},
+                   {name: 'invoiceType', type: 'int'},
+                   {name: 'invoiceTypeText', type: 'string'},
+                   {name: 'invoiceNumber', type: 'string'},
+                   {name: 'paymentStatus', type: 'string'},
+                   {name: 'amount', type: 'int'},
+                   {name: 'description', type: 'string'},
+                   {name: 'createInvoiceDate', type: 'date'}];
 
 MyUtil.Object.defineModel('Invoice', objectField);
 
@@ -72,7 +72,7 @@ var objectGridField = [{name: 'id', type: 'int'},
 //FormField
 var objectFormField = [{name: 'id', type: 'int'},
     {name: 'invoiceNumber', type: 'string'},
-    {name: 'createInvoiceDate', type: 'string'},
+    {name: 'createInvoiceDate', type: 'date'},
     {name: 'subject', type: 'int'},
     {name: 'address', type: 'string'},
     {name: 'deliveryReceiverMan', type: 'string'},
@@ -86,7 +86,7 @@ var objectFormField = [{name: 'id', type: 'int'},
 //FormField
 var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'invoiceNumber', type: 'string'},
-                        {name: 'createInvoiceDate', type: 'string'},
+                        {name: 'createInvoiceDate', type: 'date'},
                         {name: 'address', type: 'string'},
                         {name: 'phoneNumber', type: 'string'},
                         {name: 'invoiceType', type: 'int'},

@@ -44,10 +44,14 @@ class DateUtil
      * @return string
      * @author Hieunld 2014/01/15
      */
-    public static function getDateFormat($value, $format = null)
+    public static function getDateFormat($value, $format)
     {
         if (!$format) {
             $format = self::FORMAT_DATE_TIME;
+        }
+
+        if ($value instanceof \DateTime) {
+            return $value->format($format);
         }
 
         return date($format, $value);
