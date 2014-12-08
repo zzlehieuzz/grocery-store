@@ -51,7 +51,6 @@ Ext.define('SrcPageUrl.Customer.List', {
             listeners: {
                 'edit': function (editor,e) {
                     var record = e.record.data;
-
                     Ext.Ajax.request({
                         url: MyUtil.Path.getPathAction("Customer_Update"),
                         method: 'POST',
@@ -74,12 +73,7 @@ Ext.define('SrcPageUrl.Customer.List', {
             }
         });
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI",
-            onKeyPress: function(e, t) {
-                console.log(e);
-            }
-        });
+        var rowModel = Ext.create('Ext.selection.RowModel', {mode : "MULTI"});
 
         var columnsCustomer = [
             new Ext.grid.RowNumberer(),
@@ -95,14 +89,14 @@ Ext.define('SrcPageUrl.Customer.List', {
                 }
             }, {
                 text: "customer code".Translator("Customer"),
-                width: 100,
+                width: 150,
                 dataIndex: 'code',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
                 text: "phone".Translator("Customer"),
-                width: 200,
+                width: 100,
                 dataIndex: 'phoneNumber',
                 editor: {
                     xtype: 'textfield'
@@ -215,12 +209,6 @@ Ext.define('SrcPageUrl.Customer.List', {
             });
         }
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 

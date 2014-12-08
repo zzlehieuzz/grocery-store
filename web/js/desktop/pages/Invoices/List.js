@@ -46,7 +46,7 @@ var objectField = [{name: 'id', type: 'int'},
                    {name: 'paymentStatus', type: 'string'},
                    {name: 'amount', type: 'int'},
                    {name: 'description', type: 'string'},
-                   {name: 'createInvoiceDate', type: 'date'}];
+                   {name: 'createInvoiceDate', type: 'string'}];
 
 MyUtil.Object.defineModel('Invoice', objectField);
 
@@ -72,7 +72,7 @@ var objectGridField = [{name: 'id', type: 'int'},
 //FormField
 var objectFormField = [{name: 'id', type: 'int'},
     {name: 'invoiceNumber', type: 'string'},
-    {name: 'createInvoiceDate', type: 'date'},
+    {name: 'createInvoiceDate', type: 'string'},
     {name: 'subject', type: 'int'},
     {name: 'address', type: 'string'},
     {name: 'deliveryReceiverMan', type: 'string'},
@@ -86,7 +86,7 @@ var objectFormField = [{name: 'id', type: 'int'},
 //FormField
 var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'invoiceNumber', type: 'string'},
-                        {name: 'createInvoiceDate', type: 'date'},
+                        {name: 'createInvoiceDate', type: 'string'},
                         {name: 'address', type: 'string'},
                         {name: 'phoneNumber', type: 'string'},
                         {name: 'invoiceType', type: 'int'},
@@ -150,7 +150,7 @@ var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
-    }), autoLoad: true
+    }), autoLoad: false
 });
 
 var storeLoadDistributorCmb = new Ext.data.JsonStore({
@@ -159,7 +159,7 @@ var storeLoadDistributorCmb = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Distributor_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadInvoiceNumber2 = new Ext.data.JsonStore({
@@ -168,7 +168,7 @@ var storeLoadInvoiceNumber2 = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Input_Load"),
         reader: readerJsonInvoiceNumber
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadCustomerCmb = new Ext.data.JsonStore({
@@ -177,7 +177,7 @@ var storeLoadCustomerCmb = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Customer_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadProductCmb = new Ext.data.JsonStore({
@@ -186,7 +186,7 @@ var storeLoadProductCmb = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -262,8 +262,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         altFormats: date_format,
                         name: 'fromDate',
                         id: 'fromDate',
-                        value: new Date(),
-                        anchor: '50%'
+                        value: new Date()
                     }, {
                         labelWidth: 0,
                         fieldLabel: '~',
@@ -274,8 +273,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         xtype: 'datefield',
                         format: date_format,
                         altFormats: date_format,
-                        value: new Date(),
-                        anchor: '50%'
+                        value: new Date()
                     }, {
                         emptyText: 'customer name'.Translator('Invoice'),
                         padding: '0 5px 0 10px;',
@@ -292,7 +290,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         anchor: '50%'
                     }]
                 }],
-
             buttons: [{
                 xtype: 'button',
                 text: 'find'.Translator('Invoice'),
@@ -313,7 +310,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                             fromDate: fromDate,
                             toDate: toDate,
                             customerName: customerNameForm,
-                            invoiceNumber: invoiceNumberForm,
+                            invoiceNumber: invoiceNumberForm
                         }
                     });
                 }
@@ -443,7 +440,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
 });
 
 function createPopupInvoiceForm(invoiceId, invoiceType) {
-
     var invoiceTitle = "";
     var subjectT = "";
     var deliveryReceiver = "";
@@ -497,7 +493,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
     //Default value
     var formData = {
         'id': '',
-//                    'invoiceNumber' : '',
+        //'invoiceNumber' : '',
         'createInvoiceDate': '',
         'subject': 1,
         'createInvoiceMan': '',
@@ -513,8 +509,14 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             if (storeLoadInputForm.data.items[0]) {
                 formData = storeLoadInputForm.data.items[0].data;
 
+                var createInvoiceDate = Ext.util.Format.date(formData.createInvoiceDate, 'Y-m-d');
+
+                console.log(storeLoadInputForm.data);
+                console.log(formData.createInvoiceDate);
+                console.log(createInvoiceDate);
+
                 Ext.getCmp('invoice_number').setValue(formData.invoiceNumber);
-                Ext.getCmp('create_invoice_date').setValue(formData.createInvoiceDate);
+                Ext.getCmp('create_invoice_date').setValue(Ext.util.Format.date(formData.createInvoiceDate, 'Y-m-d'));
                 Ext.getCmp('subject').setValue(formData.subject);
                 Ext.getCmp('delivery_receiver_man').setValue(formData.deliveryReceiverMan);
                 Ext.getCmp('create_invoice_man').setValue(formData.createInvoiceMan);
@@ -815,7 +817,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     })
                 }]
         }],
-
         buttons: [{
             xtype: 'button',
             text: 'add'.Translator('Invoice'),
@@ -835,7 +836,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: 'save'.Translator('Invoice'),
             width: 30,
             handler: function () {
-
                 //Get value form
                 var id = Ext.getCmp('invoiceId').getValue();
                 var invoice_number = Ext.getCmp('invoice_number').getValue();
@@ -926,12 +926,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 var grid = Ext.getCmp('grid-input-output');
                 MyUx.grid.Printer.printAutomatically = false;
 
-                var invoiceNum = Ext.getCmp('invoice_number').getValue();
-                var subject = Ext.getCmp('subject').getValue();
-                var address = Ext.getCmp('address').getValue();
+                var invoiceNum   = Ext.getCmp('invoice_number').getValue();
+                var subject      = Ext.getCmp('subject').getValue();
+                var address      = Ext.getCmp('address').getValue();
                 var phone_number = Ext.getCmp('phone_number').getValue();
-                var description = Ext.getCmp('description').getValue();
-
+                var description  = Ext.getCmp('description').getValue();
                 var customerName = storeLoadCustomerCmb.findRecord("id", subject).get('name');
                 var customerCode = storeLoadCustomerCmb.findRecord("id", subject).get('code');
 

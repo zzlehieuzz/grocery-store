@@ -77,7 +77,7 @@ var storeLoadInputForm = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Input_Load"),
         reader: readerJsonForm
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadDistributorCmb = new Ext.data.JsonStore({
@@ -86,7 +86,7 @@ var storeLoadDistributorCmb = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Distributor_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadProductCmb = new Ext.data.JsonStore({
@@ -95,7 +95,7 @@ var storeLoadProductCmb = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJsonCommon
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 //Default value
