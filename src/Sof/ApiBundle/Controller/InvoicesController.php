@@ -212,6 +212,7 @@ class InvoicesController extends BaseController
                       'conditions' => array('id' => $invoiceId)));
 
             if ($entityInvoice['createInvoiceDate'] != "") {
+                $entityInvoice['createInvoiceDate'] = $entityInvoice['createInvoiceDate'] ? $entityInvoice['createInvoiceDate']->format('d/m/Y') : null;
             } else {
                 $entityInvoice['createInvoiceDate'] = null;
             }

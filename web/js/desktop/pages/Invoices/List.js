@@ -94,8 +94,7 @@ var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'description', type: 'string'},
                         {name: 'customerCode', type: 'string'},
                         {name: 'customerName', type: 'string'},
-                        {name: 'invoiceId'}
-                    ];
+                        {name: 'invoiceId'}];
 
 MyUtil.Object.defineModel('Input2', objectFormField);
 MyUtil.Object.defineModel('List_Output', objectListOutput);
@@ -105,15 +104,13 @@ var objectDistributorField = [{name: 'id', type: 'int'},
     {name: 'name', type: 'string'},
     {name: 'code', type: 'string'},
     {name: 'address', type: 'string'},
-    {name: 'phoneNumber', type: 'string'}
-];
+    {name: 'phoneNumber', type: 'string'}];
 
 //Product
 var objectProductField = [{name: 'id', type: 'int'},
     {name: 'name', type: 'string'},
     {name: 'code', type: 'string'},
-    {name: 'productUnitId', type: 'int'}
-];
+    {name: 'productUnitId', type: 'int'}];
 
 var objectUnitInvoiceDetailField = [{name: 'id', type: 'int'},  {name: 'name', type: 'string'}];
 
@@ -509,14 +506,8 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             if (storeLoadInputForm.data.items[0]) {
                 formData = storeLoadInputForm.data.items[0].data;
 
-                var createInvoiceDate = Ext.util.Format.date(formData.createInvoiceDate, 'Y-m-d');
-
-                console.log(storeLoadInputForm.data);
-                console.log(formData.createInvoiceDate);
-                console.log(createInvoiceDate);
-
                 Ext.getCmp('invoice_number').setValue(formData.invoiceNumber);
-                Ext.getCmp('create_invoice_date').setValue(Ext.util.Format.date(formData.createInvoiceDate, 'Y-m-d'));
+                Ext.getCmp('create_invoice_date').setValue(formData.createInvoiceDate);
                 Ext.getCmp('subject').setValue(formData.subject);
                 Ext.getCmp('delivery_receiver_man').setValue(formData.deliveryReceiverMan);
                 Ext.getCmp('create_invoice_man').setValue(formData.createInvoiceMan);
@@ -907,7 +898,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                                 if (msg.status) {
                                     editWindow.close();
                                     storeLoadInput.reload();
-                                    console.log('success');
                                 }
                             },
                             failure: function (msg) {
@@ -996,11 +986,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: 'close'.Translator('Common'),
             width: 30,
             handler: function () {
-                Ext.MessageBox.confirm('Close', 'Are you sure ?', function (btn) {
-                    if (btn === 'yes') {
-                        editWindow.close();
-                    }
-                });
+                editWindow.close();
             }
         }]
     });

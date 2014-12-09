@@ -4,12 +4,7 @@
 
 Ext.define('SrcPageUrl.Distributor.List', {
     extend: 'Ext.ux.desktop.Module',
-    requires: [
-        'Ext.data.ArrayStore',
-        'Ext.util.Format',
-        'Ext.grid.Panel',
-        'Ext.grid.RowNumberer'
-    ],
+    requires: ['Ext.grid.RowNumberer'],
 
     id:'distributor-list',
 
@@ -151,19 +146,19 @@ Ext.define('SrcPageUrl.Distributor.List', {
                     tooltip:'add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
-                      rowEditing.cancelEdit();
+                        rowEditing.cancelEdit();
 
-                      var r = Ext.create('Distributor', {
-                        id: '',
-                        name: '',
-                        code: '',
-                        phoneNumber: '',
-                        address: '',
-                        labels: ''
-                      });
+                        var r = Ext.create('Distributor', {
+                          id: '',
+                          name: '',
+                          code: '',
+                          phoneNumber: '',
+                          address: '',
+                          labels: ''
+                        });
 
-                      storeLoadDistributor.insert(0, r);
-                      rowEditing.startEdit(0, 0);
+                        storeLoadDistributor.insert(0, r);
+                        rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
                     text:'remove'.Translator('Common'),
@@ -193,7 +188,6 @@ Ext.define('SrcPageUrl.Distributor.List', {
                                                 if (msg.status) {
                                                     storeLoadDistributor.load();
                                                     var currentPage = storeLoadDistributor.currentPage;
-                                                    console.log(currentPage);
                                                 }
                                             },
                                             failure: function(msg) {
