@@ -34,7 +34,7 @@ var objectGridFieldOut = [{name: 'id',   type: 'int'},
 //FormField
 var objectFormFieldOut = [{name: 'id',   type: 'int'},
     {name: 'invoiceNumber', type: 'string'},
-    {name: 'createInvoiceDate', type: 'string'},
+    {name: 'createInvoiceDate', type: 'date'},
     {name: 'subject', type: 'int'},
     {name: 'createInvoiceMan', type: 'string'},
     {name: 'phoneNumber', type: 'string'},
@@ -86,7 +86,7 @@ var storeLoadDistributorCmbOut = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Distributor_Load"),
         reader: readerJsonCommonOut
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 var storeLoadProductCmbOut = new Ext.data.JsonStore({
@@ -95,7 +95,7 @@ var storeLoadProductCmbOut = new Ext.data.JsonStore({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJsonCommonOut
     }),
-    autoLoad: true
+    autoLoad: false
 });
 
 //Default value

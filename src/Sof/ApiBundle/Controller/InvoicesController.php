@@ -106,7 +106,6 @@ class InvoicesController extends BaseController
                         'maxResults' => $params['limit']
                     ));
 
-
                 if ($arrEntity1['data']) {
                     $arrEntity['data'] = array_merge ($arrEntity['data'], $arrEntity1['data']);
                 }
@@ -119,15 +118,15 @@ class InvoicesController extends BaseController
 
             $arrEntity = $this->getEntityService()->getDataForPaging(
                 'Invoice',
-                array('conditions'  => $arrCondition,
+                array(//'conditions'  => $arrCondition,
                     'orderBy'     => array('id' => 'DESC'),
                     'firstResult' => $params['start'],
                     'maxResults' => $params['limit']
                 ));
         }
 
-        $arrData = array();
         if ($arrEntity['data']) {
+
             foreach($arrEntity['data'] as $key=>$entity){
                 $subjectName = "";
                 if ($entity['invoiceType'] == 1) {
@@ -163,7 +162,7 @@ class InvoicesController extends BaseController
                 $arrData[$key]['invoiceType'] = $entity['invoiceType'];
                 $arrData[$key]['invoiceTypeText'] = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
                 $arrData[$key]['invoiceNumber'] = $entity['invoiceNumber'];
-                $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate'] : null;
+                $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
                 $arrData[$key]['paymentStatus'] = $paymentStatus;
                 $arrData[$key]['description'] = $entity['description'];
                 $arrData[$key]['amount'] = $entity['amount'].' VNĐ';
@@ -209,10 +208,8 @@ class InvoicesController extends BaseController
         if ($invoiceId) {
             $entityInvoice = $this->getEntityService()->getFirstData(
                 'Invoice',
-                array(
-                      'orderBy'     => array('id' => 'DESC'),
-                      'conditions'  => array('id' => $invoiceId)
-                ));
+                array('orderBy'    => array('id' => 'DESC'),
+                      'conditions' => array('id' => $invoiceId)));
 
             if ($entityInvoice['createInvoiceDate'] != "") {
             } else {

@@ -8,49 +8,43 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',            type: 'int'},
-                   {name: 'name',          type: 'string'},
-                   {name: 'code',          type: 'string'},
-                   {name: 'productUnitId', type: 'string'},
-                   {name: 'originalPrice', type: 'string'},
-                   {name: 'salePrice',     type: 'string'},
-                   {name: 'unitId1',       type: 'string'},
-                   {name: 'unitId2',       type: 'string'},
-                   {name: 'convertAmount', type: 'string'}];
+MyUtil.Object.defineModel('Product', [{name: 'id',           type: 'int'},
+                                     {name: 'name',          type: 'string'},
+                                     {name: 'code',          type: 'string'},
+                                     {name: 'productUnitId', type: 'string'},
+                                     {name: 'originalPrice', type: 'string'},
+                                     {name: 'salePrice',     type: 'string'},
+                                     {name: 'unitId1',       type: 'string'},
+                                     {name: 'unitId2',       type: 'string'},
+                                     {name: 'convertAmount', type: 'string'}]);
 
-var objectUnitField = [{name: 'id',       type: 'int'},
-                       {name: 'name',     type: 'string'},
-                       {name: 'code',     type: 'string'}];
-
-MyUtil.Object.defineModel('Product', objectField);
-MyUtil.Object.defineModel('Unit', objectUnitField);
+MyUtil.Object.defineModel('Unit', [{name: 'id',       type: 'int'},
+                                   {name: 'name',     type: 'string'},
+                                   {name: 'code',     type: 'string'}]);
 
 var storeLoadProduct = new Ext.data.JsonStore({
     model: 'Product',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Product_Load"),
         reader: readerJson
-    }),
-    pageSize: pageSizeDefault,
+    }), pageSize: pageSizeDefault,
     autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
-});
+}),
 
-var storeLoadUnit1 = new Ext.data.JsonStore({
+storeLoadUnit1 = new Ext.data.JsonStore({
     model: 'Unit',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
     }), autoLoad: true
-});
+}),
 
-var storeLoadUnit2 = storeLoadUnit1;
+storeLoadUnit2 = storeLoadUnit1;
 
 Ext.define('SrcPageUrl.Product.List', {
     extend: 'Ext.ux.desktop.Module',
     requires: [
-        'Ext.data.ArrayStore',
         'Ext.util.Format',
-        'Ext.grid.Panel',
         'Ext.grid.RowNumberer'
     ],
 
@@ -81,7 +75,6 @@ Ext.define('SrcPageUrl.Product.List', {
                         success: function(msg) {
                             if (msg.status) {
                                 storeLoadProduct.reload();
-                                console.log('success');
                             }
                         },
                         failure: function(msg) {
@@ -92,12 +85,15 @@ Ext.define('SrcPageUrl.Product.List', {
             }
         });
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI",
-            onKeyPress: function(e, t) {
-                console.log(e);
-            }
-        });
+        var rowRendererLoadUnit1 = function(val) {
+            var rec = storeLoadUnit1.findRecord('id', val);
+            return rec !== null ? rec.get("name") : ''
+        };
+
+        var rowRendererLoadUnit2 = function(val) {
+            var rec = storeLoadUnit2.findRecord('id', val);
+            return rec !== null ? rec.get("name") : ''
+        };
 
         var columnsProduct = [
             new Ext.grid.RowNumberer(),
@@ -106,13 +102,13 @@ Ext.define('SrcPageUrl.Product.List', {
                 hidden : true
             }, {
                 text: "name".Translator('Common'),
-                width: 160,
+                width: 200,
                 dataIndex: 'name',
                 style: 'text-align:center;',
                 editor: { xtype: 'textfield' }
             }, {
                 text: "product code".Translator('Product'),
-                width: 140,
+                width: 100,
                 dataIndex: 'code',
                 style: 'text-align:center;',
                 editor: { xtype: 'textfield' }
@@ -143,38 +139,43 @@ Ext.define('SrcPageUrl.Product.List', {
                 dataIndex: 'unitId1',
                 style: 'text-align:center;',
                 width: 100,
-                editor: {
-                    xtype: 'combobox',
+                editor: new Ext.form.ComboBox({
                     store: storeLoadUnit1,
+                    queryMode: 'local',
                     displayField: 'name',
-                    valueField: 'id'
-                },
-                renderer: function(value){
-                    if(value != 0 && value != "") {
-                        if(storeLoadUnit1.findRecord("id", value) != null)
-                            return storeLoadUnit1.findRecord("id", value).get('name');
-                        else
-                            return value;
-                    } else return "";  // display nothing if value is empty
-                }
+                    valueField: 'id',
+                    minListWidth: 300,
+                    listWidth: 150,
+                    triggerAction: 'all',
+                    typeAhead: true,
+                    lazyRender: true,
+                    selectOnFocus: true,
+                    forceSelection: true,
+                    listConfig: {
+                        width: 240 ,resizable: true , resizeHandles: "se"
+                    }
+                }),
+                renderer: rowRendererLoadUnit1
             }, {
                 header: 'unit 2'.Translator('Product'),
                 dataIndex: 'unitId2',
                 width: 100,
                 style: 'text-align:center;',
-                editor: {
-                    xtype: 'combobox',
+                editor: new Ext.form.ComboBox({
                     store: storeLoadUnit2,
+                    queryMode: 'local',
                     displayField: 'name',
-                    valueField: 'id'
-                }, renderer: function(value){
-                    if(value != 0 && value != "") {
-                        if(storeLoadUnit2.findRecord("id", value) != null)
-                            return storeLoadUnit2.findRecord("id", value).get('name');
-                        else
-                            return value;
-                    } else return "";  // display nothing if value is empty
-                }
+                    valueField: 'id',
+                    triggerAction: 'all',
+                    typeAhead: true,
+                    lazyRender: true,
+                    selectOnFocus: true,
+                    forceSelection: true,
+                    listConfig: {
+                       width: 250 ,resizable: true , resizeHandles: "se"
+                    }
+                }),
+                renderer: rowRendererLoadUnit2
             }, {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
@@ -196,7 +197,7 @@ Ext.define('SrcPageUrl.Product.List', {
                 id: 'product-list',
                 title: 'product management'.Translator('Module'),
                 width: 900,
-                height: 480,
+                height: 540,
                 iconCls: 'icon-grid',
                 animCollapse: false,
                 constrainHeader: true,
@@ -208,13 +209,15 @@ Ext.define('SrcPageUrl.Product.List', {
                         id: 'grid-product-list',
                         store: storeLoadProduct,
                         loadMask: true,
-                        selModel: rowModel,
+                        columnLines: true,
+                        selModel: Ext.create('Ext.selection.RowModel', {mode : "MULTI"}),
                         plugins: rowEditing,
                         columns: columnsProduct,
                         listeners:{
                             beforerender: function () {
                                 this.store.load();
                                 storeLoadUnit1.load();
+                                storeLoadUnit2.load();
                             }
                         }
                     }
@@ -224,18 +227,18 @@ Ext.define('SrcPageUrl.Product.List', {
                     tooltip: 'add'.Translator('Common'),
                     iconCls: 'add',
                     handler : function() {
-                      rowEditing.cancelEdit();
+                        rowEditing.cancelEdit();
 
-                      // Create a model instance
-                      var r = Ext.create('Product', {
+                        // Create a model instance
+                        var r = Ext.create('Product', {
                         id: '',
                         name: '',
                         code: '',
                         unit: ''
-                      });
+                        });
 
-                      storeLoadProduct.insert(0, r);
-                      rowEditing.startEdit(0, 0);
+                        storeLoadProduct.insert(0, r);
+                        rowEditing.startEdit(0, 0);
                     }
                 }, '-',{
                     text: 'remove'.Translator('Common'),
@@ -292,13 +295,8 @@ Ext.define('SrcPageUrl.Product.List', {
                 })
             });
         }
-        return win;
-    },
 
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
+        return win;
     }
 });
 
