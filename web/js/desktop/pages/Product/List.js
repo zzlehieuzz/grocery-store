@@ -40,7 +40,7 @@ var storeLoadUnit1 = new Ext.data.JsonStore({
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
-    }), autoLoad: false
+    }), autoLoad: true
 });
 
 var storeLoadUnit2 = storeLoadUnit1;

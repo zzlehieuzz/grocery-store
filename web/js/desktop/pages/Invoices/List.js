@@ -112,6 +112,7 @@ var objectDistributorField = [{name: 'id', type: 'int'},
 var objectProductField = [{name: 'id', type: 'int'},
     {name: 'name', type: 'string'},
     {name: 'code', type: 'string'},
+    {name: 'salePrice', type: 'string'},
     {name: 'productUnitId', type: 'int'}
 ];
 
@@ -672,7 +673,26 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 store: storeLoadProductCmb,
                 listConfig: {minWidth: 180},
                 displayField: 'name',
-                valueField: 'id'
+                valueField: 'id',
+                listeners: {
+                    change: function (field, newValue, o, e) {
+                        var grid = this.up().up();
+                        var selModel = grid.getSelectionModel();
+
+                        if (storeLoadInput.data.items[0].data.id == 0 && selModel.getSelection()[0].data.id == 0) {
+                            var salePrice = 0;
+
+                            if (newValue != 0 && newValue != "") {
+                                if (storeLoadProductCmb.findRecord("id", newValue) != null)
+                                    salePrice =  storeLoadProductCmb.findRecord("id", newValue).get('salePrice');
+                                else
+                                    salePrice =  0;
+                            } else salePrice =  0;
+
+                            selModel.getSelection()[0].set('price', parseFloat(salePrice));
+                        }
+                    }
+                }
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
@@ -690,7 +710,26 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 listConfig: {minWidth: 100},
                 store: storeLoadProductCmb,
                 displayField: 'code',
-                valueField: 'id'
+                valueField: 'id',
+                listeners: {
+                    change: function (field, newValue, o, e) {
+                        var grid = this.up().up();
+                        var selModel = grid.getSelectionModel();
+
+                        if (storeLoadInput.data.items[0].data.id == 0 && selModel.getSelection()[0].data.id == 0) {
+                            var salePrice = 0;
+
+                            if (newValue != 0 && newValue != "") {
+                                if (storeLoadProductCmb.findRecord("id", newValue) != null)
+                                    salePrice =  storeLoadProductCmb.findRecord("id", newValue).get('salePrice');
+                                else
+                                    salePrice =  0;
+                            } else salePrice =  0;
+
+                            selModel.getSelection()[0].set('price', parseFloat(salePrice));
+                        }
+                    }
+                }
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
@@ -765,7 +804,17 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         selModel.getSelection()[0].set('amount', parseFloat(amountComp));
                     }
                 }
-            }
+            },
+//            renderer: function (value) {
+//                if (invoiceId == "" || !invoiceId) {
+//                    if (value != 0 && value != "") {
+//                        if (storeLoadProductCmb.findRecord("id", value) != null)
+//                            return storeLoadProductCmb.findRecord("id", value).get('salePrice');
+//                        else
+//                            return value;
+//                    } else return "";
+//                }
+//            }
         }, {
             text: "amount".Translator('Product'),
             width: 150,
