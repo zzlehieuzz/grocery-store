@@ -36,10 +36,8 @@ storeLoadUnit1 = new Ext.data.JsonStore({
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_Load"),
         reader: readerJson
-    }), autoLoad: true
-}),
-
-storeLoadUnit2 = storeLoadUnit1;
+    }), autoLoad: false
+});
 
 Ext.define('SrcPageUrl.Product.List', {
     extend: 'Ext.ux.desktop.Module',
@@ -90,14 +88,8 @@ Ext.define('SrcPageUrl.Product.List', {
             return rec !== null ? rec.get("name") : ''
         };
 
-        var rowRendererLoadUnit2 = function(val) {
-            var rec = storeLoadUnit2.findRecord('id', val);
-            return rec !== null ? rec.get("name") : ''
-        };
-
         var columnsProduct = [
-            new Ext.grid.RowNumberer(),
-            {
+            new Ext.grid.RowNumberer(), {
                 dataIndex: 'id',
                 hidden : true
             }, {
@@ -162,7 +154,7 @@ Ext.define('SrcPageUrl.Product.List', {
                 width: 100,
                 style: 'text-align:center;',
                 editor: new Ext.form.ComboBox({
-                    store: storeLoadUnit2,
+                    store: storeLoadUnit1,
                     queryMode: 'local',
                     displayField: 'name',
                     valueField: 'id',
@@ -175,7 +167,7 @@ Ext.define('SrcPageUrl.Product.List', {
                        width: 250 ,resizable: true , resizeHandles: "se"
                     }
                 }),
-                renderer: rowRendererLoadUnit2
+                renderer: rowRendererLoadUnit1
             }, {
                 text: "convert amount".Translator('Product'),
                 flex: 1,
@@ -217,7 +209,6 @@ Ext.define('SrcPageUrl.Product.List', {
                             beforerender: function () {
                                 this.store.load();
                                 storeLoadUnit1.load();
-                                storeLoadUnit2.load();
                             }
                         }
                     }
