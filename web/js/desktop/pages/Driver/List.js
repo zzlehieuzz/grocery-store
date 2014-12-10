@@ -1,29 +1,6 @@
 /*
  * @author HieuNLD 2014/06/27
  */
-var readerJson = {
-    type: 'json',
-    root: 'data',
-    id: 'id',
-    totalProperty: 'total'
-};
-
-var objectField = [{name: 'id', type: 'int'},
-    {name: 'numberPlate', type: 'string'},
-    {name: 'name', type: 'string'}];
-
-MyUtil.Object.defineModel('Driver', objectField);
-
-var storeLoadDriver = new Ext.data.JsonStore({
-    model: 'Driver',
-    proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Driver_Load"),
-        reader: readerJson
-    }),
-    pageSize: pageSizeDefault,
-    autoLoad: ({params: {limit: limitDefault, page: pageDefault, start: startDefault}}, false)
-});
-
 Ext.define('SrcPageUrl.Driver.List', {
     extend: 'Ext.ux.desktop.Module',
 
@@ -44,6 +21,25 @@ Ext.define('SrcPageUrl.Driver.List', {
     },
 
     createWindow: function () {
+        MyUtil.Object.defineModel('Driver', [{name: 'id',          type: 'int'},
+                                             {name: 'numberPlate', type: 'string'},
+                                             {name: 'name',        type: 'string'}]);
+
+        var storeLoadDriver = new Ext.data.JsonStore({
+            model: 'Driver',
+            proxy: new Ext.data.HttpProxy({
+                url: MyUtil.Path.getPathAction("Driver_Load"),
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    id: 'id',
+                    totalProperty: 'total'
+                }
+            }),
+            pageSize: pageSizeDefault,
+            autoLoad: ({params: {limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+        });
+
         var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -61,7 +57,6 @@ Ext.define('SrcPageUrl.Driver.List', {
                         success: function (msg) {
                             if (msg.status) {
                                 storeLoadDriver.reload();
-                                console.log('success');
                             }
                         },
                         failure: function(msg) {
@@ -95,12 +90,7 @@ Ext.define('SrcPageUrl.Driver.List', {
             }
         ];
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode: "MULTI",
-            onKeyPress: function (e, t) {
-                console.log(e);
-            }
-        });
+        var rowModel = Ext.create('Ext.selection.RowModel', {mode: "MULTI"});
 
         if (!win) {
             win = desktop.createWindow({
@@ -190,10 +180,18 @@ Ext.define('SrcPageUrl.Driver.List', {
                 }],
                 bbar: new Ext.PagingToolbar({
                     store: storeLoadDriver,
-                    displayInfo: true
+                    pageSize: limitDefault,
+                    emptyMsg : 'no records found'.Translator('Common'),
+                    beforePageText : 'page'.Translator('Common'),
+                    afterPageText : 'of'.Translator('Common') + ' {0}',
+                    refreshText : 'refresh'.Translator('Common'),
+                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
+                    displayInfo:true
                 })
             });
         }
+
+
         return win;
     },
 

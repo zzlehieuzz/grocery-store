@@ -21,7 +21,7 @@ class DriverController extends BaseController
             'Driver',
             array('orderBy' => array('id' => 'DESC'),
                   'firstResult' => $params['start'],
-                 'maxResults' => $params['limit']));
+                  'maxResults' => $params['limit']));
 
         return $this->jsonResponse(array('data' => $arrEntity['data']), $arrEntity['total']);
     }
@@ -38,13 +38,13 @@ class DriverController extends BaseController
         if ($id) {
             $entityService->dqlUpdate(
                 'Driver',
-                array('update' => $params,
-                    'conditions' => array('id' => $id)
-                )
+                array('update'     => $params,
+                      'conditions' => array('id' => $id))
             );
         } else {
-            $entityService->rawSqlInsert('Driver', array('insert' => $params));
+            $id = $entityService->rawSqlInsert('Driver', array('insert' => $params));
         }
+
         $params['id'] = $id;
         $entityService->completeTransaction();
 

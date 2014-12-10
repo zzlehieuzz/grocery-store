@@ -301,12 +301,6 @@ Ext.define('SrcPageUrl.Delivery.List', {
         });
 
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 
