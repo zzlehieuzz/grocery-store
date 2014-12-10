@@ -10,6 +10,7 @@ Ext.define('MyDesktop.App', {
         'MyUtil.Path',
         'MyUtil.Message',
         'MyUtil.Object',
+        'MyUtil.String',
 
         'Ext.window.MessageBox',
         'Ext.ux.desktop.ShortcutModel',
@@ -43,6 +44,7 @@ Ext.define('MyDesktop.App', {
             new MyUtil.Path(),
             new MyUtil.Message(),
             new MyUtil.Object(),
+            new MyUtil.String(),
             //new MyDesktop.VideoWindow(),
             //new MyDesktop.Blockalanche(),
             //new MyDesktop.SystemStatus(),
