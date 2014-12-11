@@ -163,6 +163,32 @@ var storeLoadProductCmb = new Ext.data.JsonStore({
     autoLoad: true
 });
 
+var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
+    model: 'Unit',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Unit_LoadAll"),
+        reader: readerJson
+    }), autoLoad: false
+});
+
+var storeLoadDistributorCmb = new Ext.data.JsonStore({
+    model: 'DistributorCmb',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Distributor_Load"),
+        reader: readerJsonCommon
+    }),
+    autoLoad: false
+});
+
+var storeLoadCustomerCmb = new Ext.data.JsonStore({
+    model: 'CustomerCmb',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Customer_Load"),
+        reader: readerJsonCommon
+    }),
+    autoLoad: false
+});
+
 var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
     clicksToEdit: 1
 });
@@ -189,6 +215,10 @@ Ext.define('SrcPageUrl.Invoices.List', {
     createWindow: function () {
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('grid-win');
+
+        storeLoadUnitInvoiceDetail.load();
+        storeLoadDistributorCmb.load();
+        storeLoadCustomerCmb.load();
 
         var formFieldsList = {
             xtype: 'form',
@@ -414,32 +444,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
 });
 
 function createPopupInvoiceForm(invoiceId, invoiceType) {
-    var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
-        model: 'Unit',
-        proxy: new Ext.data.HttpProxy({
-            url: MyUtil.Path.getPathAction("Unit_LoadAll"),
-            reader: readerJson
-        }), autoLoad: true
-    });
-
-    var storeLoadDistributorCmb = new Ext.data.JsonStore({
-        model: 'DistributorCmb',
-        proxy: new Ext.data.HttpProxy({
-            url: MyUtil.Path.getPathAction("Distributor_Load"),
-            reader: readerJsonCommon
-        }),
-        autoLoad: true
-    });
-
-    var storeLoadCustomerCmb = new Ext.data.JsonStore({
-        model: 'CustomerCmb',
-        proxy: new Ext.data.HttpProxy({
-            url: MyUtil.Path.getPathAction("Customer_Load"),
-            reader: readerJsonCommon
-        }),
-        autoLoad: true
-    });
-
     var invoiceTitle = "";
     var subjectT = "";
     var deliveryReceiver = "";
@@ -926,7 +930,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         },
                         success: function (data) {
                             editWindow.close();
-                            storeLoadInput.reload();
+                            storeLoadInvoice.reload();
                         }
                     });
                 }
@@ -948,7 +952,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                             success: function (msg) {
                                 if (msg.status) {
                                     editWindow.close();
-                                    storeLoadInput.reload();
+                                    storeLoadInvoice.reload();
                                 }
                             },
                             failure: function (msg) {
