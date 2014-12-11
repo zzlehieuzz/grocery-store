@@ -13,14 +13,15 @@ var objectField = [{name: 'id',                type: 'int'},
                    {name: 'driverId',          type: 'int'},
                    {name: 'invoiceNumber',     type: 'string'},
                    {name: 'customerName',      type: 'string'},
-                   {name:'createInvoiceDate',  type:'date', dateFormat:'Y-m-d H:i:s'},
+                   {name:'createInvoiceDate',  type:'string'},
                    {name: 'address',           type: 'string'},
                    {name: 'phoneNumber',       type: 'string'}];
 
 var objFieldDriver = [{name: 'id',   type: 'int'},
                       {name: 'name', type: 'string'}];
 var objFieldInvoice = [{name: 'id',   type: 'int'},
-                       {name: 'invoiceNumber', type: 'string'}];
+                       {name: 'invoiceNumber', type: 'string'},
+                       {name: 'customerName', type: 'string'}];
 
 MyUtil.Object.defineModel('DriverInvoice', objectField);
 MyUtil.Object.defineModel('Driver', objFieldDriver);
@@ -279,11 +280,16 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         }
                     }, '-', Ext.create('Ext.form.field.ComboBox', {
                         id: 'listAddInvoiceOutput',
+                        tpl: MyUtil.String.createTplCombo('invoiceNumber', 'customerName'),
                         fieldLabel: 'select invoice output'.Translator('Delivery'),
                         multiSelect: true,
-                        displayField: 'invoiceNumber',
+                        forceSelection: true,
+                        displayField: 'customerName',
                         valueField: 'id',
                         width: 300,
+                        defaultListConfig: {
+                            minWidth: 430
+                        },
                         labelWidth: 90,
                         store:storeDeliveryInvoice,
                         typeAhead: true,
@@ -301,12 +307,6 @@ Ext.define('SrcPageUrl.Delivery.List', {
         });
 
         return win;
-    },
-
-    statics: {
-        getDummyData: function () {
-            return [];
-        }
     }
 });
 
