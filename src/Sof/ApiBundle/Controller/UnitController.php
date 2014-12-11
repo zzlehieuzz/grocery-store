@@ -28,6 +28,16 @@ class UnitController extends BaseController
     }
 
     /**
+     * @Route("/Unit_LoadAll", name="Unit_LoadAll")
+     */
+    public function Unit_LoadAllAction()
+    {
+      $arrEntity = $this->getEntityService()->getAllData('Unit', array('orderBy' => array('id' => 'DESC')));
+
+      return $this->jsonResponse(array('data' => $arrEntity));
+    }
+
+    /**
      * @Route("/Unit_Update", name="Unit_Update")
      */
     public function Unit_UpdateAction()

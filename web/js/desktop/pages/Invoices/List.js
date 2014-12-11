@@ -417,7 +417,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
     var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
         model: 'Unit',
         proxy: new Ext.data.HttpProxy({
-            url: MyUtil.Path.getPathAction("Unit_Load"),
+            url: MyUtil.Path.getPathAction("Unit_LoadAll"),
             reader: readerJson
         }), autoLoad: true
     });

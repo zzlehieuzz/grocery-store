@@ -110,8 +110,8 @@ Locale.module('Product', {
     'quantity': 'Số lượng',
     'sale price': 'Giá bán',
     'unit': 'Đơn vị tính',
-    'unit 1': 'Đơn vị 1',
-    'unit 2': 'Đơn vị 2',
+    'unit 1': 'Đơn vị chẳn',
+    'unit 2': 'Đơn vị lẽ',
     'amount': 'Thành Tiền',
     'convert amount': 'Số lượng chuyển đổi'
 });
