@@ -458,9 +458,13 @@ Ext.define("MyUx.grid.Printer", {
                     var rowDetail = "";
                     var total = 0;
                     var order = 1;
+
                     Ext.each(record.data.invoiceId, function (recordDetail) {
+
+                        var classColor = order % 2 === 0 ? "even" : "odd";
+
                         total = total + recordDetail.amount;
-                        rowDetail = rowDetail + '<tr>'+
+                        rowDetail = rowDetail + '<tr class="'+classColor+'">'+
                                                     '<td>'+
                                                          order+
                                                     '</td>'+
@@ -497,33 +501,33 @@ Ext.define("MyUx.grid.Printer", {
                     dataGrids = '<table>'+
                         //Header
                         '<tr>'+
-                            '<td>'+
+                            '<th>'+
                                 "order".Translator('Invoice')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 'product name'.Translator('Product')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 'product code'.Translator('Product')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 'unit'.Translator('Product')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 "quantity".Translator('Product')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 "price".Translator('Product')+
-                            '</td>'+
+                            '</th>'+
 
-                            '<td>'+
+                            '<th>'+
                                 "amount".Translator('Product')+
-                            '</td>'+
+                            '</th>'+
                         '</tr>'+
 
                         //Row Content
