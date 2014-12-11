@@ -27,6 +27,16 @@ class DistributorController extends BaseController
     }
 
     /**
+     * @Route("/Distributor_LoadAll", name="Distributor_LoadAll")
+     */
+    public function Distributor_LoadAllAction()
+    {
+        $arrEntity = $this->getEntityService()->getAllData('Distributor', array('orderBy' => array('id' => 'DESC')));
+
+        return $this->jsonResponse(array('data' => $arrEntity));
+    }
+
+    /**
      * @Route("/Distributor_Update", name="Distributor_Update")
      */
     public function Distributor_UpdateAction()

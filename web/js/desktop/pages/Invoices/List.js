@@ -157,7 +157,7 @@ var storeLoadInvoiceNumber2 = new Ext.data.JsonStore({
 var storeLoadProductCmb = new Ext.data.JsonStore({
     model: 'ProductCmb',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Product_Load"),
+        url: MyUtil.Path.getPathAction("Product_LoadAll"),
         reader: readerJsonCommon
     }),
     autoLoad: true
@@ -174,7 +174,7 @@ var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
 var storeLoadDistributorCmb = new Ext.data.JsonStore({
     model: 'DistributorCmb',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Distributor_Load"),
+        url: MyUtil.Path.getPathAction("Distributor_LoadAll"),
         reader: readerJsonCommon
     }),
     autoLoad: false
@@ -183,7 +183,7 @@ var storeLoadDistributorCmb = new Ext.data.JsonStore({
 var storeLoadCustomerCmb = new Ext.data.JsonStore({
     model: 'CustomerCmb',
     proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("Customer_Load"),
+        url: MyUtil.Path.getPathAction("Customer_LoadAll"),
         reader: readerJsonCommon
     }),
     autoLoad: false
@@ -670,7 +670,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             editor: {
                 xtype: 'combobox',
                 store: storeLoadProductCmb,
-                listConfig: {minWidth: 180},
+                listConfig: {minWidth: 220},
                 displayField: 'name',
                 valueField: 'id',
                 listeners: {
@@ -682,8 +682,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                             var salePrice = 0;
 
                             if (newValue != 0 && newValue != "") {
-                                if (storeLoadProductCmb.findRecord("id", newValue) != null)
-                                    salePrice =  storeLoadProductCmb.findRecord("id", newValue).get('salePrice');
+                                var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', newValue);
+                                var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
+
+                                if (rec)
+                                    salePrice =  rec.data.salePrice;
                                 else
                                     salePrice =  0;
                             } else salePrice =  0;
@@ -695,8 +698,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
-                    if (storeLoadProductCmb.findRecord("id", value) != null)
-                        return storeLoadProductCmb.findRecord("id", value).get('name');
+                    var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', value);
+                    var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
+
+                    if (rec)
+                        return rec.data.name;
                     else
                         return value;
                 } else return "";
@@ -719,8 +725,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                             var salePrice = 0;
 
                             if (newValue != 0 && newValue != "") {
-                                if (storeLoadProductCmb.findRecord("id", newValue) != null)
-                                    salePrice =  storeLoadProductCmb.findRecord("id", newValue).get('salePrice');
+                                var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', newValue);
+                                var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
+
+                                if (rec)
+                                    salePrice =  rec.data.salePrice;
                                 else
                                     salePrice =  0;
                             } else salePrice =  0;
@@ -732,8 +741,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
-                    if (storeLoadProductCmb.findRecord("id", value) != null)
-                        return storeLoadProductCmb.findRecord("id", value).get('code');
+                    var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', value);
+                    var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
+
+                    if (rec)
+                        return rec.data.code;
                     else
                         return value;
                 } else return "";
@@ -751,8 +763,11 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
-                    if (storeLoadUnitInvoiceDetail.findRecord("id", value) != null)
-                        return storeLoadUnitInvoiceDetail.findRecord("id", value).get('name');
+                    var index = Ext.StoreManager.lookup(storeLoadUnitInvoiceDetail).findExact('id', value);
+                    var rec = Ext.StoreManager.lookup(storeLoadUnitInvoiceDetail).getAt(index);
+
+                    if (rec)
+                        return rec.data.name;
                     else
                         return value;
                 } else return "";

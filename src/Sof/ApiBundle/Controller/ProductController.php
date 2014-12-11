@@ -54,6 +54,16 @@ class ProductController extends BaseController
     }
 
     /**
+     * @Route("/Product_LoadAll", name="Product_LoadAll")
+     */
+    public function Product_LoadAllAction()
+    {
+        $arrEntity = $this->getEntityService()->getAllData('Product', array('orderBy' => array('id' => 'DESC')));
+
+        return $this->jsonResponse(array('data' => $arrEntity));
+    }
+
+    /**
      * @Route("/Product_Update", name="Product_Update")
      */
     public function Product_UpdateAction()

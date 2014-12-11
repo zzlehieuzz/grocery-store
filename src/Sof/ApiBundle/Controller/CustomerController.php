@@ -27,6 +27,16 @@ class CustomerController extends BaseController
     }
 
     /**
+     * @Route("/Customer_LoadAll", name="Customer_LoadAll")
+     */
+    public function Customer_LoadAllAction()
+    {
+        $arrEntity = $this->getEntityService()->getAllData('Customer', array('orderBy' => array('id' => 'DESC')));
+
+        return $this->jsonResponse(array('data' => $arrEntity));
+    }
+
+    /**
      * @Route("/Customer_Update", name="Customer_Update")
      */
     public function Customer_UpdateAction()
