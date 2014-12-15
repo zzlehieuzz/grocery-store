@@ -140,6 +140,7 @@ Locale.module('Invoice', {
     'create invoice man': 'Người lập',
     'address': 'Địa chỉ',
     'phone number': 'Số điện thoại',
+    'payment status': 'Trạng thái',
     'all': 'Tất cả',
     'invoice input': 'Phiếu nhập',
     'invoice output': 'Phiếu xuất',
