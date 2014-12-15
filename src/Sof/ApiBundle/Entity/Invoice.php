@@ -95,6 +95,7 @@ class Invoice extends BaseEntity
 
   public function __construct()
   {
+      $this->paymentStatus = 1;
   }
 
   /**
