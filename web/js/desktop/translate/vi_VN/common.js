@@ -5,6 +5,7 @@ Locale.module('Common', {
     'remove': 'Xóa',
     'save': 'Lưu',
     'cancel': 'Hủy',
+    'undo': 'Hủy gán tài',
     'close': 'Đóng',
     'delete': 'Xóa',
     'print': 'In',
