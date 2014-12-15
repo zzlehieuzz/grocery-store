@@ -15,6 +15,7 @@ var objectField = [{name: 'id',                type: 'int'},
                    {name: 'customerName',      type: 'string'},
                    {name:'createInvoiceDate',  type:'string'},
                    {name: 'address',           type: 'string'},
+                   {name: 'paymentStatus',      type: 'int'},
                    {name: 'phoneNumber',       type: 'string'}];
 
 var objFieldDriver = [{name: 'id',   type: 'int'},
@@ -92,18 +93,18 @@ Ext.define('SrcPageUrl.Delivery.List', {
                 hidden : true
             }, {
                 text: "invoice number".Translator('Invoice'),
-                width: 150,
+                width: 120,
                 dataIndex: 'invoiceNumber',
                 style: 'text-align:center;'
             }, {
                 text: "create invoice date".Translator('Invoice'),
-                width: 80,
+                width: 90,
                 dataIndex: 'createInvoiceDate',
                 style: 'text-align:center;',
                 renderer: Ext.util.Format.dateRenderer('d/m/Y')
             }, {
                 text: "phone number".Translator('Invoice'),
-                width: 150,
+                width: 100,
                 dataIndex: 'phoneNumber',
                 style: 'text-align:center;',
                 renderer: function(value) {return value.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3');}
@@ -112,6 +113,29 @@ Ext.define('SrcPageUrl.Delivery.List', {
                 flex: 1,
                 dataIndex: 'address',
                 style: 'text-align:center;'
+            }, {
+                text: "payment status".Translator('Invoice'),
+                width: 100,
+                dataIndex: 'paymentStatus',
+                style: 'text-align:center;',
+                renderer:function(value){
+                    var paymentStatus;
+                    switch (value) {
+                        case 1:
+                            paymentStatus = 'Chưa Thanh Toán';
+                            break;
+                        case 2:
+                            paymentStatus = 'Đang Thanh Toán';
+                            break;
+                        case 3:
+                            paymentStatus = 'Đã Thanh Toán';
+                            break;
+                        default:
+                            paymentStatus = '';
+                    }
+
+                    return paymentStatus;
+                }
             }
         ];
 
@@ -198,6 +222,13 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         }
                     }],
                     tbar:[{
+                        text:'undo'.Translator('Common'),
+                        tooltip:'undo'.Translator('Common'),
+                        iconCls:'remove',
+                        handler : function() {
+
+                        }
+                        },{
                         text:'add'.Translator('Common'),
                         tooltip:'add'.Translator('Common'),
                         iconCls:'add',

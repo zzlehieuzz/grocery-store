@@ -22,7 +22,7 @@ class InvoiceRepository extends BaseRepository
      */
     public function getData($id, $searchInvoiceName) {
         $query = $this->querySimpleEntities(array(
-            'selects' => array('id AS invoiceId', 'invoiceNumber'),
+            'selects' => array('id AS invoiceId', 'invoiceNumber', 'paymentStatus'),
             'conditions' => array('subject'       => $id,
                                   'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
                                   'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1

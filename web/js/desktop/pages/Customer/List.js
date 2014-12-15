@@ -147,17 +147,36 @@ Ext.define('SrcPageUrl.Customer.List', {
                     handler : function() {
                       rowEditing.cancelEdit();
 
-                      // Create a model instance
-                      var r = Ext.create('Customer', {
-                        id: '',
-                        name: '',
-                        code: '',
-                        phoneNumber: '',
-                        address: ''
-                      });
+                        Ext.Ajax.request({
+                            url: MyUtil.Path.getPathAction("Customer_LoadLastCode"),
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                            waitTitle: 'processing'.Translator('Common'),
+                            waitMsg: 'sending data'.Translator('Common'),
+                            scope: this,
+                            success: function(msg) {
+                                if (msg.status) {
+                                    var lastCode = Ext.JSON.decode(msg.responseText).data;
+                                    var r = Ext.create('Customer', {
+                                        id: '',
+                                        name: '',
+                                        code: lastCode,
+                                        phoneNumber: '',
+                                        address: ''
+                                    });
 
-                      storeLoadCustomer.insert(0, r);
-                      rowEditing.startEdit(0, 0);
+                                    storeLoadCustomer.insert(0, r);
+                                    rowEditing.startEdit(0, 0);
+                                }
+                            },
+                            failure: function(msg) {
+                                console.log('failure');
+                            }
+                        });
+
+
+                      // Create a model instance
+
                     }
                 }, '-',{
                     text:'remove'.Translator('Common'),
@@ -168,7 +187,7 @@ Ext.define('SrcPageUrl.Customer.List', {
                             var selection = Ext.getCmp('grid-customer-list').getView().getSelectionModel().getSelection();
 
                             if (selection.length > 0) {
-                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'Are you sure'.Translator('Common'), function(btn){
+                                Ext.MessageBox.confirm('delete'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
                                     if(btn === 'yes') {
                                         var arrId = [];
                                         Ext.each(selection, function(v, k) {
