@@ -80,4 +80,33 @@ class CustomerController extends BaseController
 
         return $this->jsonResponse(array('data' => $params));
     }
+
+    /**
+     * @Route("/Customer_LoadLastCode", name="Customer_LoadLastCode")
+     */
+    public function Customer_LoadLastCodeAction()
+    {
+        $dateCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_YMD_NOT);
+        $code = 'KH';
+        $arrCustomer = $this->getEntityService()->getFirstData(
+            'Customer',
+            array(
+                'selects'    => array('code'),
+                'orderBy'    => array('id' => 'DESC'),
+                'conditions' => array('code' => array('LIKE' => "$code/%"))
+            ));
+        if ($arrCustomer) {
+            $oldCode = $arrCustomer;
+            $arrTemp = explode('/', $oldCode);
+            if (isset($arrTemp[2])) {
+                $arrTemp[1] = $dateCurrent;
+                $arrTemp[2]++;
+            }
+            $invoiceCodeNew = implode('/', $arrTemp);
+        } else {
+            $invoiceCodeNew = $code.'/'.$dateCurrent.'/1';
+        }
+
+        return $this->jsonResponse(array('data' => $invoiceCodeNew));
+    }
 }
