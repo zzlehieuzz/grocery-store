@@ -61,6 +61,15 @@ class DeliveryController extends BaseController
                 $arrDriverInvoice['invoiceId'] = $paramItem;
                 $entityService->rawSqlInsert('DriverInvoice', array('insert' => $arrDriverInvoice));
             }
+
+            $entityService->dqlUpdate(
+                'Invoice',
+                array('update' => array('paymentStatus' => 3),
+                      'conditions' => array('id' => $data)
+                )
+            );
+
+            $entityService->completeTransaction();
         }
 
         return $this->jsonResponse(array('data' => $params));
@@ -77,6 +86,28 @@ class DeliveryController extends BaseController
             $entityService->dqlDelete(
                 'DriverInvoice',
                 array('conditions' => array('id' => $params)));
+
+            $invoices = $entityService->getAllData(
+                'DriverInvoice',
+                array(
+                    'selects'    => array('invoiceId'),
+                    'conditions' => array('id' => $params),
+                    'groupBy'    => array('invoiceId')
+                ));
+
+            $listInvoices = array();
+            foreach ($invoices as $invoiceItem) {
+                $listInvoices[] = $invoiceItem['invoiceId'];
+            }
+            if ($listInvoices) {
+                $entityService->dqlUpdate(
+                    'Invoice',
+                    array(
+                        'update' => array('paymentStatus' => 1),
+                        'conditions' => array('id' => $listInvoices)
+                    )
+                );
+            }
             $entityService->completeTransaction();
         }
 
