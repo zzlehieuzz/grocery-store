@@ -25,7 +25,7 @@ class DriverInvoiceRepository extends BaseRepository
                 'conditions' => array('driverId' => $driverId)
             ));
 
-        $query->addSelect('i.invoiceNumber,i.createInvoiceDate,i.address,i.phoneNumber');
+        $query->addSelect('i.invoiceNumber,i.createInvoiceDate,i.address,i.phoneNumber,i.paymentStatus');
         $query->addSelect('c.name AS customerName');
 
         $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'i', 'WITH', "entity.invoiceId = i.id");
