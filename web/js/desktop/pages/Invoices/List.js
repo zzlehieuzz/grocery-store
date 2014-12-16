@@ -1009,7 +1009,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                                         '</td>'+
 
                                         '<td>'+
-                                            customerName+
+                                            'Anh/Chị ' + customerName+
                                         '</td>'+
 
                                         '<td class="font-bold">'+

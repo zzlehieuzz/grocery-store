@@ -148,17 +148,36 @@ Ext.define('SrcPageUrl.Distributor.List', {
                     handler : function() {
                         rowEditing.cancelEdit();
 
-                        var r = Ext.create('Distributor', {
-                          id: '',
-                          name: '',
-                          code: '',
-                          phoneNumber: '',
-                          address: '',
-                          labels: ''
+                        Ext.Ajax.request({
+                            url: MyUtil.Path.getPathAction("Distributor_LoadLastCode"),
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                            waitTitle: 'processing'.Translator('Common'),
+                            waitMsg: 'sending data'.Translator('Common'),
+                            scope: this,
+                            success: function(msg) {
+                                if (msg.status) {
+                                    var lastCode = Ext.JSON.decode(msg.responseText).data;
+                                    var r = Ext.create('Distributor', {
+                                        id: '',
+                                        name: '',
+                                        code: lastCode,
+                                        phoneNumber: '',
+                                        address: '',
+                                        labels: ''
+                                    });
+
+                                    storeLoadDistributor.insert(0, r);
+                                    rowEditing.startEdit(0, 0);
+                                }
+                            },
+                            failure: function(msg) {
+                                console.log('failure');
+                            }
                         });
 
-                        storeLoadDistributor.insert(0, r);
-                        rowEditing.startEdit(0, 0);
+
+
                     }
                 }, '-',{
                     text:'remove'.Translator('Common'),
@@ -187,7 +206,6 @@ Ext.define('SrcPageUrl.Distributor.List', {
                                             success: function(msg) {
                                                 if (msg.status) {
                                                     storeLoadDistributor.load();
-                                                    var currentPage = storeLoadDistributor.currentPage;
                                                 }
                                             },
                                             failure: function(msg) {

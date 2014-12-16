@@ -145,7 +145,7 @@ Ext.define('SrcPageUrl.Customer.List', {
                     tooltip:'add'.Translator('Common'),
                     iconCls:'add',
                     handler : function() {
-                      rowEditing.cancelEdit();
+                        rowEditing.cancelEdit();
 
                         Ext.Ajax.request({
                             url: MyUtil.Path.getPathAction("Customer_LoadLastCode"),
@@ -173,10 +173,6 @@ Ext.define('SrcPageUrl.Customer.List', {
                                 console.log('failure');
                             }
                         });
-
-
-                      // Create a model instance
-
                     }
                 }, '-',{
                     text:'remove'.Translator('Common'),
@@ -206,7 +202,6 @@ Ext.define('SrcPageUrl.Customer.List', {
                                                 if (msg.status) {
                                                     //storeLoadCustomer.remove(selection);
                                                     storeLoadCustomer.reload();
-                                                    console.log('success');
                                                 }
                                             },
                                             failure: function(msg) {
