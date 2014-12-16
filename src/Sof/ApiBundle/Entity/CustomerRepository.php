@@ -2,6 +2,7 @@
 
 namespace Sof\ApiBundle\Entity;
 
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\SofUtil;
 
 /**
@@ -22,7 +23,7 @@ class CustomerRepository extends BaseRepository
             'selects' => array('id', 'name'),
             'groupBy' => array('id')
         ));
-        $query->innerJoin(self::ENTITY_BUNDLE . ":Invoice", 'invoice', 'WITH', "entity.id = invoice.subject");
+        $query->innerJoin(self::ENTITY_BUNDLE . ":Invoice", 'invoice', 'WITH', "entity.id = invoice.subject AND invoice.invoiceType = " . InvoiceConst::INVOICE_TYPE_2);
 
         return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
     }
