@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\User;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\DateUtil;
 
 class DeliveryController extends BaseController
@@ -64,7 +65,7 @@ class DeliveryController extends BaseController
 
             $entityService->dqlUpdate(
                 'Invoice',
-                array('update' => array('paymentStatus' => 3),
+                array('update' => array('paymentStatus' => InvoiceConst::PAYMENT_STATUS_3),
                       'conditions' => array('id' => $data)
                 )
             );
@@ -103,7 +104,7 @@ class DeliveryController extends BaseController
                 $entityService->dqlUpdate(
                     'Invoice',
                     array(
-                        'update' => array('paymentStatus' => 1),
+                        'update' => array('paymentStatus' => InvoiceConst::PAYMENT_STATUS_1),
                         'conditions' => array('id' => $listInvoices)
                     )
                 );

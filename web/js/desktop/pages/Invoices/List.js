@@ -818,7 +818,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         selModel.getSelection()[0].set('amount', parseFloat(amountComp));
                     }
                 }
-            },
+            }
 //            renderer: function (value) {
 //                if (invoiceId == "" || !invoiceId) {
 //                    if (value != 0 && value != "") {

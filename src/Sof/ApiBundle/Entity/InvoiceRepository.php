@@ -48,10 +48,10 @@ class InvoiceRepository extends BaseRepository
     public function getDataInvoice_Delivery($arrDriverInvoice = array()) {
         $query = $this->querySimpleEntities(array(
                 'selects' => array('id', 'invoiceNumber', 'createInvoiceDate'),
-//                'conditions' => array(
-//                    'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
-//                    'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
-//                )
+                'conditions' => array(
+                    'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
+                    'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+                )
             ));
         $query->addSelect('c.name AS customerName');
         $query->leftJoin(self::ENTITY_BUNDLE . ":Customer", 'c', 'WITH', "entity.subject = c.id");
