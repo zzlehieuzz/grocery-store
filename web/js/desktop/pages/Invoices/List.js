@@ -239,8 +239,8 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 name: 'invoiceTypeRadio',
                 id: 'invoiceTypeRadio',
                 vertical: true,
-                items: [{boxLabel: 'all'.Translator('Invoice'), name: 'rb', inputValue: '0', checked: true},
-                        {boxLabel: 'invoice input'.Translator('Invoice'), name: 'rb', inputValue: '1'},
+                items: [//{boxLabel: 'all'.Translator('Invoice'), name: 'rb', inputValue: '0', checked: true},
+                        {boxLabel: 'invoice input'.Translator('Invoice'), name: 'rb', inputValue: '1', checked: true},
                         {boxLabel: 'invoice output'.Translator('Invoice'), name: 'rb', inputValue: '2'}],
                 listeners: {
                     change: function (field, newValue, oldValue) {
