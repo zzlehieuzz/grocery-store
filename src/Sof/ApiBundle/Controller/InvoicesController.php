@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\User;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\DateUtil;
 
 class InvoicesController extends BaseController
@@ -290,6 +291,7 @@ class InvoicesController extends BaseController
         } else {
             //Insert
             unset($form_fields_value['id']);
+            $form_fields_value['paymentStatus'] = InvoiceConst::PAYMENT_STATUS_1;
             $invoiceId = $entityService->rawSqlInsert('Invoice', array('insert' => $form_fields_value));
         }
 

@@ -122,13 +122,13 @@ Ext.define('SrcPageUrl.Delivery.List', {
                     var paymentStatus;
                     switch (value) {
                         case 1:
-                            paymentStatus = 'Chưa Thanh Toán';
+                            paymentStatus = 'Chưa giao hàng';
                             break;
                         case 2:
                             paymentStatus = 'Đang Thanh Toán';
                             break;
                         case 3:
-                            paymentStatus = 'Đã Thanh Toán';
+                            paymentStatus = 'Đã giao hàng';
                             break;
                         default:
                             paymentStatus = '';
