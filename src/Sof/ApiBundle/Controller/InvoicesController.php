@@ -32,15 +32,15 @@ class InvoicesController extends BaseController
         $entityService = $this->getEntityService();
 
         if ($fromDate && $toDate) {
-            $arrCondition['createInvoiceDate'] = array('>=' => DateUtil::getCurrentDate(),
-                                                       '<=' => DateUtil::getCurrentDate());
+            $arrCondition['createInvoiceDate'] = array('>=' => $fromDate,
+                                                       '<=' => $toDate);
         } else {
             if ($fromDate) {
-                $arrCondition['createInvoiceDate'] = array('>=' => DateUtil::getCurrentDate());
+                $arrCondition['createInvoiceDate'] = array('>=' => $fromDate);
             }
 
             if ($toDate) {
-                $arrCondition['createInvoiceDate'] = array('<=' => DateUtil::getCurrentDate());
+                $arrCondition['createInvoiceDate'] = array('<=' => $toDate);
             }
         }
 
