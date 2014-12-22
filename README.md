@@ -88,6 +88,6 @@ password: thanhdp123456
 
 db:
 chincchi_store
-store_123
+admin123
 
 ALTER TABLE invoice ADD delivery_Status INT NOT NULL COMMENT '10:delivery_Status';
