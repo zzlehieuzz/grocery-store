@@ -741,10 +741,12 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         {
             xtype: 'rownumberer',
             text: 'order'.Translator('Invoice'),
+            style: 'text-align:center;',
             width: 30
         }, {
             header: 'product name'.Translator('Product'),
             dataIndex: 'productId',
+            style: 'text-align:center;',
             editor: {
                 xtype: 'combobox',
                 store: storeLoadProductCmb,
@@ -789,6 +791,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }, {
             header: 'product code'.Translator('Product'),
             dataIndex: 'productId',
+            style: 'text-align:center;',
             editor: {
                 xtype: 'combobox',
                 listConfig: {minWidth: 100},
@@ -834,6 +837,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: "unit".Translator('Product'),
             flex: 1,
             dataIndex: 'unit',
+            style: 'text-align:center;',
             editor: {
                 allowBlank: true,
                 xtype: 'combobox',
@@ -856,7 +860,12 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }, {
             text: "quantity".Translator('Product'),
             flex: 1,
+            style: 'text-align:center;',
+            align: 'right',
             dataIndex: 'quantity',
+            renderer: function(value){
+                return Ext.util.Format.currency(value, ' ', decimalPrecision)
+            },
             editor: {
                 allowBlank: true,
                 listeners: {
@@ -878,9 +887,15 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }, {
             text: "price".Translator('Product'),
             flex: 1,
+            style: 'text-align:center;',
+            align: 'right',
             dataIndex: 'price',
-            summaryType: function(records){
+            summaryType: 'sum',
+            summaryRenderer: function(records){
                 return 'total'.Translator('Invoice');
+            },
+            renderer: function(value){
+                return Ext.util.Format.currency(value, ' ', decimalPrecision)
             },
             editor: {
                 allowBlank: true,
@@ -913,6 +928,8 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }, {
             text: "amount".Translator('Product'),
             width: 150,
+            style: 'text-align:center;',
+            align: 'right',
             dataIndex: 'amount',
             summaryType: function(records){
                 var totals = 0;
@@ -924,8 +941,8 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
 
                 return totals;
             },
-            renderer: function (value) {
-                return value;
+            renderer: function(value){
+                return Ext.util.Format.currency(value, ' ', decimalPrecision)
             },
             editor: {
                 allowBlank: true
@@ -947,6 +964,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     store: storeLoadInput,
                     selModel: Ext.create('Ext.selection.RowModel', {mode: "MULTI"}),
                     columns: columnsInvoicePopup,
+                    columnLines: true,
                     plugins: cellEditing,
                     features: [{ftype: 'summary'}],
                     listeners: {
