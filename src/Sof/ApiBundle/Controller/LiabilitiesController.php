@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\User;
+use Sof\ApiBundle\Entity\ValueConst\BaseConst;
 use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\DateUtil;
 
@@ -37,6 +38,20 @@ class LiabilitiesController extends BaseController
 
         return $this->jsonResponse(array('data' => $arrCustomer), count($arrCustomer));
     }
+
+    /**
+     * @Route("/Liabilities_Name_Load", name="Liabilities_Name_Load")
+     */
+    public function Liabilities_Name_LoadAction()
+    {
+        $liabilities = $this->getEntityService()->getAllData('Liabilities',
+            array('selects' => array('name'),
+                  'groupBy' => array('name'),
+                  'orderBy' => array('name')));
+
+        return $this->jsonResponse(array('data' => $liabilities));
+    }
+
 
     /**
      * @Route("/Liabilities_Save", name="Liabilities_Save")

@@ -21,6 +21,7 @@ var objectFieldCustomer = [{name: 'id',   type: 'int'},
 
 MyUtil.Object.defineModel('Liabilities', objectField);
 MyUtil.Object.defineModel('LiabilitiesCustomer', objectFieldCustomer);
+MyUtil.Object.defineModel('LiabilitiesName', [{name: 'name', type: 'string'}]);
 
 var storeLoadLiabilities = new Ext.data.JsonStore({
     model: 'Liabilities',
@@ -40,6 +41,19 @@ var storeLoadLiabilitiesCustomer = new Ext.data.JsonStore({
     }),
     pageSize: pageSizeDefault,
     autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+});
+
+var storeLiabilitiesName = new Ext.data.JsonStore({
+    model: 'LiabilitiesName',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Liabilities_Name_Load"),
+        reader: {
+            type: 'json',
+            root: 'data',
+            name  : 'name'
+        }
+    }),
+    autoLoad: false
 });
 
 Ext.define('SrcPageUrl.Liabilities.List', {
@@ -147,7 +161,12 @@ Ext.define('SrcPageUrl.Liabilities.List', {
             },
             items: [{
                 fieldLabel: 'name'.Translator('Common'),
-                xtype: 'textfield',
+                xtype: 'combobox',
+                store: storeLiabilitiesName,
+                listConfig: {minWidth: 300},
+                displayField: 'name',
+                valueField: 'name',
+                queryMode: 'local',
                 name: 'liabilitiesName',
                 id: 'liabilitiesName',
                 allowBlank: false
@@ -174,7 +193,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         var arrInsert = {
                             invoiceId  : invoiceSelectId,
                             customerId : customerSelectId,
-                            name       : Ext.getCmp('liabilitiesName').value,
+                            name       : Ext.getCmp('liabilitiesName').getValue(),
                             amount     : Ext.getCmp('liabilitiesAmount').value,
                             price      : Ext.getCmp('liabilitiesPrice').value
                         };
@@ -336,8 +355,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         tooltip:'accept'.Translator('Delivery'),
                         iconCls:'accept',
                         handler : function() {
-                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked"),
-                                selection    = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked");
 
                             if (rdoInvoiceId.length == 1) {
                                 Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
@@ -375,6 +393,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                 selection    = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
 
                             if (rdoInvoiceId.length == 1) {
+                                storeLiabilitiesName.load();
                                 invoiceSelectId  = rdoInvoiceId[0].value;
                                 customerSelectId = selection[0].data.id;
                                 popupAddNewLiabilitiesForm.show();
