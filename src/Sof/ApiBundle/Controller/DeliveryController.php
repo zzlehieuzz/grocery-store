@@ -63,12 +63,12 @@ class DeliveryController extends BaseController
                 $entityService->rawSqlInsert('DriverInvoice', array('insert' => $arrDriverInvoice));
             }
 
-            $entityService->dqlUpdate(
-                'Invoice',
-                array('update' => array('paymentStatus' => InvoiceConst::PAYMENT_STATUS_3),
-                      'conditions' => array('id' => $data)
-                )
-            );
+//            $entityService->dqlUpdate(
+//                'Invoice',
+//                array('update' => array('deliveryStatus' => InvoiceConst::DELIVERY_STATUS_2),
+//                      'conditions' => array('id' => $data)
+//                )
+//            );
 
             $entityService->completeTransaction();
         }
@@ -84,10 +84,6 @@ class DeliveryController extends BaseController
         $entityService = $this->getEntityService();
         $params        = $this->getJsonParams();
         if ($params) {
-            $entityService->dqlDelete(
-                'DriverInvoice',
-                array('conditions' => array('id' => $params)));
-
             $invoices = $entityService->getAllData(
                 'DriverInvoice',
                 array(
@@ -101,13 +97,17 @@ class DeliveryController extends BaseController
                 $listInvoices[] = $invoiceItem['invoiceId'];
             }
             if ($listInvoices) {
-                $entityService->dqlUpdate(
-                    'Invoice',
-                    array(
-                        'update' => array('paymentStatus' => InvoiceConst::PAYMENT_STATUS_1),
-                        'conditions' => array('id' => $listInvoices)
-                    )
-                );
+//                $entityService->dqlUpdate(
+//                    'Invoice',
+//                    array(
+//                        'update' => array('deliveryStatus' => InvoiceConst::DELIVERY_STATUS_1),
+//                        'conditions' => array('id' => $listInvoices)
+//                    )
+//                );
+
+                $entityService->dqlDelete(
+                    'DriverInvoice',
+                    array('conditions' => array('id' => $params)));
             }
             $entityService->completeTransaction();
         }

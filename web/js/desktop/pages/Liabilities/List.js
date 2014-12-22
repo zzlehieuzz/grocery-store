@@ -332,6 +332,40 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         }
                     }],
                     tbar:[{
+                        text:'accept'.Translator('Delivery'),
+                        tooltip:'accept'.Translator('Delivery'),
+                        iconCls:'accept',
+                        handler : function() {
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked"),
+                                selection    = Ext.getCmp('grid-liabilities-customer-list').getView().getSelectionModel().getSelection();
+
+                            if (rdoInvoiceId.length == 1) {
+                                Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
+                                    if(btn === 'yes') {
+                                        Ext.Ajax.request({
+                                            url: MyUtil.Path.getPathAction("Liabilities_AcceptDelivery"),
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            jsonData: {'params' : rdoInvoiceId[0].value},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
+                                            scope: this,
+                                            success: function(msg) {
+                                                if (msg.status) {
+                                                    storeLoadLiabilities.reload();
+                                                }
+                                            },
+                                            failure: function(msg) {
+                                                console.log('failure');
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
+                            }
+                        }
+                    }, '-', {
                         text:'add'.Translator('Common'),
                         tooltip:'add'.Translator('Common'),
                         iconCls:'add',

@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sof\ApiBundle\Entity\User;
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\DateUtil;
 
 class LiabilitiesController extends BaseController
@@ -82,6 +83,28 @@ class LiabilitiesController extends BaseController
             )
         );
         $entityService->completeTransaction();
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
+    /**
+     * @Route("/Liabilities_AcceptDelivery", name="Liabilities_AcceptDelivery")
+     */
+    public function Liabilities_AcceptDeliveryAction()
+    {
+        $params = $this->getJsonParams();
+
+        if($params) {
+            $this->getEntityService()->dqlUpdate(
+                'Invoice',
+                array('update' => array('paymentStatus'  => InvoiceConst::PAYMENT_STATUS_3,
+                                        'deliveryStatus' => InvoiceConst::DELIVERY_STATUS_2),
+                      'conditions' => array('id' => $params)
+                )
+            );
+
+            $this->getEntityService()->completeTransaction();
+        }
 
         return $this->jsonResponse(array('data' => $params));
     }

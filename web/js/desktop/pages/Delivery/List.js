@@ -93,6 +93,11 @@ Ext.define('SrcPageUrl.Delivery.List', {
                 dataIndex: 'driverId',
                 hidden : true
             }, {
+                text: "customer name".Translator('Invoice'),
+                width: 120,
+                dataIndex: 'customerName',
+                style: 'text-align:center;'
+            }, {
                 text: "invoice number".Translator('Invoice'),
                 width: 120,
                 dataIndex: 'invoiceNumber',
@@ -135,7 +140,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
             win = desktop.createWindow({
                 id: 'delivery-list',
                 title: 'delivery management'.Translator('Module'),
-                width: 900,
+                width: 950,
                 height: height_600,
                 iconCls: 'icon-grid',
                 animCollapse: false,
@@ -200,15 +205,8 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         }
                     }],
                     tbar:[{
-                        text:'undo'.Translator('Common'),
-                        tooltip:'undo'.Translator('Common'),
-                        iconCls:'remove',
-                        handler : function() {
-
-                        }
-                        },{
-                        text:'add'.Translator('Common'),
-                        tooltip:'add'.Translator('Common'),
+                        text:'add driver'.Translator('Delivery'),
+                        tooltip:'add driver'.Translator('Delivery'),
                         iconCls:'add',
                         handler : function() {
                             var selection            = Ext.getCmp('grid-driver-list').getView().getSelectionModel().getSelection();
@@ -246,8 +244,8 @@ Ext.define('SrcPageUrl.Delivery.List', {
                             }
                         }
                     }, '-',{
-                        text:'undo'.Translator('Common'),
-                        tooltip:'undo'.Translator('Common'),
+                        text:'undo driver'.Translator('Delivery'),
+                        tooltip:'undo driver'.Translator('Delivery'),
                         iconCls:'remove',
                         listeners: {
                             click: function () {

@@ -258,7 +258,10 @@ div.ux-taskbar div.x-toolbar {
     background-image:url( ../images/grid.png ) !important; }
 
 .add {
-    background-image:url(../images/gird-window/add.gif) !important; }
+    background-image:url(../images/gird-window/add.png) !important; }
+
+.accept {
+    background-image:url(../images/gird-window/accept.png) !important; }
 
 .option {
     background-image:url(../images/gird-window/plugin.gif) !important; }

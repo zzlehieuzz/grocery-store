@@ -76,7 +76,7 @@ class Invoice extends BaseEntity
     private $paymentStatus;
 
     /**
-     * @ORM\Column(name="delivery_Status", type="integer", nullable=false, options={"comment" = "10:delivery_Status"})
+     * @ORM\Column(name="delivery_status", type="integer", nullable=false, options={"comment" = "10:delivery_status"})
      * @Assert\Type(type="integer")
      */
     private $deliveryStatus;

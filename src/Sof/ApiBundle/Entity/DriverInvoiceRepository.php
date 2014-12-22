@@ -2,6 +2,7 @@
 
 namespace Sof\ApiBundle\Entity;
 
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\SofUtil;
 
 /**
@@ -28,8 +29,10 @@ class DriverInvoiceRepository extends BaseRepository
         $query->addSelect('i.invoiceNumber,i.createInvoiceDate,i.address,i.phoneNumber,i.paymentStatus');
         $query->addSelect('c.name AS customerName');
 
-        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'i', 'WITH', "entity.invoiceId = i.id");
+        $query->innerJoin(self::ENTITY_BUNDLE . ":Invoice", 'i', 'WITH', "entity.invoiceId = i.id");
         $query->leftJoin(self::ENTITY_BUNDLE . ":Customer", 'c', 'WITH', "i.subject = c.id");
+
+        $query->andWhere('i.deliveryStatus = :deliveryStatus')->setParameter('deliveryStatus', InvoiceConst::DELIVERY_STATUS_1);
 
         return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
     }

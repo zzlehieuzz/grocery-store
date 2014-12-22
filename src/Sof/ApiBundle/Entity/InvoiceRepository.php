@@ -25,7 +25,8 @@ class InvoiceRepository extends BaseRepository
             'selects' => array('id AS invoiceId', 'invoiceNumber', 'paymentStatus'),
             'conditions' => array('subject'       => $id,
                                   'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
-//                                  'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+                                  'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1,
+                                  'deliveryStatus' => InvoiceConst::DELIVERY_STATUS_1
             )
         ));
         $query->addSelect('l.id, l.name, l.amount, l.price, l.customerId');

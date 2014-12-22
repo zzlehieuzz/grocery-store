@@ -5,7 +5,6 @@ Locale.module('Common', {
     'remove': 'Xóa',
     'save': 'Lưu',
     'cancel': 'Hủy',
-    'undo': 'Hủy gán tài',
     'close': 'Đóng',
     'delete': 'Xóa',
     'print': 'In',
@@ -189,9 +188,14 @@ Locale.module('Delivery', {
     //label
     'invoice list output': 'Danh sách phiếu xuất',
     'select invoice output': 'Chọn phiếu xuất',
+    'undo driver': 'Hủy gán tài',
+    'add driver': 'Gán tài',
 
     //message
-    'please choose invoice': 'Làm ơn chọn phiếu xuất.'
+    'please choose invoice': 'Làm ơn chọn phiếu xuất.',
+
+    //button
+    'accept': 'Xác nhận hóa đơn'
 });
 
 Locale.module('Report', {
