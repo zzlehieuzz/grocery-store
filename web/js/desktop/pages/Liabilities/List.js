@@ -353,6 +353,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                             success: function(msg) {
                                                 if (msg.status) {
                                                     storeLoadLiabilities.reload();
+                                                    storeLoadLiabilitiesCustomer.reload();
                                                 }
                                             },
                                             failure: function(msg) {

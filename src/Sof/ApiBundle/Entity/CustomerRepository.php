@@ -24,6 +24,10 @@ class CustomerRepository extends BaseRepository
             'groupBy' => array('id')
         ));
         $query->innerJoin(self::ENTITY_BUNDLE . ":Invoice", 'invoice', 'WITH', "entity.id = invoice.subject AND invoice.invoiceType = " . InvoiceConst::INVOICE_TYPE_2);
+        $query->andWhere('invoice.paymentStatus = :paymentStatus')
+              ->andWhere('invoice.deliveryStatus = :deliveryStatus')
+              ->setParameter('paymentStatus', InvoiceConst::PAYMENT_STATUS_1)
+              ->setParameter('deliveryStatus', InvoiceConst::DELIVERY_STATUS_1);
 
         return SofUtil::formatScalarArray($query->getQuery()->getScalarResult());
     }
