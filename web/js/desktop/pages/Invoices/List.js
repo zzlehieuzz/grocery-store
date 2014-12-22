@@ -44,6 +44,7 @@ var objectField = [{name: 'id', type: 'int'},
                    {name: 'invoiceTypeText', type: 'string'},
                    {name: 'invoiceNumber', type: 'string'},
                    {name: 'paymentStatus', type: 'string'},
+                   {name: 'deliveryStatus', type: 'string'},
                    {name: 'amount', type: 'int'},
                    {name: 'description', type: 'string'},
                    {name: 'createInvoiceDate', type: 'string'}];
@@ -239,9 +240,15 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 name: 'invoiceTypeRadio',
                 id: 'invoiceTypeRadio',
                 vertical: true,
-                items: [//{boxLabel: 'all'.Translator('Invoice'), name: 'rb', inputValue: '0', checked: true},
-                        {boxLabel: 'invoice input'.Translator('Invoice'), name: 'rb', inputValue: '1', checked: true},
-                        {boxLabel: 'invoice output'.Translator('Invoice'), name: 'rb', inputValue: '2'}],
+                items: [{
+                            boxLabel: 'invoice input'.Translator('Invoice'),
+                            name: 'rb', inputValue: '1',
+                            checked: true
+                        }, {
+                            boxLabel: 'invoice output'.Translator('Invoice'),
+                            name: 'rb',
+                            inputValue: '2'
+                        }],
                 listeners: {
                     change: function (field, newValue, oldValue) {
                         var printBtn = Ext.getCmp('print_btn');
@@ -250,6 +257,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         } else {
                             printBtn.setVisible(false);
                         }
+                        storeLoadInvoice.reload();
                     }
                 }
             }, {
@@ -266,7 +274,14 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         altFormats: date_format,
                         name: 'fromDate',
                         id: 'fromDate',
-                        value: new Date()
+                        value: new Date(),
+                        listeners: {
+                            specialkey: function (s, e) {
+                                if (e.getKey() == Ext.EventObject.ENTER) {
+                                    storeLoadInvoice.reload();
+                                }
+                            }
+                        }
                     }, {
                         labelWidth: 0,
                         fieldLabel: '~',
@@ -277,21 +292,42 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         xtype: 'datefield',
                         format: date_format,
                         altFormats: date_format,
-                        value: new Date()
+                        value: new Date(),
+                        listeners: {
+                            specialkey: function (s, e) {
+                                if (e.getKey() == Ext.EventObject.ENTER) {
+                                    storeLoadInvoice.reload();
+                                }
+                            }
+                        }
                     }, {
                         emptyText: 'customer name'.Translator('Invoice'),
                         padding: '0 5px 0 10px;',
                         xtype: 'textfield',
                         name: 'customerNameForm',
                         id: 'customerNameForm',
-                        anchor: '50%'
+                        anchor: '50%',
+                        listeners: {
+                            specialkey: function (s, e) {
+                                if (e.getKey() == Ext.EventObject.ENTER) {
+                                    storeLoadInvoice.reload();
+                                }
+                            }
+                        }
                     },{
                         emptyText: 'invoice number'.Translator('Invoice'),
                         padding: '0 5px 0 10px;',
                         xtype: 'textfield',
                         name: 'invoiceNumberForm',
                         id: 'invoiceNumberForm',
-                        anchor: '50%'
+                        anchor: '50%',
+                        listeners: {
+                            specialkey: function (s, e) {
+                                if (e.getKey() == Ext.EventObject.ENTER) {
+                                    storeLoadInvoice.reload();
+                                }
+                            }
+                        }
                     }]
                 }],
             buttons: [{
@@ -299,24 +335,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 text: 'find'.Translator('Invoice'),
                 width: 50,
                 handler: function () {
-                    var invoiceType = Ext.getCmp('invoiceTypeRadio').getValue().rb;
-                    var fromDate = Ext.util.Format.date(Ext.getCmp('fromDate').getValue(), 'Y-m-d');
-                    var toDate = Ext.util.Format.date(Ext.getCmp('toDate').getValue(), 'Y-m-d');
-                    var customerNameForm = Ext.getCmp('customerNameForm').getValue();
-                    var invoiceNumberForm = Ext.getCmp('invoiceNumberForm').getValue();
-
-                    storeLoadInvoice.reload({
-                        params: {
-                            limit: limitDefault,
-                            page: pageDefault,
-                            start: startDefault,
-                            invoiceType: invoiceType,
-                            fromDate: fromDate,
-                            toDate: toDate,
-                            customerName: customerNameForm,
-                            invoiceNumber: invoiceNumberForm
-                        }
-                    });
+                    storeLoadInvoice.reload();
                 }
             }, {
                 xtype: 'button',
@@ -343,6 +362,22 @@ Ext.define('SrcPageUrl.Invoices.List', {
             }]
         };
 
+        storeLoadInvoice.on('beforeload', function() {
+            var invoiceType       = Ext.getCmp('invoiceTypeRadio').getValue().rb;
+            var fromDate          = Ext.util.Format.date(Ext.getCmp('fromDate').getValue(), 'Y-m-d');
+            var toDate            = Ext.util.Format.date(Ext.getCmp('toDate').getValue(), 'Y-m-d');
+            var customerNameForm  = Ext.getCmp('customerNameForm').getValue();
+            var invoiceNumberForm = Ext.getCmp('invoiceNumberForm').getValue();
+
+            this.proxy.extraParams = {
+                invoiceType: invoiceType,
+                fromDate: fromDate,
+                toDate: toDate,
+                customerName: customerNameForm,
+                invoiceNumber: invoiceNumberForm
+            };
+        });
+
         var columnsInvoice = [
             new Ext.grid.RowNumberer(),
             {
@@ -354,24 +389,64 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 text: "date".Translator('Invoice'),
                 dataIndex: 'createInvoiceDate',
                 style: 'text-align:center;',
-                width: 80
+                align: 'center',
+                width: 70
             }, {
                 text: "amount".Translator('Invoice'),
-                flex: 1,
                 style: 'text-align:center;',
                 align: 'right',
                 dataIndex: 'amount',
-                renderer: function (value) {
-                    if (value) {
-                        return value;
-                    } else return 0;
-                }
-            }, {
-                text: "invoice type".Translator('Invoice'),
-                width: 80,
+                width: 120,
+                renderer:  Ext.util.Format.numberRenderer(moneyFormat)
+            }
+            , {
+                text: "payment status".Translator('Invoice'),
+                width: 100,
                 style: 'text-align:center;',
-                dataIndex: 'invoiceTypeText'
-            }, {
+                align: 'center',
+                dataIndex: 'paymentStatus',
+                renderer:function(value){
+                    var paymentStatus;
+                    switch (value) {
+                        case '1':
+                            paymentStatus = 'Chưa thanh toán';
+                            break;
+                        case '2':
+                            paymentStatus = 'Đang thanh Toán';
+                            break;
+                        case '3':
+                            paymentStatus = 'Đã thanh toán';
+                            break;
+                        default:
+                            paymentStatus = '';
+                    }
+
+                    return paymentStatus;
+                }
+            }
+            , {
+                text: "delivery status".Translator('Invoice'),
+                width: 100,
+                style: 'text-align:center;',
+                align: 'center',
+                dataIndex: 'deliveryStatus',
+                renderer:function(value){
+                    var deliveryStatus;
+                    switch (value) {
+                        case '1':
+                            deliveryStatus = 'Chưa giao hàng';
+                            break;
+                        case '2':
+                            deliveryStatus = 'Đã giao hàng';
+                            break;
+                        default:
+                            deliveryStatus = '';
+                    }
+
+                    return deliveryStatus;
+                }
+            }
+            , {
                 text: "invoice number".Translator('Invoice'),
                 width: 100,
                 style: 'text-align:center;',
@@ -396,12 +471,13 @@ Ext.define('SrcPageUrl.Invoices.List', {
 
                     return Ext.String.format('<div id="{0}"></div>', id);
                 }
-            }, {
-                text: "state".Translator('Invoice'),
-                width: 100,
-                style: 'text-align:center;',
-                dataIndex: 'paymentStatus'
             }
+            //, {
+            //    text: "state".Translator('Invoice'),
+            //    width: 100,
+            //    style: 'text-align:center;',
+            //    dataIndex: 'paymentStatus'
+            //}
         ];
 
         var rowModel = Ext.create('Ext.selection.RowModel', {mode: "MULTI"});
@@ -421,6 +497,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         id: 'grid-invoice-list',
                         xtype: 'grid',
                         style: 'padding: 5px;',
+                        columnLines: true,
                         height: 400,
                         store: storeLoadInvoice,
                         selModel: rowModel,
@@ -562,7 +639,8 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     id: 'create_invoice_date',
                     xtype: 'datefield',
                     format: date_format,
-                    altFormats: date_format
+                    altFormats: date_format,
+                    value: new Date()
                 }, {
                     xtype: 'combobox',
                     labelWidth: 150,
@@ -673,6 +751,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 listConfig: {minWidth: 220},
                 displayField: 'name',
                 valueField: 'id',
+                queryMode: 'local',
                 listeners: {
                     change: function (field, newValue, o, e) {
                         var grid = this.up().up();
@@ -716,6 +795,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 store: storeLoadProductCmb,
                 displayField: 'code',
                 valueField: 'id',
+                queryMode: 'local',
                 listeners: {
                     change: function (field, newValue, o, e) {
                         var grid = this.up().up();
@@ -758,6 +838,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 allowBlank: true,
                 xtype: 'combobox',
                 store: storeLoadUnitInvoiceDetail,
+                queryMode: 'local',
                 displayField: 'name',
                 valueField: 'id'
             },

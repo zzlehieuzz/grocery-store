@@ -13,19 +13,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Invoice extends BaseEntity
 {
-  /**
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   * @ORM\Column(name="id", type="integer", nullable=false, options={"comment" = "1:Id"})
-   * @Assert\Type(type="integer")
-   */
-  private $id;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"comment" = "1:Id"})
+     * @Assert\Type(type="integer")
+     */
+    private $id;
 
-  /**
-   * @ORM\Column(name="invoice_number", type="string", nullable=true, options={"comment" = "2:invoice_number"})
-   * @Assert\Type(type="string")
-   */
-  private $invoiceNumber;
+    /**
+     * @ORM\Column(name="invoice_number", type="string", nullable=true, options={"comment" = "2:invoice_number"})
+     * @Assert\Type(type="string")
+     */
+    private $invoiceNumber;
 
     /**
      * @ORM\Column(name="create_invoice_date", type="date", nullable=true)
@@ -76,6 +76,12 @@ class Invoice extends BaseEntity
     private $paymentStatus;
 
     /**
+     * @ORM\Column(name="delivery_Status", type="integer", nullable=false, options={"comment" = "10:delivery_Status"})
+     * @Assert\Type(type="integer")
+     */
+    private $deliveryStatus;
+
+    /**
      * @ORM\Column(name="amount", type="integer", nullable=true, options={"comment" = "11:amount"})
      * @Assert\Type(type="integer")
      */
@@ -93,58 +99,59 @@ class Invoice extends BaseEntity
      */
     private $description;
 
-  public function __construct()
-  {
-      $this->paymentStatus = 1;
-  }
+    public function __construct()
+    {
+        $this->paymentStatus = 1;
+        $this->deliveryStatus = 1;
+    }
 
-  /**
-   * @param mixed $id
-   */
-  public function setId($id)
-  {
-    $this->id = $id;
-  }
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+      $this->id = $id;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+      return $this->id;
+    }
 
-  /**
-   * @param mixed $invoiceNumber
-   */
-  public function setInvoiceNumber($invoiceNumber)
-  {
-    $this->invoiceNumber = $invoiceNumber;
-  }
+    /**
+     * @param mixed $invoiceNumber
+     */
+    public function setInvoiceNumber($invoiceNumber)
+    {
+      $this->invoiceNumber = $invoiceNumber;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getInvoiceNumber()
-  {
-    return $this->invoiceNumber;
-  }
+    /**
+     * @return mixed
+     */
+    public function getInvoiceNumber()
+    {
+      return $this->invoiceNumber;
+    }
 
-  /**
-   * @param mixed $createInvoiceDate
-   */
-  public function setCreateInvoiceDate($createInvoiceDate)
-  {
-    $this->createInvoiceDate = $createInvoiceDate;
-  }
+    /**
+     * @param mixed $createInvoiceDate
+     */
+    public function setCreateInvoiceDate($createInvoiceDate)
+    {
+      $this->createInvoiceDate = $createInvoiceDate;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getCreateInvoiceDate()
-  {
-    return $this->createInvoiceDate;
-  }
+    /**
+     * @return mixed
+     */
+    public function getCreateInvoiceDate()
+    {
+      return $this->createInvoiceDate;
+    }
 
     /**
      * @param mixed $subject
@@ -306,5 +313,19 @@ class Invoice extends BaseEntity
         return $this->description;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDeliveryStatus()
+    {
+      return $this->deliveryStatus;
+    }
 
+    /**
+     * @param mixed $deliveryStatus
+     */
+    public function setDeliveryStatus($deliveryStatus)
+    {
+      $this->deliveryStatus = $deliveryStatus;
+    }
 }

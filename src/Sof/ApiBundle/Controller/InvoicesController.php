@@ -148,24 +148,14 @@ class InvoicesController extends BaseController
                     $subjectName = $entitySubject['name'];
                 }
 
-                $paymentStatus = "";
-                if ($entity['invoiceType'] == 2) {
-                    if ($entity['paymentStatus'] == 1) {
-                        $paymentStatus = 'Chưa Giao Hàng';
-                    } elseif ($entity['paymentStatus'] == 3) {
-                        $paymentStatus = 'Đã Giao Hàng';
-                    } else {
-                        $paymentStatus = '';
-                    }
-                }
-
                 $arrData[$key]['id']                = $entity['id'];
                 $arrData[$key]['subjectName']       = $subjectName;
                 $arrData[$key]['invoiceType']       = $entity['invoiceType'];
-                $arrData[$key]['invoiceTypeText']   = $entity['invoiceType'] == 1 ? 'Phiếu Nhập': 'Phiếu Xuất';
+                $arrData[$key]['invoiceTypeText']   = $entity['invoiceType'] == InvoiceConst::INVOICE_TYPE_1 ? InvoiceConst::INVOICE_TYPE_TEXT_1 : InvoiceConst::INVOICE_TYPE_TEXT_2;
                 $arrData[$key]['invoiceNumber']     = $entity['invoiceNumber'];
                 $arrData[$key]['createInvoiceDate'] = $entity['createInvoiceDate'] ? $entity['createInvoiceDate']->format('d/m/Y') : null;
-                $arrData[$key]['paymentStatus']     = $paymentStatus;
+                $arrData[$key]['paymentStatus']     = $entity['paymentStatus'];
+                $arrData[$key]['deliveryStatus']     = $entity['deliveryStatus'];
                 $arrData[$key]['description']       = $entity['description'];
                 $arrData[$key]['amount']            = $entity['amount'].' VNĐ';
             }
@@ -245,11 +235,11 @@ class InvoicesController extends BaseController
     {
         $entityService = $this->getEntityService();
 
-        $params        =  $this->get('request')->getContent();
-        $params = json_decode($params);
-        $formParent = (array)$params->form_fields_value;
+        $params            =  $this->get('request')->getContent();
+        $params            = json_decode($params);
+        $formParent        = (array)$params->form_fields_value;
         $form_fields_value = (array)$formParent[0];
-        $grid_value = (array)$params->grid_value;
+        $grid_value        = (array)$params->grid_value;
 
         $amount = 0;
         if ($grid_value){
@@ -283,16 +273,22 @@ class InvoicesController extends BaseController
             if ($invoiceId){
                 $entityService->dqlUpdate(
                     'Invoice',
-                    array('update' => $form_fields_value,
-                        'conditions' => array('id' => $invoiceId)
+                    array('update'     => $form_fields_value,
+                          'conditions' => array('id' => $invoiceId)
                     )
                 );
             }
-
         } else {
             //Insert
             unset($form_fields_value['id']);
-            $form_fields_value['paymentStatus'] = InvoiceConst::PAYMENT_STATUS_1;
+            if($form_fields_value['invoiceType'] == InvoiceConst::INVOICE_TYPE_1) {
+                $form_fields_value['paymentStatus']  = 0;
+                $form_fields_value['deliveryStatus'] = 0;
+            } else {
+                $form_fields_value['paymentStatus']  = InvoiceConst::PAYMENT_STATUS_1;
+                $form_fields_value['deliveryStatus'] = InvoiceConst::DELIVERY_STATUS_1;
+            }
+
             $invoiceId = $entityService->rawSqlInsert('Invoice', array('insert' => $form_fields_value));
         }
 
@@ -308,7 +304,7 @@ class InvoicesController extends BaseController
             $arrInsert = array();
             $arrUpdate = array();
             $arrDelete = array();
-            $arrNewId = array();
+            $arrNewId  = array();
 
             foreach ($grid_value as $rowValue) {
                 $arrData = (array)$rowValue;
@@ -322,14 +318,12 @@ class InvoicesController extends BaseController
                 }
 
                 if (count($arrInvoiceDetail) > 0 && isset($arrData['id']) && $arrData['id']) {
-
                     for ($i = 0; $i < count($arrInvoiceDetail); $i++){
                         if ($arrInvoiceDetail[$i]['id'] == $arrData['id']) {
                             $arrData['invoiceId'] = $invoiceId;
                             $arrUpdate[] = $arrData;
                         }
                     }
-
                 }
             }
 
@@ -350,8 +344,8 @@ class InvoicesController extends BaseController
                     unset($arrEntity0['id']);
                     $entityService->dqlUpdate(
                         'InvoiceDetail',
-                        array('update' => $arrEntity0,
-                            'conditions' => array('id' => $id)
+                        array('update'     => $arrEntity0,
+                              'conditions' => array('id' => $id)
                         )
                     );
                 }

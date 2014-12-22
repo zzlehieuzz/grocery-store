@@ -13,9 +13,10 @@ var objectField = [{name: 'id',                type: 'int'},
                    {name: 'driverId',          type: 'int'},
                    {name: 'invoiceNumber',     type: 'string'},
                    {name: 'customerName',      type: 'string'},
-                   {name:'createInvoiceDate',  type:'string'},
+                   {name: 'createInvoiceDate',  type:'string'},
                    {name: 'address',           type: 'string'},
-                   {name: 'paymentStatus',      type: 'int'},
+                   {name: 'paymentStatus',      type: 'string'},
+                   {name: 'paymentStatus',      type: 'string'},
                    {name: 'phoneNumber',       type: 'string'}];
 
 var objFieldDriver = [{name: 'id',   type: 'int'},
@@ -113,29 +114,6 @@ Ext.define('SrcPageUrl.Delivery.List', {
                 flex: 1,
                 dataIndex: 'address',
                 style: 'text-align:center;'
-            }, {
-                text: "payment status".Translator('Invoice'),
-                width: 100,
-                dataIndex: 'paymentStatus',
-                style: 'text-align:center;',
-                renderer:function(value){
-                    var paymentStatus;
-                    switch (value) {
-                        case 1:
-                            paymentStatus = 'Chưa giao hàng';
-                            break;
-                        case 2:
-                            paymentStatus = 'Đang Thanh Toán';
-                            break;
-                        case 3:
-                            paymentStatus = 'Đã giao hàng';
-                            break;
-                        default:
-                            paymentStatus = '';
-                    }
-
-                    return paymentStatus;
-                }
             }
         ];
 
@@ -268,8 +246,8 @@ Ext.define('SrcPageUrl.Delivery.List', {
                             }
                         }
                     }, '-',{
-                        text:'remove'.Translator('Common'),
-                        tooltip:'remove'.Translator('Common'),
+                        text:'undo'.Translator('Common'),
+                        tooltip:'undo'.Translator('Common'),
                         iconCls:'remove',
                         listeners: {
                             click: function () {

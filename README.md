@@ -79,3 +79,15 @@ MySQL Password : test123456
 MySQL Server: localhost          
 
 Cpanel URL: http://103.18.5.67:2222/
+
+chincchi.com
+ftp: 125.253.124.100
+http://125.253.124.100:2082/login.php3
+username : chincchi
+password: thanhdp123456
+
+db:
+chincchi_store
+store_123
+
+ALTER TABLE invoice ADD delivery_Status INT NOT NULL COMMENT '10:delivery_Status';
