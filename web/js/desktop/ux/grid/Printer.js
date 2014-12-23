@@ -398,7 +398,6 @@ Ext.define("MyUx.grid.Printer", {
             var dataGrids = "";
 
             if (extData) {
-
                 Ext.each(extData, function (record) {
 
                 dataForms = '<table class="no-border" border="0px" style="width: 70%">'+
