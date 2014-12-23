@@ -129,7 +129,9 @@ Locale.module('Liabilities', {
 
     //message
     'please choice a invoice': 'Làm ơn chọn số phiếu.',
-    'please choice a customer': 'Làm ơn chọn khách hàng.'
+    'please choice a customer': 'Làm ơn chọn khách hàng.',
+
+    'debit': 'Tiền nợ'
 });
 
 Locale.module('Invoice', {
@@ -195,7 +197,9 @@ Locale.module('Delivery', {
     'please choose invoice': 'Làm ơn chọn phiếu xuất.',
 
     //button
-    'accept': 'Xác nhận hóa đơn'
+    'accept': 'Xác nhận hóa đơn',
+    'accept delivery': 'Xác nhận giao hàng',
+    'undo delivery': 'Hũy giao hàng'
 });
 
 Locale.module('Report', {

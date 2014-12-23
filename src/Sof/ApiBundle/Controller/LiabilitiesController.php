@@ -103,9 +103,9 @@ class LiabilitiesController extends BaseController
     }
 
     /**
-     * @Route("/Liabilities_AcceptDelivery", name="Liabilities_AcceptDelivery")
+     * @Route("/Liabilities_AcceptAll", name="Liabilities_AcceptAll")
      */
-    public function Liabilities_AcceptDeliveryAction()
+    public function Liabilities_AcceptAllAction()
     {
         $params = $this->getJsonParams();
 
@@ -123,4 +123,47 @@ class LiabilitiesController extends BaseController
 
         return $this->jsonResponse(array('data' => $params));
     }
+
+    /**
+     * @Route("/Liabilities_AcceptDelivery", name="Liabilities_AcceptDelivery")
+     */
+    public function Liabilities_AcceptDeliveryAction()
+    {
+        $params = $this->getJsonParams();
+
+        if($params) {
+            $this->getEntityService()->dqlUpdate(
+              'Invoice',
+              array('update' => array('deliveryStatus' => InvoiceConst::DELIVERY_STATUS_2),
+                    'conditions' => array('id' => $params)
+              )
+            );
+
+            $this->getEntityService()->completeTransaction();
+        }
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
+    /**
+     * @Route("/Liabilities_UnAcceptDelivery", name="Liabilities_UnAcceptDelivery")
+     */
+    public function Liabilities_UnAcceptDeliveryAction()
+    {
+        $params = $this->getJsonParams();
+
+        if($params) {
+            $this->getEntityService()->dqlUpdate(
+              'Invoice',
+              array('update' => array('deliveryStatus' => InvoiceConst::DELIVERY_STATUS_1),
+                    'conditions' => array('id' => $params)
+              )
+            );
+
+            $this->getEntityService()->completeTransaction();
+        }
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
 }

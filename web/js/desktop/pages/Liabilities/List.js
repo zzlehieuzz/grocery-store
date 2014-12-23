@@ -12,6 +12,8 @@ var objectField = [{name: 'id',            type: 'int'},
                    {name: 'customerId',    type: 'int'},
                    {name: 'invoiceId',     type: 'int'},
                    {name: 'invoiceNumber', type: 'string'},
+                   {name: 'paymentStatus', type: 'int'},
+                   {name: 'deliveryStatus', type: 'int'},
                    {name: 'name',          type: 'string'},
                    {name: 'amount',        type: 'int'},
                    {name: 'price',         type: 'float'}];
@@ -117,7 +119,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                     decimalPrecision: 0
                 }
             }, {
-                text: "price".Translator('Common'),
+                text: "debit".Translator('Liabilities'),
                 flex: 1,
                 dataIndex: 'price',
                 style: 'text-align:center;',
@@ -178,7 +180,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                 decimalPrecision: 0,
                 allowBlank: false
             }, {
-                fieldLabel: 'price'.Translator('Common'),
+                fieldLabel: 'debit'.Translator('Liabilities'),
                 name: 'liabilitiesPrice',
                 id: 'liabilitiesPrice',
                 allowBlank: false,
@@ -339,7 +341,16 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         },
                         features: [{
                             ftype: 'groupingsummary',
-                            groupHeaderTpl: Ext.create('Ext.XTemplate', '<input type="radio" name="rdoInvoiceId" class="rdoInvoiceId" customerId="' + '{[values.rows[0].data.customerId]}' + '" value="' + '{[values.rows[0].data.invoiceId]}' + '">' + '<label>' + 'invoice number'.Translator('Invoice') + ': {name}' + '</label>'),
+                            groupHeaderTpl: Ext.create(
+                              'Ext.XTemplate',
+                              '<input type="radio" name="rdoInvoiceId" class="rdoInvoiceId" customerId="'
+                              + '{[values.rows[0].data.customerId]}'
+                              + '" value="' + '{[values.rows[0].data.invoiceId]}'
+                              + '">'
+                              + '<label>'
+                              + 'invoice number'.Translator('Invoice') + ': {name} - '
+                              + '{[values.rows[0].data.deliveryStatus == 1 ? "Chưa giao hàng" : "Đã giao hàng"]}'
+                              + '</label>'),
                             hideGroupedHeader: true,
                             enableGroupingMenu: true,
                             collapsible: false
@@ -351,40 +362,6 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         }
                     }],
                     tbar:[{
-                        text:'accept'.Translator('Delivery'),
-                        tooltip:'accept'.Translator('Delivery'),
-                        iconCls:'accept',
-                        handler : function() {
-                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked");
-
-                            if (rdoInvoiceId.length == 1) {
-                                Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
-                                    if(btn === 'yes') {
-                                        Ext.Ajax.request({
-                                            url: MyUtil.Path.getPathAction("Liabilities_AcceptDelivery"),
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            jsonData: {'params' : rdoInvoiceId[0].value},
-                                            waitTitle: 'processing'.Translator('Common'),
-                                            waitMsg: 'sending data'.Translator('Common'),
-                                            scope: this,
-                                            success: function(msg) {
-                                                if (msg.status) {
-                                                    storeLoadLiabilities.reload();
-                                                    storeLoadLiabilitiesCustomer.reload();
-                                                }
-                                            },
-                                            failure: function(msg) {
-                                                console.log('failure');
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
-                            }
-                        }
-                    }, '-', {
                         text:'add'.Translator('Common'),
                         tooltip:'add'.Translator('Common'),
                         iconCls:'add',
@@ -474,6 +451,109 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                 } else {
                                     MyUtil.Message.MessageWarning('please choice a customer'.Translator('Liabilities'));
                                 }
+                            }
+                        }
+                    }],
+                    bbar:[{
+                        text:'accept delivery'.Translator('Delivery'),
+                        tooltip:'accept delivery'.Translator('Delivery'),
+                        iconCls:'accept',
+                        handler : function() {
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked");
+
+                            if (rdoInvoiceId.length == 1) {
+                                Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
+                                    if(btn === 'yes') {
+                                        Ext.Ajax.request({
+                                            url: MyUtil.Path.getPathAction("Liabilities_AcceptDelivery"),
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            jsonData: {'params' : rdoInvoiceId[0].value},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
+                                            scope: this,
+                                            success: function(msg) {
+                                                if (msg.status) {
+                                                    storeLoadLiabilities.reload();
+                                                    storeLoadLiabilitiesCustomer.reload();
+                                                }
+                                            },
+                                            failure: function(msg) {
+                                                console.log('failure');
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
+                            }
+                        }
+                    }, {
+                        text:'undo delivery'.Translator('Delivery'),
+                        tooltip:'undo delivery'.Translator('Delivery'),
+                        iconCls:'remove',
+                        handler : function() {
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked");
+
+                            if (rdoInvoiceId.length == 1) {
+                                Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
+                                    if(btn === 'yes') {
+                                        Ext.Ajax.request({
+                                            url: MyUtil.Path.getPathAction("Liabilities_UnAcceptDelivery"),
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            jsonData: {'params' : rdoInvoiceId[0].value},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
+                                            scope: this,
+                                            success: function(msg) {
+                                                if (msg.status) {
+                                                    storeLoadLiabilities.reload();
+                                                    storeLoadLiabilitiesCustomer.reload();
+                                                }
+                                            },
+                                            failure: function(msg) {
+                                                console.log('failure');
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
+                            }
+                        }
+                    }, '->', {
+                        text:'accept'.Translator('Delivery'),
+                        tooltip:'accept'.Translator('Delivery'),
+                        iconCls:'accept',
+                        handler : function() {
+                            var rdoInvoiceId = Ext.query(".rdoInvoiceId:checked");
+
+                            if (rdoInvoiceId.length == 1) {
+                                Ext.MessageBox.confirm('warning'.Translator('Common'), 'are you sure'.Translator('Common'), function(btn){
+                                    if(btn === 'yes') {
+                                        Ext.Ajax.request({
+                                            url: MyUtil.Path.getPathAction("Liabilities_AcceptAll"),
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            jsonData: {'params' : rdoInvoiceId[0].value},
+                                            waitTitle: 'processing'.Translator('Common'),
+                                            waitMsg: 'sending data'.Translator('Common'),
+                                            scope: this,
+                                            success: function(msg) {
+                                                if (msg.status) {
+                                                    storeLoadLiabilities.reload();
+                                                    storeLoadLiabilitiesCustomer.reload();
+                                                }
+                                            },
+                                            failure: function(msg) {
+                                                console.log('failure');
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
                             }
                         }
                     }]
