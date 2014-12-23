@@ -238,11 +238,12 @@ Ext.define("MyUx.grid.Printer", {
             //remove columns that do not contains dataIndex or dataIndex is empty. for example: columns filter or columns button
             var clearColumns = [];
             Ext.each(columns, function (column, row) {
+
                 if (column && column.xtype === 'rownumberer'){
                     column.text = 'STT';
                     clearColumns.push(column);
                 }
-                else if ((column) && (!Ext.isEmpty(column.dataIndex) && !column.hidden)) {
+                else if ((column) && (!Ext.isEmpty(column.dataIndex) && !column.hidden && column.text != 'Mã sản phẩm')) {
                     clearColumns.push(column);
                 }
             });
@@ -474,10 +475,6 @@ Ext.define("MyUx.grid.Printer", {
                                                     '</td>'+
 
                                                     '<td>'+
-                                                        recordDetail.productCode+
-                                                    '</td>'+
-
-                                                    '<td>'+
                                                         recordDetail.unitName+
                                                     '</td>'+
 
@@ -510,10 +507,6 @@ Ext.define("MyUx.grid.Printer", {
                             '</th>'+
 
                             '<th>'+
-                                'product code'.Translator('Product')+
-                            '</th>'+
-
-                            '<th>'+
                                 'unit'.Translator('Product')+
                             '</th>'+
 
@@ -536,7 +529,7 @@ Ext.define("MyUx.grid.Printer", {
 
                         //Row total
                         '<tr>'+
-                            '<td style="text-align: right;" colspan="6">'+
+                            '<td style="text-align: right;" colspan="5">'+
                             '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
                             '</td>'+
 
