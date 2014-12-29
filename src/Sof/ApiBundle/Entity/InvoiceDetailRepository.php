@@ -55,14 +55,24 @@ class InvoiceDetailRepository extends BaseRepository
     }
 
     public function getData_ReportRevenue($fromDate, $toDate, $invoiceType) {
-        $invoice = self::ENTITY_BUNDLE . ":Invoice";
+        $invoice     = self::ENTITY_BUNDLE . ":Invoice";
+        $liabilities = self::ENTITY_BUNDLE . ":Liabilities";
 
         $query = $this->querySimpleEntities(array(
             'selects' => array("SUM(entity.price) AS price")
         ));
         $query->addSelect("DATE_FORMAT(invoice.createInvoiceDate, '%Y-%m') AS createInvoiceDate");
         $query->leftJoin($invoice, 'invoice', 'WITH', "entity.invoiceId = invoice.id");
-        $query->groupBy('createInvoiceDate');
+        if($invoiceType == InvoiceConst::INVOICE_TYPE_2) {
+            $query->addSelect('SUM(l.price) AS liabilitiesPrice');
+            $query->leftJoin($liabilities, 'l', 'WITH', "entity.invoiceId = l.invoiceId");
+
+            $query->andWhere('invoice.paymentStatus = :paymentStatus');
+            $query->andWhere('invoice.deliveryStatus = :deliveryStatus');
+            $query->setParameter('paymentStatus', InvoiceConst::PAYMENT_STATUS_3);
+            $query->setParameter('deliveryStatus', InvoiceConst::DELIVERY_STATUS_2);
+        }
+
         if ($fromDate) {
             $query->andWhere('invoice.createInvoiceDate >= :fromDate')
                   ->setParameter('fromDate', $fromDate);
@@ -75,6 +85,8 @@ class InvoiceDetailRepository extends BaseRepository
             $query->andWhere('invoice.invoiceType = :invoiceType')
                   ->setParameter('invoiceType', $invoiceType);
         }
+
+        $query->groupBy('createInvoiceDate');
 
         return $query->getQuery()->getArrayResult();
     }

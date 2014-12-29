@@ -110,13 +110,13 @@ class ReportController extends BaseController
         }
 
         $default = 0;
-
         if ($arrInvoiceInput) {
             foreach ($arrInvoiceInput as $invoiceInputItem) {
                 $input  = $invoiceInputItem['price'];
                 $output = $default;
                 if(isset($result1[$invoiceInputItem['createInvoiceDate']])) {
                     $output = $result1[$invoiceInputItem['createInvoiceDate']]['price'];
+                    $output = $output - $result1[$invoiceInputItem['createInvoiceDate']]['liabilitiesPrice'];
                 }
                 $remain = $output - $input;
 
