@@ -117,6 +117,7 @@ Ext.define('SrcPageUrl.Unit.List', {
                     [{
                         border: false,
                         xtype: 'grid',
+                        columnLines: true,
                         id: 'grid-unit-list',
                         store: storeLoadUnit,
                         loadMask:true,

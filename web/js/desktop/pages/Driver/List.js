@@ -111,6 +111,7 @@ Ext.define('SrcPageUrl.Driver.List', {
                         selModel: rowModel,
                         loadMask: true,
                         columns: columnsDriver,
+                        columnLines: true,
                         plugins: rowEditing,
                         listeners: {
                             beforerender: function () {

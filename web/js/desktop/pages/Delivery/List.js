@@ -162,6 +162,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         loadMask: true,
                         stripeRows : true,
                         selModel: Ext.create('Ext.selection.RowModel'),
+                        columnLines: true,
                         columns: columnsDriver,
                         trackMouseOver: true,
                         viewConfig: {
@@ -195,6 +196,7 @@ Ext.define('SrcPageUrl.Delivery.List', {
                         loadMask: true,
                         selModel: rowModel,
                         columns: columnsDriverInvoice,
+                        columnLines: true,
                         viewConfig: {
                             emptyText: 'no records found'.Translator('Common')
                         },

@@ -134,6 +134,7 @@ Ext.define('SrcPageUrl.Distributor.List', {
                         selModel: Ext.create('Ext.selection.RowModel', {mode : "MULTI"}),
                         plugins: rowEditing,
                         columns: columnsDistributor,
+                        columnLines: true,
                         listeners:{
                             beforerender: function () {
                                 this.store.load();

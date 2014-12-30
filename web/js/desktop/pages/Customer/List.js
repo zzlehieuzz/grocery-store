@@ -133,6 +133,7 @@ Ext.define('SrcPageUrl.Customer.List', {
                         selModel: rowModel,
                         plugins: rowEditing,
                         columns: columnsCustomer,
+                        columnLines: true,
                         listeners:{
                             beforerender: function () {
                                 this.store.load();

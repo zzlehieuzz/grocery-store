@@ -336,6 +336,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                         selModel: rowModel,
                         plugins: rowEditing,
                         columns: columnsLiabilities,
+                        columnLines: true,
                         viewConfig: {
                             emptyText: 'no records found'.Translator('Common')
                         },
