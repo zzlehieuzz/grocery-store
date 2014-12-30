@@ -50,8 +50,9 @@ class InvoiceRepository extends BaseRepository
         $query = $this->querySimpleEntities(array(
                 'selects' => array('id', 'invoiceNumber', 'createInvoiceDate'),
                 'conditions' => array(
-                    'invoiceType'   => InvoiceConst::INVOICE_TYPE_2,
-                    'paymentStatus' => InvoiceConst::PAYMENT_STATUS_1
+                    'invoiceType'    => InvoiceConst::INVOICE_TYPE_2,
+                    'deliveryStatus' => InvoiceConst::DELIVERY_STATUS_1,
+//                    'paymentStatus'  => InvoiceConst::PAYMENT_STATUS_1
                 )
             ));
         $query->addSelect('c.name AS customerName');
