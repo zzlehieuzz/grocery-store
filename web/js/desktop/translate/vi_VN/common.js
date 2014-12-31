@@ -28,6 +28,7 @@ Locale.module('Common', {
     'are you sure': 'Bạn đã chắc chắn ?',
     'processing': 'Đang xử lý ...',
     'sending data': 'Chuyển dữ liệu ...',
+    'none selected': 'Chưa chọn',
 
     'please choose 1 record has data': 'Chọn 1 dòng có dữ liệu.',
     'please choose 1 record to delete': 'Chọn 1 dòng để xóa!',

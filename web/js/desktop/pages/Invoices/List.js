@@ -70,6 +70,16 @@ var objectGridField = [{name: 'id', type: 'int'},
     {name: 'quantity', type: 'int'},
     {name: 'amount', type: 'int'}];
 
+var objectProductUnitField = [
+    {name: 'id', type: 'int'},
+    {name: 'salePrice', type: 'string'},
+    {name: 'originalPrice', type: 'string'},
+    {name: 'unitId1', type: 'int'},
+    {name: 'unitId2', type: 'int'},
+    {name: 'inputQuantity', type: 'int'},
+    {name: 'outputQuantity', type: 'int'},
+    {name: 'convertAmount', type: 'int'}];
+
 //FormField
 var objectFormField = [{name: 'id', type: 'int'},
     {name: 'invoiceNumber', type: 'string'},
@@ -125,6 +135,7 @@ MyUtil.Object.defineModel('CustomerCmb', objectDistributorField);
 MyUtil.Object.defineModel('ProductCmb', objectProductField);
 MyUtil.Object.defineModel('InvoiceNumber', objectInvoiceNumber);
 MyUtil.Object.defineModel('Unit', objectUnitInvoiceDetailField);
+MyUtil.Object.defineModel('ProductUnit', objectProductUnitField);
 
 var storeLoadInput = new Ext.data.JsonStore({
     model: 'Input',
@@ -168,6 +179,14 @@ var storeLoadUnitInvoiceDetail = new Ext.data.JsonStore({
     model: 'Unit',
     proxy: new Ext.data.HttpProxy({
         url: MyUtil.Path.getPathAction("Unit_LoadAll"),
+        reader: readerJson
+    }), autoLoad: false
+});
+
+var storeLoadUnitByProduct = new Ext.data.JsonStore({
+    model: 'ProductUnit',
+    proxy: new Ext.data.HttpProxy({
+        url: MyUtil.Path.getPathAction("Product_LoadUnitByProductId"),
         reader: readerJson
     }), autoLoad: false
 });
@@ -472,12 +491,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                     return Ext.String.format('<div id="{0}"></div>', id);
                 }
             }
-            //, {
-            //    text: "state".Translator('Invoice'),
-            //    width: 100,
-            //    style: 'text-align:center;',
-            //    dataIndex: 'paymentStatus'
-            //}
         ];
 
         var rowModel = Ext.create('Ext.selection.RowModel', {mode: "MULTI"});
@@ -773,6 +786,23 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                             } else salePrice =  0;
 
                             selModel.getSelection()[0].set('price', parseFloat(salePrice));
+
+                            storeLoadUnitByProduct.load({
+                                params:{productId: rec.data.id},
+                                scope: this,
+                                callback: function(records, operation, success) {
+                                    if (success) {
+                                        if(records.length > 0) {
+                                            console.log(records[0].data);
+                                        }
+                                    } else {
+                                        console.log('error');
+                                    }
+                                }
+                            });
+
+
+
                         }
                     }
                 }
@@ -784,51 +814,6 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
 
                     if (rec)
                         return rec.data.name;
-                    else
-                        return value;
-                } else return "";
-            }
-        }, {
-            header: 'product code'.Translator('Product'),
-            dataIndex: 'productId',
-            style: 'text-align:center;',
-            editor: {
-                xtype: 'combobox',
-                listConfig: {minWidth: 100},
-                store: storeLoadProductCmb,
-                displayField: 'code',
-                valueField: 'id',
-                queryMode: 'local',
-                listeners: {
-                    change: function (field, newValue, o, e) {
-                        var grid = this.up().up();
-                        var selModel = grid.getSelectionModel();
-
-                        if (storeLoadInput.data.items[0].data.id == 0 && selModel.getSelection()[0].data.id == 0) {
-                            var salePrice = 0;
-
-                            if (newValue != 0 && newValue != "") {
-                                var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', newValue);
-                                var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
-
-                                if (rec)
-                                    salePrice =  rec.data.salePrice;
-                                else
-                                    salePrice =  0;
-                            } else salePrice =  0;
-
-                            selModel.getSelection()[0].set('price', parseFloat(salePrice));
-                        }
-                    }
-                }
-            },
-            renderer: function (value) {
-                if (value != 0 && value != "") {
-                    var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', value);
-                    var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
-
-                    if (rec)
-                        return rec.data.code;
                     else
                         return value;
                 } else return "";

@@ -141,4 +141,19 @@ class ProductController extends BaseController
 
         return $this->jsonResponse(array('data' => $params));
     }
+
+
+    /**
+     * @Route("/Product_LoadUnitByProductId", name="Product_LoadUnitByProductId")
+     */
+    public function Product_LoadUnitByProductIdAction()
+    {
+        $productId = $this->getRequestData()->get('productId');
+        $unitDetail      = array();
+        if ($productId) {
+            $unitDetail = $this->getEntityService()->selectOnDefault('ProductUnit:getDataUnitByProductId_Invoice', $productId);
+        }
+
+        return $this->jsonResponse(array('data' => $unitDetail));
+    }
 }

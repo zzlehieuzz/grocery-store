@@ -2,8 +2,10 @@
 
 namespace Sof\ApiBundle\Entity;
 
+use Sof\ApiBundle\Entity\ValueConst\InvoiceConst;
 use Sof\ApiBundle\Lib\Config;
 
+use Sof\ApiBundle\Lib\SofUtil;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -18,5 +20,31 @@ use Doctrine\ORM\NoResultException;
  */
 class ProductUnitRepository extends BaseRepository
 {
+    /**
+     * @return Array
+     *
+     * @author HieuNLD 2014/11/13
+     */
+    public function getDataUnitByProductId_Invoice($productId) {
+        $query = $this->querySimpleEntities(array(
+          'selects' => array('entity.productId AS id', 'entity.unitId1', 'entity.unitId2' , 'entity.convertAmount')
+        ));
+        $query->addSelect('p.salePrice, p.originalPrice');
+        $query->addSelect('entity.unitId1, entity.unitId2 , entity.convertAmount');
+        $query->addSelect('COUNT(ind1.quantity) AS inputQuantity');
+        $query->addSelect('COUNT(ind2.quantity) AS outputQuantity');
+        $query->innerJoin(self::ENTITY_BUNDLE . ":Product", 'p', 'WITH', "entity.productId = p.id");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Unit", 'u1', 'WITH', "entity.unitId1 = u1.id");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Unit", 'u2', 'WITH', "entity.unitId2 = u2.id");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":InvoiceDetail", 'ind1', 'WITH', "ind1.productId = p.id");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":InvoiceDetail", 'ind2', 'WITH', "ind2.productId = p.id");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'in1', 'WITH', "in1.id = ind1.invoiceId AND in1.invoiceType = :invoiceType1");
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'in2', 'WITH', "in2.id = ind2.invoiceId AND in2.invoiceType = :invoiceType2");
+        $query->andWhere('entity.productId = :productId')
+              ->setParameter('productId', $productId)
+              ->setParameter('invoiceType1', InvoiceConst::INVOICE_TYPE_1)
+              ->setParameter('invoiceType2', InvoiceConst::INVOICE_TYPE_2);
 
+        return SofUtil::formatScalarArrayList($query->getQuery()->getScalarResult());
+    }
 }

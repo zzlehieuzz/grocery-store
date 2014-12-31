@@ -306,7 +306,7 @@ class BaseController extends Controller implements FilterControllerInterface
     protected function getPagingParams()
     {
         $params  = array();
-        $request = $this->get('request');
+        $request = $this->getRequestData();
 
         $params['limit'] = $request->get('limit');
         $params['page']  = $request->get('page');
