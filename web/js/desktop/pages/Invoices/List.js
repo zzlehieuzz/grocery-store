@@ -758,6 +758,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             width: 30
         }, {
             header: 'product name'.Translator('Product'),
+            width: 200,
             dataIndex: 'productId',
             style: 'text-align:center;',
             editor: {
@@ -773,36 +774,46 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         var selModel = grid.getSelectionModel();
 
                         if (storeLoadInput.data.items[0].data.id == 0 && selModel.getSelection()[0].data.id == 0) {
-                            var salePrice = 0;
+                            var price = 0;
 
                             if (newValue != 0 && newValue != "") {
                                 var index = Ext.StoreManager.lookup(storeLoadProductCmb).findExact('id', newValue);
-                                var rec = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
+                                var rec   = Ext.StoreManager.lookup(storeLoadProductCmb).getAt(index);
 
-                                if (rec)
-                                    salePrice =  rec.data.salePrice;
-                                else
-                                    salePrice =  0;
-                            } else salePrice =  0;
+                                storeLoadUnitByProduct.load({
+                                    params:{productId: rec.data.id},
+                                    scope: this,
+                                    callback: function(records, operation, success) {
+                                        if (success) {
+                                            if(records.length > 0) {
+                                                var unitByProduct  = records[0].data,
+                                                    inputQuantity  = unitByProduct.inputQuantity,
+                                                    outputQuantity = unitByProduct.outputQuantity;
 
-                            selModel.getSelection()[0].set('price', parseFloat(salePrice));
+                                                var inOutRadio = Ext.ComponentQuery.query('[name=invoiceTypeRadio]')[0].getValue().rb;
+                                                if (inOutRadio == 1) {
+                                                    price = unitByProduct.originalPrice;
+                                                } else if(inOutRadio == 2) {
+                                                    var defQuantity = inputQuantity - outputQuantity;
+                                                    if(defQuantity <= 0) {
+                                                        MyUtil.Message.MessageWarning('end product'.Translator('Invoice'));
+                                                        return false;
+                                                    }
+                                                    else if(5 >= defQuantity) {
+                                                        MyUtil.Message.MessageWarning(
+                                                          'still <= 5 product'.Translator('Invoice')
+                                                          + '- [ ' + defQuantity + ' ]');
+                                                    }
 
-                            storeLoadUnitByProduct.load({
-                                params:{productId: rec.data.id},
-                                scope: this,
-                                callback: function(records, operation, success) {
-                                    if (success) {
-                                        if(records.length > 0) {
-                                            console.log(records[0].data);
-                                        }
-                                    } else {
-                                        console.log('error');
+                                                    price = unitByProduct.salePrice;
+                                                    selModel.getSelection()[0].set('unit', unitByProduct.unitId1);
+                                                }
+                                            }
+                                        } else console.log('error');
+                                        selModel.getSelection()[0].set('price', parseFloat(price));
                                     }
-                                }
-                            });
-
-
-
+                                });
+                            }
                         }
                     }
                 }
@@ -820,7 +831,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             }
         }, {
             text: "unit".Translator('Product'),
-            flex: 1,
+            width: 80,
             dataIndex: 'unit',
             style: 'text-align:center;',
             editor: {
@@ -829,7 +840,51 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 store: storeLoadUnitInvoiceDetail,
                 queryMode: 'local',
                 displayField: 'name',
-                valueField: 'id'
+                valueField: 'id',
+                listeners: {
+                    change: function (field, newValue, o, e) {
+                        var amount = 0, price = 0;
+
+                        if (newValue != 0 && newValue != "") {
+                            var grid         = this.up().up(),
+                                selModel     = grid.getSelectionModel(),
+                                selectedData = selModel.getSelection()[0].getData();
+
+                            storeLoadUnitByProduct.load({
+                                params:{productId: selectedData.productId},
+                                scope: this,
+                                callback: function(records, operation, success) {
+                                    if (success) {
+                                        if(records.length > 0) {
+                                            var unitByProduct = records[0].data,
+                                                unitId1       = unitByProduct.unitId1,
+                                                unitId2       = unitByProduct.unitId2;
+                                            var inOutRadio = Ext.ComponentQuery.query('[name=invoiceTypeRadio]')[0].getValue().rb;
+
+                                            if (inOutRadio == 1) {
+
+                                            } else if(inOutRadio == 2) {
+                                                var quantity = selectedData.quantity;
+                                                price  = parseFloat(unitByProduct.salePrice);
+
+                                                if(unitId1 == newValue ) {
+                                                    amount = price * quantity;
+                                                } else if(unitId2 == newValue) {
+                                                    price = Math.ceil(price / unitByProduct.convertAmount);
+                                                    amount = price * quantity;
+                                                    selModel.getSelection()[0].set('price', price);
+                                                } else amount = 0; price = 0;
+                                            }
+                                            selModel.getSelection()[0].set('price', price);
+                                        }
+                                    } else console.log('error');
+
+                                    selModel.getSelection()[0].set('amount', amount);
+                                }
+                            });
+                        }
+                    }
+                }
             },
             renderer: function (value) {
                 if (value != 0 && value != "") {
@@ -844,7 +899,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             }
         }, {
             text: "quantity".Translator('Product'),
-            flex: 1,
+            width: 80,
             style: 'text-align:center;',
             align: 'right',
             dataIndex: 'quantity',
@@ -855,23 +910,43 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 allowBlank: true,
                 listeners: {
                     change: function (field, newValue, o, e) {
-                        var models = Ext.getCmp('grid-input-output').getStore().getRange();
+                        var amount = 0;
 
-                        var grid = this.up().up();
-                        var selModel = grid.getSelectionModel();
-                        var row = grid.store.indexOf(selModel.getSelection()[0]);
+                        if (newValue != 0 && newValue != "") {
+                            var grid         = this.up().up(),
+                                selModel     = grid.getSelectionModel(),
+                                selectedData = selModel.getSelection()[0].getData();
 
-                        var amountComp = (newValue * parseFloat(models[row].data.price));
-                        if (isNaN(amountComp)) {
-                            amountComp = 0;
+                            storeLoadUnitByProduct.load({
+                                params:{productId: selectedData.productId},
+                                scope: this,
+                                callback: function(records, operation, success) {
+                                    if (success) {
+                                        if(records.length > 0) {
+                                            var unitByProduct = records[0].data,
+                                                unitId1       = unitByProduct.unitId1,
+                                                unitId2       = unitByProduct.unitId2;
+                                            var inOutRadio = Ext.ComponentQuery.query('[name=invoiceTypeRadio]')[0].getValue().rb;
+
+                                            if (inOutRadio == 1) {
+                                                amount = (newValue * parseFloat(selectedData.price));
+                                            } else if(inOutRadio == 2) {
+                                                if(unitId1 == selectedData.unit || unitId2 == selectedData.unit) {
+                                                    amount = (newValue * parseFloat(selectedData.price));
+                                                } else amount = 0;
+                                            }
+                                        }
+                                    } else console.log('error');
+                                    selModel.getSelection()[0].set('amount', amount);
+                                }
+                            });
                         }
-                        selModel.getSelection()[0].set('amount', parseFloat(amountComp));
                     }
                 }
             }
         }, {
             text: "price".Translator('Product'),
-            flex: 1,
+            width: 150,
             style: 'text-align:center;',
             align: 'right',
             dataIndex: 'price',
@@ -900,19 +975,9 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     }
                 }
             }
-//            renderer: function (value) {
-//                if (invoiceId == "" || !invoiceId) {
-//                    if (value != 0 && value != "") {
-//                        if (storeLoadProductCmb.findRecord("id", value) != null)
-//                            return storeLoadProductCmb.findRecord("id", value).get('salePrice');
-//                        else
-//                            return value;
-//                    } else return "";
-//                }
-//            }
         }, {
             text: "amount".Translator('Product'),
-            width: 150,
+            flex: 1,
             style: 'text-align:center;',
             align: 'right',
             dataIndex: 'amount',

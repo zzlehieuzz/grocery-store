@@ -178,7 +178,11 @@ Locale.module('Invoice', {
     'description': 'Ghi chú',
     'total': 'Tổng tiền:',
     'print': 'In',
-    'currency': 'VNĐ'
+    'currency': 'VNĐ',
+
+    'input compare output': 'Số lượng nhập < số lượng xuất',
+    'still <= 5 product': 'Chỉ còn <= 5 sản phầm',
+    'end product': 'Hết sản phầm'
 });
 
 Locale.module('Distributor', {

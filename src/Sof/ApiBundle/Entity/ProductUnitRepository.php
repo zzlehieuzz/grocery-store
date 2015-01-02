@@ -31,15 +31,20 @@ class ProductUnitRepository extends BaseRepository
         ));
         $query->addSelect('p.salePrice, p.originalPrice');
         $query->addSelect('entity.unitId1, entity.unitId2 , entity.convertAmount');
-        $query->addSelect('COUNT(ind1.quantity) AS inputQuantity');
-        $query->addSelect('COUNT(ind2.quantity) AS outputQuantity');
+        $query->addSelect("SUM(CASE WHEN in1.invoiceType = 1"
+          .' THEN ind1.quantity'
+          .' ELSE 0 END) AS inputQuantity');
+        $query->addSelect("SUM(CASE WHEN in1.invoiceType = 2"
+          .' THEN ind1.quantity'
+          .' ELSE 0 END) AS outputQuantity');
+
         $query->innerJoin(self::ENTITY_BUNDLE . ":Product", 'p', 'WITH', "entity.productId = p.id");
         $query->leftJoin(self::ENTITY_BUNDLE . ":Unit", 'u1', 'WITH', "entity.unitId1 = u1.id");
         $query->leftJoin(self::ENTITY_BUNDLE . ":Unit", 'u2', 'WITH', "entity.unitId2 = u2.id");
-        $query->leftJoin(self::ENTITY_BUNDLE . ":InvoiceDetail", 'ind1', 'WITH', "ind1.productId = p.id");
-        $query->leftJoin(self::ENTITY_BUNDLE . ":InvoiceDetail", 'ind2', 'WITH', "ind2.productId = p.id");
-        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'in1', 'WITH', "in1.id = ind1.invoiceId AND in1.invoiceType = :invoiceType1");
-        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'in2', 'WITH', "in2.id = ind2.invoiceId AND in2.invoiceType = :invoiceType2");
+
+        $query->leftJoin(self::ENTITY_BUNDLE . ":Invoice", 'in1', 'WITH', "in1.invoiceType = :invoiceType1 OR in1.invoiceType = :invoiceType2");
+        $query->innerJoin(self::ENTITY_BUNDLE . ":InvoiceDetail", 'ind1', 'WITH', "in1.id = ind1.invoiceId AND ind1.productId = :productId");
+
         $query->andWhere('entity.productId = :productId')
               ->setParameter('productId', $productId)
               ->setParameter('invoiceType1', InvoiceConst::INVOICE_TYPE_1)
