@@ -179,6 +179,9 @@ Locale.module('Invoice', {
     'total': 'Tổng tiền:',
     'print': 'In',
     'currency': 'VNĐ',
+    'unit': 'DVT',
+    'quantity': 'SL',
+    'price': 'DG',
 
     'input compare output': 'Số lượng nhập < số lượng xuất',
     'still <= 5 product': 'Chỉ còn <= 5 sản phầm',

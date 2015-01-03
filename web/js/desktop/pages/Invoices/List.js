@@ -758,7 +758,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             width: 30
         }, {
             header: 'product name'.Translator('Product'),
-            width: 200,
+            flex: 1,
             dataIndex: 'productId',
             style: 'text-align:center;',
             editor: {
@@ -830,7 +830,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 } else return "";
             }
         }, {
-            text: "unit".Translator('Product'),
+            text: "unit".Translator('Invoice'),
             width: 80,
             dataIndex: 'unit',
             style: 'text-align:center;',
@@ -898,7 +898,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 } else return "";
             }
         }, {
-            text: "quantity".Translator('Product'),
+            text: "quantity".Translator('Invoice'),
             width: 80,
             style: 'text-align:center;',
             align: 'right',
@@ -945,7 +945,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 }
             }
         }, {
-            text: "price".Translator('Product'),
+            text: "price".Translator('Invoice'),
             width: 150,
             style: 'text-align:center;',
             align: 'right',
@@ -977,7 +977,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             }
         }, {
             text: "amount".Translator('Product'),
-            flex: 1,
+            width: 200,
             style: 'text-align:center;',
             align: 'right',
             dataIndex: 'amount',
