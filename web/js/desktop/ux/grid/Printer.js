@@ -191,7 +191,7 @@ Ext.define("MyUx.grid.Printer", {
                 }
             }
         },
-        printExt: function(grid, extData) {
+        printExt: function(grid, extData, liabilityData) {
             //We generate an XTemplate here by using 2 intermediary XTemplates - one to create the header,
             //the other to create the body (see the escaped {} below)
             var columns = [];
@@ -339,11 +339,42 @@ Ext.define("MyUx.grid.Printer", {
                         '</td>',
 
                         '<td>',
-                            total + 'currency'.Translator('Invoice'),
+                            Ext.util.Format.currency(total, ' ', decimalPrecision) + 'currency'.Translator('Invoice'),
                         '</td>',
                     '</tr>',
                     //End Row total
 
+                '</table>',
+
+                '<br>' +
+
+                '<span class="font-bold">'+ 'Nợ Trước' + '</span>',
+                '<table border="0" cellpadding="0" cellspacing="0">',
+                    '<tr>',
+                         '<td style="width: 100px;" >'+
+                            'Tiền',
+                        '</td>',
+
+                         '<td colspan="5">',
+                            Ext.util.Format.currency(liabilityData.amount, ' ', decimalPrecision) + ' '+ 'currency'.Translator('Invoice'),
+                        '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<td colspan="6">',
+                            liabilityData.note,
+                        '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<td style="text-align: right; width: 100px;">',
+                            '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>',
+                        '</td>',
+
+                        '<td colspan="5">',
+                            Ext.util.Format.currency((parseInt(total) + parseInt(liabilityData.amount)), ' ', decimalPrecision) + 'currency'.Translator('Invoice'),
+                        '</td>',
+                    '</tr>',
                 '</table>',
 
                 '</body>',
@@ -396,6 +427,8 @@ Ext.define("MyUx.grid.Printer", {
             var contentNew = "";
             var dataForms = "";
             var dataGrids = "";
+            var liabilityAmount = 0;
+            var liabilityNote = '';
 
             if (extData) {
                 Ext.each(extData, function (record) {
@@ -460,6 +493,8 @@ Ext.define("MyUx.grid.Printer", {
                     var order = 1;
 
                     Ext.each(record.data.invoiceId, function (recordDetail) {
+                        liabilityAmount = recordDetail.liab_amount;
+                        liabilityNote = recordDetail.liab_note;
 
                         var classColor = order % 2 === 0 ? "even" : "odd";
 
@@ -533,11 +568,42 @@ Ext.define("MyUx.grid.Printer", {
                             '</td>'+
 
                             '<td>'+
-                                total + 'currency'.Translator('Invoice')+
+                                Ext.util.Format.currency(total, ' ', decimalPrecision) + 'currency'.Translator('Invoice')+
                             '</td>'+
                         '</tr>'+
                         //End Row total
 
+                    '</table>'+
+
+                    '<br>' +
+
+                    '<span class="font-bold">'+ 'Nợ Trước' + '</span>'+
+                    '<table border="0" cellpadding="0" cellspacing="0">'+
+                        '<tr>'+
+                            '<td style="width: 100px;" >'+
+                                'Tiền'+
+                            '</td>'+
+
+                            '<td colspan="5">'+
+                                Ext.util.Format.currency((liabilityAmount), ' ', decimalPrecision) + ' '+ 'currency'.Translator('Invoice')+
+                            '</td>'+
+                        '</tr>'+
+
+                        '<tr>'+
+                            '<td colspan="6">'+
+                                liabilityNote+
+                            '</td>'+
+                        '</tr>'+
+
+                        '<tr>'+
+                            '<td style="width: 100px; text-align: right;" >'+
+                                '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                            '</td>'+
+
+                            '<td colspan="5">'+
+                                Ext.util.Format.currency((total + liabilityAmount), ' ', decimalPrecision)  + ' ' + 'currency'.Translator('Invoice')+
+                            '</td>'+
+                        '</tr>'+
                     '</table>'+
 
                     '<br>' +  '<br>' +  '<br>' +  '<br>'+  '<br>';
