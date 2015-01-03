@@ -196,6 +196,8 @@ class InvoicesController extends BaseController
         $invoiceId = $request->get('id');
         $arrInvoiceDetail = array();
         $entityInvoice = array();
+        $liabilitiesAmount = 0;
+        $liabilitiesNote = "";
 
         if ($invoiceId) {
             $entityInvoice = $this->getEntityService()->getFirstData(
@@ -218,6 +220,22 @@ class InvoicesController extends BaseController
                     'maxResults' => $request->get('limit')
                 ));
 
+            $arrLiabilities = $this->getEntityService()->getAllData(
+                'Liabilities',
+                array(
+                    'conditions' => array('invoiceId' => $invoiceId)
+                ));
+
+            if (count($arrLiabilities)) {
+                foreach ($arrLiabilities as $liability) {
+                    $liabilitiesAmount += ($liability['amount'] * $liability['price']);
+                    $liabilitiesNote .= $liability['name'].': '.$liability['description'].'; ';
+                }
+            }
+
+            $entityInvoice['liab_amount'] = $liabilitiesAmount;
+            $entityInvoice['liab_note']  = $liabilitiesNote;
+
         } else {
             $invoiceNumberInput = $this->generatingInvoiceNumber(1);
             $invoiceNumberOutput = $this->generatingInvoiceNumber(2);
@@ -225,7 +243,9 @@ class InvoicesController extends BaseController
             return $this->jsonResponse(array('invoice_number' => array('input' => $invoiceNumberInput, 'output' => $invoiceNumberOutput)));
         }
 
-        return $this->jsonResponse(array('grid_data' => $arrInvoiceDetail, 'form_data' => $entityInvoice, 'total' => count($arrInvoiceDetail)));
+        return $this->jsonResponse(array('grid_data' => $arrInvoiceDetail,
+                                        'form_data' => $entityInvoice,
+                                        'total' => count($arrInvoiceDetail)));
     }
 
     /**
@@ -504,6 +524,22 @@ class InvoicesController extends BaseController
                             'conditions' => array('id' => $itemDetail['unit'])
                         ));
 
+                    //Liabilities Info
+                    $arrLiabilities = $this->getEntityService()->getAllData(
+                        'Liabilities',
+                        array(
+                            'conditions' => array('invoiceId' => $item['id'])
+                        ));
+
+                    $liabilitiesAmount = 0;
+                    $liabilitiesNote = '';
+                    if (count($arrLiabilities)) {
+                        foreach ($arrLiabilities as $liability) {
+                            $liabilitiesAmount += ($liability['amount'] * $liability['price']);
+                            $liabilitiesNote .= $liability['name'].': '.$liability['description'].'; ';
+                        }
+                    }
+
                     $listInvoice[$key]['invoiceId'][$keyDetail]['unitCode'] = $arrUnit['code'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['unitName'] = $arrUnit['name'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['productCode'] = $arrProduct['code'];
@@ -511,6 +547,8 @@ class InvoicesController extends BaseController
                     $listInvoice[$key]['invoiceId'][$keyDetail]['quantity'] = $itemDetail['quantity'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['price'] = $itemDetail['price'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['amount'] = $itemDetail['amount'];
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['liab_amount'] = $liabilitiesAmount;
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['liab_note'] = $liabilitiesNote;
                 }
 
 
