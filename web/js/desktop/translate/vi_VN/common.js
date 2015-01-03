@@ -104,8 +104,8 @@ Locale.module('Customer', {
 
 Locale.module('Product', {
     //label
-    'product name': 'Tên sản phẩm',
-    'product code': 'Mã sản phẩm',
+    'product name': 'Tên hàng',
+    'product code': 'Mã hàng',
     'original price': 'Giá gốc',
     'price': 'Đơn giá',
     'quantity': 'Số lượng',
@@ -179,6 +179,9 @@ Locale.module('Invoice', {
     'total': 'Tổng tiền:',
     'print': 'In',
     'currency': 'VNĐ',
+    'unit': 'DVT',
+    'quantity': 'SL',
+    'price': 'DG',
 
     'input compare output': 'Số lượng nhập < số lượng xuất',
     'still <= 5 product': 'Chỉ còn <= 5 sản phầm',
@@ -216,7 +219,7 @@ Locale.module('Report', {
     'remain quantity': 'Số lượng tồn',
     'input quantity': 'Số lượng nhập',
     'output quantity': 'Số lượng xuất',
-    'product name': 'Tên sản phẩm',
+    'product name': 'Tên hàng',
     'month of the year': 'Tháng của năm',
     'input': 'Nhập',
     'output': 'Xuất',

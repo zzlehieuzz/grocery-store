@@ -66,10 +66,11 @@ MySQL Server:        SEE THE CPANEL
 b15_15455114_grocery_store
 
 ########################################################
-
+Cpanel URL: http://103.18.5.67:2222/
+URL:  http://adorzhang.com 
 Cpanel Username:    adorzhang    
 Cpanel Password:    0937669567   
-Your URL:  http://adorzhang.com               
+
 FTP Server :   ftp.adorzhang.com       
 FTP Login :     test@adorzhang.com        
 FTP Password :  test123456        
@@ -78,16 +79,13 @@ MySQL Username : adorzhang_store
 MySQL Password : test123456       
 MySQL Server: localhost          
 
-Cpanel URL: http://103.18.5.67:2222/
-
-chincchi.com
+########################################################
+Cpanel URL: http://125.253.124.100:2082
+Url: chincchi.com
 ftp: 125.253.124.100
-http://125.253.124.100:2082/login.php3
 username : chincchi
 password: thanhdp123456
 
 db:
 chincchi_store
 admin123
-
-ALTER TABLE invoice ADD delivery_Status INT NOT NULL COMMENT '10:delivery_Status';

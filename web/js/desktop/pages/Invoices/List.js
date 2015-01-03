@@ -265,11 +265,11 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 vertical: true,
                 items: [{
                             boxLabel: 'invoice input'.Translator('Invoice'),
-                            name: 'rb', inputValue: '1',
-                            checked: true
+                            name: 'rb', inputValue: '1'
                         }, {
                             boxLabel: 'invoice output'.Translator('Invoice'),
                             name: 'rb',
+                            checked: true,
                             inputValue: '2'
                         }],
                 listeners: {
@@ -415,14 +415,18 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 align: 'center',
                 width: 70
             }, {
+                text: "invoice number".Translator('Invoice'),
+                width: 100,
+                style: 'text-align:center;',
+                dataIndex: 'invoiceNumber'
+            }, {
                 text: "amount".Translator('Invoice'),
                 style: 'text-align:center;',
                 align: 'right',
                 dataIndex: 'amount',
                 width: 120,
                 renderer:  Ext.util.Format.numberRenderer(moneyFormat)
-            }
-            , {
+            }, {
                 text: "payment status".Translator('Invoice'),
                 width: 100,
                 style: 'text-align:center;',
@@ -446,8 +450,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
 
                     return paymentStatus;
                 }
-            }
-            , {
+            }, {
                 text: "delivery status".Translator('Invoice'),
                 width: 100,
                 style: 'text-align:center;',
@@ -468,12 +471,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
 
                     return deliveryStatus;
                 }
-            }
-            , {
-                text: "invoice number".Translator('Invoice'),
-                width: 100,
-                style: 'text-align:center;',
-                dataIndex: 'invoiceNumber'
             }, {
                 text: '',
                 width: 80,
@@ -623,6 +620,9 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         }
     });
 
+    var jsonUserLoginData = Ext.get('UserLoginJson').getAttribute('data'),
+        userLoginData     = Ext.JSON.decode(jsonUserLoginData);
+
     var formFieldsAll = {
         xtype: 'form',
         border: false,
@@ -699,7 +699,8 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     labelWidth: 150,
                     xtype: 'textfield',
                     name: 'create_invoice_man',
-                    id: 'create_invoice_man'
+                    id: 'create_invoice_man',
+                    value: userLoginData.name
                 }, {
                     fieldLabel: addressSubject,
                     labelWidth: 150,
@@ -719,8 +720,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     name: 'description',
                     id: 'description'
                 }]
-            }
-            ]
+            }]
         }],
         buttons: [{
             xtype: 'button',
@@ -766,7 +766,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             width: 30
         }, {
             header: 'product name'.Translator('Product'),
-            width: 200,
+            flex: 1,
             dataIndex: 'productId',
             style: 'text-align:center;',
             editor: {
@@ -838,7 +838,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 } else return "";
             }
         }, {
-            text: "unit".Translator('Product'),
+            text: "unit".Translator('Invoice'),
             width: 80,
             dataIndex: 'unit',
             style: 'text-align:center;',
@@ -906,7 +906,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 } else return "";
             }
         }, {
-            text: "quantity".Translator('Product'),
+            text: "quantity".Translator('Invoice'),
             width: 80,
             style: 'text-align:center;',
             align: 'right',
@@ -953,7 +953,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 }
             }
         }, {
-            text: "price".Translator('Product'),
+            text: "price".Translator('Invoice'),
             width: 150,
             style: 'text-align:center;',
             align: 'right',
@@ -985,7 +985,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             }
         }, {
             text: "amount".Translator('Product'),
-            flex: 1,
+            width: 200,
             style: 'text-align:center;',
             align: 'right',
             dataIndex: 'amount',
@@ -1041,10 +1041,10 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             width: 30,
             handler: function () {
 //                Ext.getCmp('invoice_number').setValue('');
-                Ext.getCmp('create_invoice_date').setValue('');
+                Ext.getCmp('create_invoice_date').setValue(new Date());
                 Ext.getCmp('subject').setValue('');
                 Ext.getCmp('delivery_receiver_man').setValue('');
-                Ext.getCmp('create_invoice_man').setValue('');
+                Ext.getCmp('create_invoice_man').setValue(userLoginData.name);
                 Ext.getCmp('address').setValue('');
                 Ext.getCmp('description').setValue('');
                 Ext.getCmp('phone_number').setValue('');
