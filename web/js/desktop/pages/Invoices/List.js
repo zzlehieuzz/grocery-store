@@ -91,6 +91,8 @@ var objectFormField = [{name: 'id', type: 'int'},
     {name: 'phoneNumber', type: 'string'},
     {name: 'invoiceType', type: 'string'},
     {name: 'description', type: 'string'},
+    {name: 'liab_amount', type: 'string'},
+    {name: 'liab_note', type: 'string'},
     {name: 'paymentStatus', type: 'int'}
 ];
 
@@ -105,6 +107,8 @@ var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'description', type: 'string'},
                         {name: 'customerCode', type: 'string'},
                         {name: 'customerName', type: 'string'},
+                        {name: 'liab_amount', type: 'string'},
+                        {name: 'liab_note', type: 'string'},
                         {name: 'invoiceId'}];
 
 MyUtil.Object.defineModel('Input2', objectFormField);
@@ -597,11 +601,15 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
         'paymentStatus': ''
     };
 
+    var liab_obj = {amount: 0, note: ''};
+
     storeLoadInputForm.load({
         params: {limit: limitDefault, page: pageDefault, start: startDefault, id: invoiceId},
         callback: function (records, options, success) {
             if (storeLoadInputForm.data.items[0]) {
                 formData = storeLoadInputForm.data.items[0].data;
+                liab_obj.amount = formData.liab_amount;
+                liab_obj.note = formData.liab_note;
 
                 Ext.getCmp('invoice_number').setValue(formData.invoiceNumber);
                 Ext.getCmp('create_invoice_date').setValue(formData.createInvoiceDate);
@@ -1198,7 +1206,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
 
                                 '</table>';
 
-                MyUx.grid.Printer.printExt(grid, dataForm);
+                MyUx.grid.Printer.printExt(grid, dataForm, liab_obj);
             }
         }, {
             xtype: 'button',
