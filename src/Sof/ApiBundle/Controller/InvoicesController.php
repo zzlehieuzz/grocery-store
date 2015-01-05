@@ -557,4 +557,19 @@ class InvoicesController extends BaseController
 
         return $this->jsonResponse(array('data' => $listInvoice));
     }
+
+    /**
+     * @Route("/Invoice_LoadDataToPrint", name="Invoice_LoadDataToPrint")
+     */
+    public function Invoice_LoadDataToPrintAction()
+    {
+        $params = $this->getJsonParams();
+
+        if($params) {
+//            print_r($params);
+        }
+
+        return $this->jsonResponse(array('data' => $params));
+    }
+
 }

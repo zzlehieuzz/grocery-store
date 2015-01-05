@@ -158,7 +158,7 @@ Locale.module('Invoice', {
     'create new invoice': 'Tạo mới phiếu',
     'please choose invoice type': 'Vui lòng chọn loại phiếu cần tạo',
     'please input invoice number': 'Vui lòng nhập số phiếu.',
-    'customer name': 'Tên khách hàng',
+    'customer name': 'Khách hàng',
     'customer code': 'Mã khách hàng',
     'date': 'Ngày',
     'amount': 'Thành tiền',

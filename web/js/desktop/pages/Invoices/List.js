@@ -374,7 +374,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 }
             }, {
                 xtype: 'button',
-                hidden: true,
                 id: 'print_btn',
                 text: 'print'.Translator('Invoice'),
                 width: 50,
@@ -1016,6 +1015,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             items: [formFieldsAll
                 , {
                     id: 'grid-input-output',
+                    name: 'grid-input-output',
                     xtype: 'grid',
                     height: 280,
                     style: 'padding: 5px;',
@@ -1140,8 +1140,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: 'print'.Translator('Invoice'),
             width: 30,
             handler: function () {
-                var grid = Ext.getCmp('grid-input-output');
-                MyUx.grid.Printer.printAutomatically = false;
+                var grid = Ext.ComponentQuery.query('[name=grid-input-output]')[0];
 
                 var invoiceNum   = Ext.getCmp('invoice_number').getValue();
                 var subject      = Ext.getCmp('subject').getValue();
@@ -1149,64 +1148,30 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                 var phone_number = Ext.getCmp('phone_number').getValue();
                 var description  = Ext.getCmp('description').getValue();
                 var customerName = storeLoadCustomerCmb.findRecord("id", subject).get('name');
-                var customerCode = storeLoadCustomerCmb.findRecord("id", subject).get('code');
+                var dataForms = '<div style="text-align: center; font-weight: bolder; font-size: x-large;">'
+                + 'PHIẾU XUẤT' +'</div><br/>';
 
-                var dataForm = '<table class="no-border" border="0px" style="width: 70%">'+
-                                    '<tr>'+
-                                        '<td class="font-bold">'+
-                                            'invoice number'.Translator('Invoice')+
-                                        '</td>'+
+                dataForms += '<table class="no-border" border="0px" style="width: 100%">'+
+                                '<tr>' +
+                                    '<td class="font-bold" width="80">' + 'customer name'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td colspan="3">' + 'Anh/Chị ' + customerName + '</td>'+
 
-                                        '<td>'+
-                                            invoiceNum+
-                                        '</td>'+
+                                '</tr>' +
 
-                                        '<td class="font-bold">'+
-                                            'customer name'.Translator('Invoice')+
-                                        '</td>'+
+                                '<tr>' +
+                                    '<td class="font-bold" width="80">' + 'invoice number'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td>' + invoiceNum + '</td>'+
+                                    '<td class="font-bold" width="80">' + 'phone number'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td>' + phone_number + '</td>' +
+                                '</tr>' +
 
-                                        '<td>'+
-                                            'Anh/Chị ' + customerName+
-                                        '</td>'+
+                                '<tr>' +
+                                    '<td class="font-bold"  width="80">' + 'address'.Translator('Invoice') + ':' + '</td>' +
+                                    '<td colspan="3">' + address + '</td>' +
+                                '</tr>' +
+                            '</table>';
 
-                                        '<td class="font-bold">'+
-                                            'phone number'.Translator('Invoice')+
-                                        '</td>'+
-
-                                        '<td>'+
-                                            phone_number+
-                                        '</td>'+
-                                    '</tr>'+
-
-                                    '<tr>'+
-                                        '<td class="font-bold">'+
-                                            'customer code'.Translator('Invoice')+
-                                        '</td>'+
-
-                                        '<td>'+
-                                            customerCode+
-                                        '</td>'+
-
-                                        '<td class="font-bold">'+
-                                            'address'.Translator('Invoice')+
-                                        '</td>'+
-
-                                        '<td>'+
-                                            address+
-                                        '</td>'+
-
-                                        '<td class="font-bold">'+
-                                            'description'.Translator('Invoice')+
-                                        '</td>'+
-
-                                        '<td>'+
-                                            description+
-                                        '</td>'+
-                                    '</tr>'+
-
-                                '</table>';
-
-                MyUx.grid.Printer.printExt(grid, dataForm, liab_obj);
+                MyUx.grid.Printer.printExt(grid, dataForms, liab_obj);
             }
         }, {
             xtype: 'button',
