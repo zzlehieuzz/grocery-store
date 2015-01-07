@@ -91,8 +91,8 @@ var objectFormField = [{name: 'id', type: 'int'},
     {name: 'phoneNumber', type: 'string'},
     {name: 'invoiceType', type: 'string'},
     {name: 'description', type: 'string'},
-    {name: 'liab_amount', type: 'string'},
-    {name: 'liab_note', type: 'string'},
+//    {name: 'liab_amount', type: 'string'},
+    {name: 'liab_arr', type: 'string'},
     {name: 'paymentStatus', type: 'int'}
 ];
 
@@ -107,8 +107,8 @@ var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'description', type: 'string'},
                         {name: 'customerCode', type: 'string'},
                         {name: 'customerName', type: 'string'},
-                        {name: 'liab_amount', type: 'string'},
-                        {name: 'liab_note', type: 'string'},
+//                        {name: 'liab_amount', type: 'string'},
+                        {name: 'liab_arr', type: 'string'},
                         {name: 'invoiceId'}];
 
 MyUtil.Object.defineModel('Input2', objectFormField);
@@ -378,8 +378,15 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 text: 'print'.Translator('Invoice'),
                 width: 50,
                 handler: function () {
+                    var grid2 = Ext.getCmp('grid-invoice-list').getSelectionModel().getSelection();
+
+                    var arrId = [];
+                    Ext.each(grid2, function (record) {
+                        arrId.push(record.data.id);
+                    });
+
                     MyUx.grid.Printer.printAutomatically = false;
-                    MyUx.grid.Printer.printExtList(storeListOutput.data.items);
+                    MyUx.grid.Printer.printExtList(storeListOutput.data.items, arrId);
                 }
             }]
         };
@@ -1140,7 +1147,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: 'print'.Translator('Invoice'),
             width: 30,
             handler: function () {
-                var grid = Ext.ComponentQuery.query('[name=grid-input-output]')[0];
+                /*var grid = Ext.ComponentQuery.query('[name=grid-input-output]')[0];
 
                 var invoiceNum   = Ext.getCmp('invoice_number').getValue();
                 var subject      = Ext.getCmp('subject').getValue();
@@ -1169,9 +1176,10 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                                     '<td class="font-bold"  width="80">' + 'address'.Translator('Invoice') + ':' + '</td>' +
                                     '<td colspan="3">' + address + '</td>' +
                                 '</tr>' +
-                            '</table>';
+                            '</table>';*/
 
-                MyUx.grid.Printer.printExt(grid, dataForms, liab_obj);
+                MyUx.grid.Printer.printAutomatically = false;
+                MyUx.grid.Printer.printExtList(storeListOutput.data.items, Ext.getCmp('invoiceId').getValue());
             }
         }, {
             xtype: 'button',

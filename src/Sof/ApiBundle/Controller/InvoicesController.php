@@ -196,8 +196,6 @@ class InvoicesController extends BaseController
         $invoiceId = $request->get('id');
         $arrInvoiceDetail = array();
         $entityInvoice = array();
-        $liabilitiesAmount = 0;
-        $liabilitiesNote = "";
 
         if ($invoiceId) {
             $entityInvoice = $this->getEntityService()->getFirstData(
@@ -226,15 +224,17 @@ class InvoicesController extends BaseController
                     'conditions' => array('invoiceId' => $invoiceId)
                 ));
 
+            $arrLiab = [];
             if (count($arrLiabilities)) {
-                foreach ($arrLiabilities as $liability) {
-                    $liabilitiesAmount += ($liability['amount'] * $liability['price']);
-                    $liabilitiesNote .= $liability['name'].': '.$liability['description'].'; ';
+                foreach ($arrLiabilities as $key=>$liability) {
+                    $arrLiab[$key]['name'] =  $liability['name'];
+                    $arrLiab[$key]['amount'] =  $liability['amount'];
+                    $arrLiab[$key]['price'] =  $liability['price'];
+                    $arrLiab[$key]['description'] =  $liability['description'];
                 }
             }
 
-            $entityInvoice['liab_amount'] = $liabilitiesAmount;
-            $entityInvoice['liab_note']  = $liabilitiesNote;
+            $entityInvoice['liab_arr'] = $arrLiab;
 
         } else {
             $invoiceNumberInput = $this->generatingInvoiceNumber(1);
@@ -531,12 +531,13 @@ class InvoicesController extends BaseController
                             'conditions' => array('invoiceId' => $item['id'])
                         ));
 
-                    $liabilitiesAmount = 0;
-                    $liabilitiesNote = '';
+                    $arrLiab = [];
                     if (count($arrLiabilities)) {
-                        foreach ($arrLiabilities as $liability) {
-                            $liabilitiesAmount += ($liability['amount'] * $liability['price']);
-                            $liabilitiesNote .= $liability['name'].': '.$liability['description'].'; ';
+                        foreach ($arrLiabilities as $key=>$liability) {
+                            $arrLiab[$key]['name'] =  $liability['name'];
+                            $arrLiab[$key]['amount'] =  $liability['amount'];
+                            $arrLiab[$key]['price'] =  $liability['price'];
+                            $arrLiab[$key]['description'] =  $liability['description'];
                         }
                     }
 
@@ -547,8 +548,7 @@ class InvoicesController extends BaseController
                     $listInvoice[$key]['invoiceId'][$keyDetail]['quantity'] = $itemDetail['quantity'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['price'] = $itemDetail['price'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['amount'] = $itemDetail['amount'];
-                    $listInvoice[$key]['invoiceId'][$keyDetail]['liab_amount'] = $liabilitiesAmount;
-                    $listInvoice[$key]['invoiceId'][$keyDetail]['liab_note'] = $liabilitiesNote;
+                    $listInvoice[$key]['invoiceId'][$keyDetail]['liab_arr'] = $arrLiab;
                 }
 
 
