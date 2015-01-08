@@ -430,62 +430,36 @@ Ext.define("MyUx.grid.Printer", {
                 if (ids.length > 0) {
                     Ext.each(extData, function (record) {
                         if (ids.indexOf(record.data.id) !== -1) {
-                            dataForms = '<div style="text-align: center; font-weight: bolder; font-size: x-large;">'+
-                                'PHIẾU XUẤT'
-                                +'</div><br/>';
-                            dataForms = dataForms + '<table class="no-border" border="0px" style="width: 100%">'+
+                            dataForms =
+                                '<div style="text-align: center; font-weight: bolder; font-size: x-large;">'+
+                                    'PHIẾU XUẤT</div><br/>';
+
+                            dataForms = dataForms +
+                            '<table class="no-border" border="0px" style="width: 100%">'+
                                 '<tr>'+
-                                '<td class="font-bold" width="90">'+
-                                'invoice number'.Translator('Invoice')+
-                                '</td>'+
-
-                                '<td>'+
-                                record.data.invoiceNumber+
-                                '</td>'+
-
-                                '<td class="font-bold" width="90">'+
-                                'customer name'.Translator('Invoice')+
-                                '</td>'+
-
-                                '<td width="200">'+
-                                'Anh/Chị ' + record.data.customerName+
-                                '</td>'+
-
-                                '<td class="font-bold" width="75">'+
-                                'phone number'.Translator('Invoice')+
-                                '</td>'+
-
-                                '<td>'+
-                                record.data.phoneNumber+
-                                '</td>'+
+                                    '<td class="font-bold" width="80">' + 'customer name'.Translator('Invoice') + ':</td>'+
+                                    '<td width="250">Anh/Chị ' + record.data.customerName + '</td>'+
+                                    '<td class="font-bold" width="80">' + 'phone number'.Translator('Invoice') + ':</td>'+
+                                    '<td>' + record.data.phoneNumber + '</td>'+
                                 '</tr>'+
-
                                 '<tr>'+
-                                '<td class="font-bold">'+
-                                'customer code'.Translator('Invoice')+
-                                '</td>'+
-
-                                '<td>'+
-                                record.data.customerCode+
-                                '</td>'+
-
-                                '<td class="font-bold">'+
-                                'address'.Translator('Invoice')+
-                                '</td>'+
-
-                                '<td colspan="3">'+
-                                record.data.address+
-                                '</td>'+
+                                    '<td class="font-bold" width="80">' + 'invoice number'.Translator('Invoice') + ':</td>'+
+                                    '<td>' + record.data.invoiceNumber + '</td>'+
                                 '</tr>'+
+                                '<tr>'+
+                                    '<td class="font-bold" width="80">' + 'address'.Translator('Invoice') + ':</td>'+
+                                    '<td colspan="3">' + record.data.address + '</td>'+
+                                '</tr>'+
+                                '<tr>'+
+                                    '<td class="font-bold" width="80">' + 'description'.Translator('Invoice') + ':</td>'+
+                                    '<td colspan="3">' + record.data.description + '</td>'+
+                                '</tr>'+
+                            '</table>';
 
-                                '</table>';
-
-                            var rowDetail = "";
-                            var total = 0;
-                            var order = 1;
+                            var rowDetail = "", total = 0, order = 1;
 
                             Ext.each(record.data.invoiceId, function (recordDetail) {
-                                var classColor  = order % 2 === 0 ? "even" : "odd";
+                                var classColor  = 'even';
                                 var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
                                 var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
                                 var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
@@ -504,118 +478,93 @@ Ext.define("MyUx.grid.Printer", {
                                 order++;
                             });
 
-                            dataGrids = '<table>'+
-                                //Header
-                                '<tr>'+
-                                    '<th width="30" style="text-align: center;">'+
-                                    "order".Translator('Invoice') + '</th>'+
+                            dataGrids =
+                                '<table>'+
+                                    '<tr>'+
+                                        '<th width="30" style="text-align: center;">'+
+                                            "order".Translator('Invoice') + '</th>'+
+                                        '<th style="text-align: center;">'+
+                                            'product name'.Translator('Product') + '</th>'+
+                                        '<th width="70" style="text-align: center;">'+
+                                            "quantity".Translator('Invoice') + '</th>'+
+                                        '<th width="60" style="text-align: center;">'+
+                                            'unit'.Translator('Invoice') + '</th>'+
+                                        '<th width="120" style="text-align: center;">'+
+                                            "price".Translator('Invoice') + '</th>'+
+                                        '<th width="160" style="text-align: center;">'+
+                                            "amount".Translator('Product') + '</th>'+
+                                    '</tr>'+
 
-                                    '<th style="text-align: center;">'+
-                                    'product name'.Translator('Product') + '</th>'+
+                                    //Row Content
+                                    rowDetail +
+                                    //End Row Content
 
-                                    '<th width="70" style="text-align: center;">'+
-                                    "quantity".Translator('Invoice') + '</th>'+
-
-                                    '<th width="60" style="text-align: center;">'+
-                                    'unit'.Translator('Invoice') + '</th>'+
-
-                                    '<th width="120" style="text-align: center;">'+
-                                    "price".Translator('Invoice') + '</th>'+
-
-                                    '<th width="160" style="text-align: center;">'+
-                                    "amount".Translator('Product') + '</th>'+
-                                '</tr>'+
-
-                                //Row Content
-                                rowDetail +
-                                //End Row Content
-
-                                //Row total
-                                '<tr>'+
-                                    '<td style="text-align: right;" colspan="5">'+
-                                        '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
-                                    '</td>'+
-
-                                     '<td style="text-align: right;">'+
-                                        Ext.util.Format.currency(total, ' ', decimalPrecision) + ' ' + 'currency'.Translator('Invoice')+
-                                    '</td>'+
-                                '</tr>'+
-                                //End Row total
-
+                                    //Row total
+                                    '<tr>'+
+                                        '<td style="text-align: right;" colspan="5">'+
+                                            '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                                        '</td>'+
+                                         '<td style="text-align: right;">'+
+                                             'currency'.Translator('Invoice') + ' ' +
+                                             Ext.util.Format.currency(total, ' ', decimalPrecision) +
+                                        '</td>'+
+                                    '</tr>'+
                                 '</table>';
 
-                            var rowLiabDetail = '', note = '';
-                            var totalLiab = 0, stt = 1;
+                            var rowLiabDetail = '', totalLiab = 0, stt = 1, debit = '';
 
                             Ext.each(liabilityArr, function (liability) {
                                 totalLiab = totalLiab + (parseInt(liability.amount) * parseInt(liability.price));
 
-                                rowLiabDetail = rowLiabDetail +
-                                                '<tr>'+
-                                                    '<td style="text-align: center; ">'+
-                                                        stt+
-                                                    '</td>'+
-                                                    '<td>'+
-                                                        liability.name+
-                                                    '</td>'+
-
-                                                    '<td style="text-align: right;">'+
-                                                        liability.amount+
-                                                    '</td>'+
-
-                                                    '<td style="text-align: right;">'+
-                                                        Ext.util.Format.currency((parseInt(liability.amount) * parseInt(liability.price)), ' ', decimalPrecision) +
-                                                    '</td>'+
-                                                '</tr>';
+                                rowLiabDetail =
+                                    rowLiabDetail +
+                                    '<tr>'+
+                                        '<td style="text-align: center; ">' + stt + '</td>'+
+                                        '<td>' + liability.name + '</td>' +
+                                        '<td style="text-align: right;">' + liability.amount + '</td>'+
+                                        '<td style="text-align: right;">'+
+                                            Ext.util.Format.currency((parseInt(liability.amount) * parseInt(liability.price)), ' ', decimalPrecision) +
+                                        '</td>'+
+                                    '</tr>';
                                 stt++;
                             });
 
-                            if (record.data.description.length > 0) {
-                                note = record.data.description + '.';
-                            }
-
-                            var debit = '<br>' +
-                                '<span class="font-bold">'+ 'previous debit'.Translator('Liabilities') + '</span>'+
-
-                                '<table border="0" cellpadding="0" cellspacing="0">'+
+                            if(liabilityArr) {
+                                debit =
+                                '<table border="0" cellpadding="0" cellspacing="0">' +
+                                    '<tr><th colspan="4">' + 'previous debit'.Translator('Liabilities') + '</th></tr>' +
                                     '<tr>' +
-                                        '<th style="text-align: center; " width="30">'+'order'.Translator('Invoice')+'</th>' +
-                                        '<th style="text-align: center;">'+'product name'.Translator('Report')+'</th>' +
-                                        '<th style="text-align: center;" width="70">'+'quantity'.Translator('Invoice')+'</th>' +
-                                        '<th style="text-align: center;" width="160">'+ 'money'.Translator('Liabilities') + '</th>' +
+                                        '<th style="text-align: center; " width="30">' + 'order'.Translator('Invoice') + '</th>' +
+                                        '<th style="text-align: center;">' + 'product name'.Translator('Report') + '</th>' +
+                                        '<th style="text-align: center;" width="120">' + 'quantity'.Translator('Invoice') + '</th>' +
+                                        '<th style="text-align: center;" width="160">' + 'money'.Translator('Liabilities') + '</th>' +
+                                    '</tr>' + rowLiabDetail +
+                                    '<tr>' +
+                                        '<td colspan="3" style="text-align: right;" >' +
+                                            '<span class="font-bold">' + 'debit'.Translator('Liabilities') + '</span>' +
+                                        '</td>' +
+                                        '<td style="text-align: right;">' +
+                                            'currency'.Translator('Invoice') + ' ' +
+                                            Ext.util.Format.currency((totalLiab), ' ', decimalPrecision) +
+                                        '</td>' +
                                     '</tr>' +
 
-                                    rowLiabDetail +
+                                    '<tr>' +
+                                        '<td colspan="3" style="text-align: right;" >' +
+                                            '<span class="font-bold">' + 'total debit before and after'.Translator('Liabilities') + '</span>' +
+                                        '</td>' +
 
-                                    '<tr>'+
-                                        '<td colspan="3" style="text-align: right;" >'+
-                                            '<span class="font-bold">'+ 'debit'.Translator('Liabilities') + '</span>'+
-                                        '</td>'+
+                                        '<td style="text-align: right;">' +
+                                        'currency'.Translator('Invoice') + ' ' + Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision) +
+                                        '</td>' +
+                                    '</tr>' +
+                                '</table>';
+                            }
 
-                                        '<td style="text-align: right;">'+
-                                            Ext.util.Format.currency((totalLiab), ' ', decimalPrecision)  + ' ' + 'currency'.Translator('Invoice')+
-                                        '</td>'+
-                                    '</tr>'+
-
-                                    '<tr>'+
-                                        '<td colspan="3" style="text-align: right;" >'+
-                                            '<span class="font-bold">'+ 'total debit before and after'.Translator('Liabilities') + '</span>'+
-                                        '</td>'+
-
-                                        '<td style="text-align: right;">'+
-                                            'currency'.Translator('Invoice') + ' ' +  Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision)  +
-                                        '</td>'+
-                                    '</tr>'+
-
-                                '</table>' +
-
-                                '<br>'+
-                                '<span class="font-bold">'+  'description'.Translator('Invoice') + '</span>'+ ': ' + note;
-
-                            var listSign = '<table class="no-border" border="0" cellpadding="0" cellspacing="0">'+
+                            var listSign = '<br/><table class="no-border" border="0" cellpadding="0" cellspacing="0">'+
                                 '<tr>'+
                                     '<td colspan="2" style="text-align: right; padding-right: 30px;" >'+
-                                        '<span class="">'+ 'Ngày.....Tháng.....Năm.....' + '</span>'+
+                                        '<span class="">'+ 'Ngày ... Tháng ... Năm ...' + '</span>'+
                                     '</td>'+
                                 '</tr>'+
 
@@ -639,9 +588,9 @@ Ext.define("MyUx.grid.Printer", {
                                     '</td>'+
                                 '</tr>'+
 
-                                '</table>' + '<br>' + '<br>' + '<br>';
+                                '</table>';
 
-                            contentNew = contentNew + dataForms + '<br>' + dataGrids + debit + listSign + '<div class="page-break"></div>';
+                            contentNew = contentNew + dataForms + dataGrids + debit + listSign + '<div class="page-break"></div>';
                         }
                     });
                 } else {
