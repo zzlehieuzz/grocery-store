@@ -91,7 +91,6 @@ var objectFormField = [{name: 'id', type: 'int'},
     {name: 'phoneNumber', type: 'string'},
     {name: 'invoiceType', type: 'string'},
     {name: 'description', type: 'string'},
-//    {name: 'liab_amount', type: 'string'},
     {name: 'liab_arr', type: 'string'},
     {name: 'paymentStatus', type: 'int'}
 ];
@@ -107,7 +106,6 @@ var objectListOutput = [{name: 'id', type: 'int'},
                         {name: 'description', type: 'string'},
                         {name: 'customerCode', type: 'string'},
                         {name: 'customerName', type: 'string'},
-//                        {name: 'liab_amount', type: 'string'},
                         {name: 'liab_arr', type: 'string'},
                         {name: 'invoiceId'}];
 

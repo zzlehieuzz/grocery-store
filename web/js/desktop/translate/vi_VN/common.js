@@ -132,7 +132,11 @@ Locale.module('Liabilities', {
     'please choice a invoice': 'Làm ơn chọn số phiếu.',
     'please choice a customer': 'Làm ơn chọn khách hàng.',
 
-    'debit': 'Tiền nợ'
+    'debit': 'Tiền nợ',
+    'money': 'Tiền',
+    'previous debit': 'Nợ Trước',
+    'total debit before and after': 'Tổng tiền trước và sau nợ',
+    'please chose invoice': 'Vui lòng chọn hóa đơn cần xuất.'
 });
 
 Locale.module('Invoice', {
