@@ -612,7 +612,36 @@ Ext.define("MyUx.grid.Printer", {
                                 '<br>'+
                                 '<span class="font-bold">'+  'description'.Translator('Invoice') + '</span>'+ ': ' + note;
 
-                            contentNew = contentNew + dataForms + '<br>' + dataGrids + debit + '<div class="page-break"></div>';
+                            var listSign = '<table class="no-border" border="0" cellpadding="0" cellspacing="0">'+
+                                '<tr>'+
+                                    '<td colspan="2" style="text-align: right; padding-right: 30px;" >'+
+                                        '<span class="">'+ 'Ngày.....Tháng.....Năm.....' + '</span>'+
+                                    '</td>'+
+                                '</tr>'+
+
+                                '<tr>'+
+                                    '<td style="text-align: center;" >'+
+                                        '<span class="font-bold">'+ 'Người Giao' + '</span>'+
+                                    '</td>'+
+
+                                    '<td style="text-align: center;">'+
+                                        '<span class="font-bold">'+ 'Người Nhận' + '</span>'+
+                                    '</td>'+
+                                '</tr>'+
+
+                                '<tr>'+
+                                    '<td style="text-align: center;" >'+
+                                        '<span class="">'+ 'Ký, ghi rõ họ tên' + '</span>'+
+                                    '</td>'+
+
+                                    '<td style="text-align: center;">'+
+                                        '<span class="">'+ 'Ký, ghi rõ họ tên' + '</span>'+
+                                    '</td>'+
+                                '</tr>'+
+
+                                '</table>' + '<br>' + '<br>' + '<br>';
+
+                            contentNew = contentNew + dataForms + '<br>' + dataGrids + debit + listSign + '<div class="page-break"></div>';
                         }
                     });
                 } else {
