@@ -424,8 +424,6 @@ Ext.define("MyUx.grid.Printer", {
             var contentNew = "";
             var dataForms = "";
             var dataGrids = "";
-//            var liabilityAmount = 0;
-//            var liabilityNote = '';
             var liabilityArr = [];
 
             if (extData) {
@@ -509,23 +507,23 @@ Ext.define("MyUx.grid.Printer", {
                             dataGrids = '<table>'+
                                 //Header
                                 '<tr>'+
-                                '<th width="30" style="text-align: center;">'+
-                                "order".Translator('Invoice') + '</th>'+
+                                    '<th width="30" style="text-align: center;">'+
+                                    "order".Translator('Invoice') + '</th>'+
 
-                                '<th style="text-align: center;">'+
-                                'product name'.Translator('Product') + '</th>'+
+                                    '<th style="text-align: center;">'+
+                                    'product name'.Translator('Product') + '</th>'+
 
-                                '<th width="70" style="text-align: center;">'+
-                                "quantity".Translator('Invoice') + '</th>'+
+                                    '<th width="70" style="text-align: center;">'+
+                                    "quantity".Translator('Invoice') + '</th>'+
 
-                                '<th width="60" style="text-align: center;">'+
-                                'unit'.Translator('Invoice') + '</th>'+
+                                    '<th width="60" style="text-align: center;">'+
+                                    'unit'.Translator('Invoice') + '</th>'+
 
-                                '<th width="120" style="text-align: center;">'+
-                                "price".Translator('Invoice') + '</th>'+
+                                    '<th width="120" style="text-align: center;">'+
+                                    "price".Translator('Invoice') + '</th>'+
 
-                                '<th width="160" style="text-align: center;">'+
-                                "amount".Translator('Product') + '</th>'+
+                                    '<th width="160" style="text-align: center;">'+
+                                    "amount".Translator('Product') + '</th>'+
                                 '</tr>'+
 
                                 //Row Content
@@ -534,69 +532,91 @@ Ext.define("MyUx.grid.Printer", {
 
                                 //Row total
                                 '<tr>'+
-                                '<td style="text-align: right;" colspan="5">'+
-                                '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
-                                '</td>'+
+                                    '<td style="text-align: right;" colspan="5">'+
+                                        '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                                    '</td>'+
 
-                                '<td>'+
-                                Ext.util.Format.currency(total, ' ', decimalPrecision) + 'currency'.Translator('Invoice')+
-                                '<td style="text-align: right;">'+
-                                'currency'.Translator('Invoice') + ' ' + Ext.util.Format.currency(total, ' ', 0) +
-                                '</td>'+
+                                     '<td style="text-align: right;">'+
+                                        Ext.util.Format.currency(total, ' ', decimalPrecision) + ' ' + 'currency'.Translator('Invoice')+
+                                    '</td>'+
                                 '</tr>'+
                                 //End Row total
 
                                 '</table>';
 
-                            var rowLiabDetail = '';
-                            var totalLiab = 0;
-                            Ext.each(liabilityArr, function (liability) {
+                            var rowLiabDetail = '', note = '';
+                            var totalLiab = 0, stt = 1;
 
-                                totalLiab = totalLiab + parseInt(liability.amount);
+                            Ext.each(liabilityArr, function (liability) {
+                                totalLiab = totalLiab + (parseInt(liability.amount) * parseInt(liability.price));
 
                                 rowLiabDetail = rowLiabDetail +
                                                 '<tr>'+
-                                                    '<td style="width: 100px;" >'+
+                                                    '<td style="text-align: center; ">'+
+                                                        stt+
+                                                    '</td>'+
+                                                    '<td>'+
                                                         liability.name+
                                                     '</td>'+
 
-                                                    '<td colspan="5">'+
-                                                    Ext.util.Format.currency((liability.amount), ' ', decimalPrecision) + ' '+ 'currency'.Translator('Invoice')+
+                                                    '<td style="text-align: right;">'+
+                                                        liability.amount+
+                                                    '</td>'+
+
+                                                    '<td style="text-align: right;">'+
+                                                        Ext.util.Format.currency((parseInt(liability.amount) * parseInt(liability.price)), ' ', decimalPrecision) +
                                                     '</td>'+
                                                 '</tr>';
+                                stt++;
                             });
 
-                            var debit = '<br>' +
-                                '<span class="font-bold">'+ 'Nợ Trước' + '</span>'+
-                                '<table border="0" cellpadding="0" cellspacing="0">'+
-                                    '<tr>'+
-                                        '<td style="width: 100px;" >'+
-                                            'Tiền'+
-                                        '</td>'+
+                            if (record.data.description.length > 0) {
+                                note = record.data.description + '.';
+                            }
 
-                                        '<td colspan="4">'+
-                                            Ext.util.Format.currency((totalLiab), ' ', decimalPrecision)  + ' ' + 'currency'.Translator('Invoice') +
-                                        '</td>'+
-                                    '</tr>'+
+                            var debit = '<br>' +
+                                '<span class="font-bold">'+ 'previous debit'.Translator('Liabilities') + '</span>'+
+
+                                '<table border="0" cellpadding="0" cellspacing="0">'+
+                                    '<tr>' +
+                                        '<th style="text-align: center; " width="30">'+'order'.Translator('Invoice')+'</th>' +
+                                        '<th style="text-align: center;">'+'product name'.Translator('Report')+'</th>' +
+                                        '<th style="text-align: center;" width="70">'+'quantity'.Translator('Invoice')+'</th>' +
+                                        '<th style="text-align: center;" width="160">'+ 'money'.Translator('Liabilities') + '</th>' +
+                                    '</tr>' +
 
                                     rowLiabDetail +
 
                                     '<tr>'+
-                                        '<td style="width: 100px; text-align: right;" >'+
-                                        '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                                        '<td colspan="3" style="text-align: right;" >'+
+                                            '<span class="font-bold">'+ 'debit'.Translator('Liabilities') + '</span>'+
                                         '</td>'+
 
-                                        '<td colspan="5">'+
-                                            Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision)  + ' ' + 'currency'.Translator('Invoice')+
+                                        '<td style="text-align: right;">'+
+                                            Ext.util.Format.currency((totalLiab), ' ', decimalPrecision)  + ' ' + 'currency'.Translator('Invoice')+
                                         '</td>'+
                                     '</tr>'+
-                                '</table>';
+
+                                    '<tr>'+
+                                        '<td colspan="3" style="text-align: right;" >'+
+                                            '<span class="font-bold">'+ 'total debit before and after'.Translator('Liabilities') + '</span>'+
+                                        '</td>'+
+
+                                        '<td style="text-align: right;">'+
+                                            'currency'.Translator('Invoice') + ' ' +  Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision)  +
+                                        '</td>'+
+                                    '</tr>'+
+
+                                '</table>' +
+
+                                '<br>'+
+                                '<span class="font-bold">'+  'description'.Translator('Invoice') + '</span>'+ ': ' + note;
 
                             contentNew = contentNew + dataForms + '<br>' + dataGrids + debit + '<div class="page-break"></div>';
                         }
                     });
                 } else {
-                    MyUtil.Message.MessageInfo('Vui lòng chọn hóa đơn cần xuất.');
+                    MyUtil.Message.MessageInfo('please chose invoice'.Translator('Liabilities'));
                     return false;
                 }
             }
