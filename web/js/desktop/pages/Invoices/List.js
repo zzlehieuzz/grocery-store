@@ -149,7 +149,7 @@ var storeLoadInput = new Ext.data.JsonStore({
     autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
 });
 
-//Load defaut to print list invoice output
+//Load default to print list invoice output
 var storeListOutput = new Ext.data.JsonStore({
     model: 'List_Output',
     proxy: new Ext.data.HttpProxy({

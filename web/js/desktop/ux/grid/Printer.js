@@ -458,25 +458,27 @@ Ext.define("MyUx.grid.Printer", {
 
                             var rowDetail = "", total = 0, order = 1;
 
-                            Ext.each(record.data.invoiceId, function (recordDetail) {
-                                var classColor  = 'even';
-                                var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
-                                var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
-                                var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
-                                liabilityArr = recordDetail.liab_arr;
+                            if (record.data.invoiceId.length > 0) {
+                                Ext.each(record.data.invoiceId, function (recordDetail) {
+                                    var classColor  = 'even';
+                                    var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
+                                    var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
+                                    var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
+                                    liabilityArr = recordDetail.liab_arr;
 
-                                total = total + recordDetail.amount;
-                                rowDetail = rowDetail + '<tr class="'+classColor+'">'+
-                                    '<td style="text-align: center;">' + order + '</td>'+
-                                    '<td>' + recordDetail.productName + '</td>'+
-                                    '<td style="text-align: right;">' + forQuantity + '</td>'+
-                                    '<td>' + recordDetail.unitName + '</td>'+
-                                    '<td style="text-align: right;">' + forPrice + '</td>'+
-                                    '<td style="text-align: right;">' + forAmount + '</td>'+
-                                    '</tr>';
+                                    total = total + recordDetail.amount;
+                                    rowDetail = rowDetail + '<tr class="'+classColor+'">'+
+                                        '<td style="text-align: center;">' + order + '</td>'+
+                                        '<td>' + recordDetail.productName + '</td>'+
+                                        '<td style="text-align: right;">' + forQuantity + '</td>'+
+                                        '<td>' + recordDetail.unitName + '</td>'+
+                                        '<td style="text-align: right;">' + forPrice + '</td>'+
+                                        '<td style="text-align: right;">' + forAmount + '</td>'+
+                                        '</tr>';
 
-                                order++;
-                            });
+                                    order++;
+                                });
+                            }
 
                             dataGrids =
                                 '<table>'+

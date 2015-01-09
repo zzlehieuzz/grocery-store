@@ -533,11 +533,11 @@ class InvoicesController extends BaseController
 
                     $arrLiab = [];
                     if (count($arrLiabilities)) {
-                        foreach ($arrLiabilities as $key=>$liability) {
-                            $arrLiab[$key]['name'] =  $liability['name'];
-                            $arrLiab[$key]['amount'] =  $liability['amount'];
-                            $arrLiab[$key]['price'] =  $liability['price'];
-                            $arrLiab[$key]['description'] =  $liability['description'];
+                        foreach ($arrLiabilities as $key1=>$liability) {
+                            $arrLiab[$key1]['name'] =  $liability['name'];
+                            $arrLiab[$key1]['amount'] =  $liability['amount'];
+                            $arrLiab[$key1]['price'] =  $liability['price'];
+                            $arrLiab[$key1]['description'] =  $liability['description'];
                         }
                     }
 
