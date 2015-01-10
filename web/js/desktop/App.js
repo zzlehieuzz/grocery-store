@@ -7,10 +7,10 @@
 Ext.define('MyDesktop.App', {
     extend: 'Ext.ux.desktop.App',
     requires: [
-        'MyUtil.Path',
-        'MyUtil.Message',
-        'MyUtil.Object',
-        'MyUtil.String',
+        //'MyUtil.Path',
+        //'MyUtil.Message',
+        //'MyUtil.Object',
+        //'MyUtil.String',
 
         'Ext.window.MessageBox',
         'Ext.ux.desktop.ShortcutModel',
@@ -41,10 +41,10 @@ Ext.define('MyDesktop.App', {
     },
     getModules : function(){
         return [
-            new MyUtil.Path(),
-            new MyUtil.Message(),
-            new MyUtil.Object(),
-            new MyUtil.String(),
+            //new MyUtil.Path(),
+            //new MyUtil.Message(),
+            //new MyUtil.Object(),
+            //new MyUtil.String(),
             //new MyDesktop.VideoWindow(),
             //new MyDesktop.Blockalanche(),
             //new MyDesktop.SystemStatus(),
