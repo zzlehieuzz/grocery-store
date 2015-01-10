@@ -459,44 +459,37 @@ Ext.define("MyUx.grid.Printer", {
 
             var getDataGrids = function(rowsDetail, total) {
                 var tableDetail = '<table>'+
-                    '<tr>'+
-                    '<th width="30" style="text-align: center;">'+
-                    "order".Translator('Invoice') + '</th>'+
-                    '<th style="text-align: center;">'+
-                    'product name'.Translator('Product') + '</th>'+
-                    '<th width="70" style="text-align: center;">'+
-                    "quantity".Translator('Invoice') + '</th>'+
-                    '<th width="60" style="text-align: center;">'+
-                    'unit'.Translator('Invoice') + '</th>'+
-                    '<th width="120" style="text-align: center;">'+
-                    "price".Translator('Invoice') + '</th>'+
-                    '<th width="160" style="text-align: center;">'+
-                    "amount".Translator('Product') + '</th>'+
-                    '</tr>'+
+                                    '<tr>'+
+                                        '<th width="30" style="text-align: center;">' + "order".Translator('Invoice') + '</th>'+
+                                        '<th style="text-align: center;">' + 'product name'.Translator('Product') + '</th>'+
+                                        '<th width="70" style="text-align: center;">' + "quantity".Translator('Invoice') + '</th>'+
+                                        '<th width="60" style="text-align: center;">' + 'unit'.Translator('Invoice') + '</th>'+
+                                        '<th width="120" style="text-align: center;">'+ "price".Translator('Invoice') + '</th>'+
+                                        '<th width="160" style="text-align: center;">'+ "amount".Translator('Product') + '</th>'+
+                                    '</tr>'+
 
-                    //Row Content
-                    rowsDetail +
-                    //End Row Content
+                                    //Row Content
+                                    rowsDetail +
+                                    //End Row Content
 
-                    //Row total
-                    '<tr>'+
-                    '<td style="text-align: right;" colspan="5">'+
-                    '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
-                    '</td>'+
-                    '<td style="text-align: right;">'+
-                    'currency'.Translator('Invoice') + ' ' +
-                    Ext.util.Format.currency(total, ' ', decimalPrecision) +
-                    '</td>'+
-                    '</tr>'+
-                    //End Row total
-                    '</table>';
+                                    //Row total
+                                    '<tr>'+
+                                        '<td style="text-align: right;" colspan="5">'+
+                                            '<span class="font-bold">'+ 'total'.Translator('Invoice') + '</span>'+
+                                        '</td>'+
+                                        '<td style="text-align: right;">'+
+                                            'currency'.Translator('Invoice') + ' ' + Ext.util.Format.currency(total, ' ', decimalPrecision) +
+                                        '</td>'+
+                                    '</tr>'+
+                                    //End Row total
+                                '</table>';
 
                 return tableDetail;
             };
 
             var contentNew = "", numRowDetail = 5;
             var dataForms = "";
-            var dataGrids = "", pageBreak = '<div class="page-break"></div>';
+            var dataGrids = "", pageBreak = '<br><br><br><br>';
             var liabilityArr = [];
 
             var listSign = '<br/><table class="no-border" border="0" cellpadding="0" cellspacing="0">'+
@@ -530,7 +523,10 @@ Ext.define("MyUx.grid.Printer", {
 
             if (extData) {
 
-                var differenceId = '';
+                var arrHaveNoLiabilitiesAll = [];
+                var numInvoice = 0;
+                var numOfCard = 0;
+
                 if (ids.length > 0) {
                     Ext.each(extData, function (record) {
                         if (ids.indexOf(record.data.id) !== -1) {
@@ -561,7 +557,7 @@ Ext.define("MyUx.grid.Printer", {
                             '</table>';
 
                             var rowDetail = "", total = 0, order = 1, numRowOdd = 0;
-                            var arrHaveLiabilities = [];
+                            var arrHaveLiabilities = [], arrHaveNoLiabilities = [];
 
                             if (record.data.invoiceId.length > 0) {
 
@@ -569,73 +565,22 @@ Ext.define("MyUx.grid.Printer", {
                                     numRowOdd = record.data.invoiceId.length % numRowDetail;
 
                                     if (numRowOdd == 0) {
-                                        Ext.each(record.data.invoiceId, function (recordDetail) {
-                                            total = total + recordDetail.amount;
-                                            var classColor  = 'even';
-                                            var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
-                                            var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
-                                            var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
-                                            liabilityArr = recordDetail.liab_arr;
-
-                                            rowDetail = rowDetail + '<tr class="'+classColor+'">'+
-                                                                        '<td style="text-align: center;">' + order + '</td>'+
-                                                                        '<td>' + recordDetail.productName + '</td>'+
-                                                                        '<td style="text-align: right;">' + forQuantity + '</td>'+
-                                                                        '<td>' + recordDetail.unitName + '</td>'+
-                                                                        '<td style="text-align: right;">' + forPrice + '</td>'+
-                                                                        '<td style="text-align: right;">' + forAmount + '</td>'+
-                                                                    '</tr>';
-
-                                            if (order % numRowDetail == 0) {
-                                                pageBreak = '<br><br><br><br><br>';
-                                                if (order % (numRowDetail * 2) == 0) {
-                                                    pageBreak = pageBreak + '<div class="page-break"></div>';
-                                                }
-
-                                                dataGrids = getDataGrids(rowDetail, total);
-                                                contentNew = contentNew + dataForms + dataGrids + listSign + pageBreak;
-
-                                                rowDetail = "";
-                                            }
-
-                                            order++;
+                                        Ext.each(record.data.invoiceId, function (recordDetail0) {
+                                            arrHaveNoLiabilities.push(recordDetail0);
+                                            arrHaveNoLiabilitiesAll.push(recordDetail0);
                                         });
 
                                     } else {
                                         var lengthRemain = record.data.invoiceId.length - numRowOdd;
+                                        var countRemain = 1;
 
-                                        Ext.each(record.data.invoiceId, function (recordDetail) {
-                                            if (order <= lengthRemain) {
-                                                total = total + recordDetail.amount;
-                                                var classColor  = 'even';
-                                                var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
-                                                var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
-                                                var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
-                                                liabilityArr = recordDetail.liab_arr;
-
-                                                rowDetail = rowDetail + '<tr class="'+classColor+'">'+
-                                                    '<td style="text-align: center;">' + order + '</td>'+
-                                                    '<td>' + recordDetail.productName + '</td>'+
-                                                    '<td style="text-align: right;">' + forQuantity + '</td>'+
-                                                    '<td>' + recordDetail.unitName + '</td>'+
-                                                    '<td style="text-align: right;">' + forPrice + '</td>'+
-                                                    '<td style="text-align: right;">' + forAmount + '</td>'+
-                                                    '</tr>';
-
-                                                if (order % numRowDetail == 0) {
-                                                    pageBreak = '<br><br><br><br><br>';
-                                                    if (order % (numRowDetail * 2) == 0) {
-                                                        pageBreak = pageBreak + '<div class="page-break"></div>';
-                                                    }
-
-                                                    dataGrids = getDataGrids(rowDetail, total);
-                                                    contentNew = contentNew + dataForms + dataGrids + listSign + pageBreak;
-
-                                                    rowDetail = "";
-                                                }
-
-                                                order++;
+                                        Ext.each(record.data.invoiceId, function (recordDetail1) {
+                                            if (countRemain <= lengthRemain) {
+                                                arrHaveNoLiabilities.push(recordDetail1);
+                                                arrHaveNoLiabilitiesAll.push(recordDetail1);
                                             }
+
+                                            countRemain++;
                                         });
 
                                         var countRow = 0;
@@ -652,20 +597,61 @@ Ext.define("MyUx.grid.Printer", {
                                     arrHaveLiabilities = record.data.invoiceId;
                                 }
 
-                                if (arrHaveLiabilities) {
-                                    Ext.each(arrHaveLiabilities, function (recordDetail) {
-                                        var classColor  = 'even';
-                                        var forPrice    = Ext.util.Format.currency(recordDetail.price, ' ', 0);
-                                        var forAmount   = Ext.util.Format.currency(recordDetail.amount, ' ', 0);
-                                        var forQuantity = Ext.util.Format.currency(recordDetail.quantity, ' ', 0);
-                                        liabilityArr = recordDetail.liab_arr;
+                                //Array have no Liabilities
+                                var breakP = false;
+                                if (arrHaveNoLiabilities) {
+                                    Ext.each(arrHaveNoLiabilities, function (recordDetailNo) {
 
-                                        total = total + recordDetail.amount;
+                                        total = total + recordDetailNo.amount;
+
+                                        var classColor  = 'even';
+                                        var forPrice    = Ext.util.Format.currency(recordDetailNo.price, ' ', 0);
+                                        var forAmount   = Ext.util.Format.currency(recordDetailNo.amount, ' ', 0);
+                                        var forQuantity = Ext.util.Format.currency(recordDetailNo.quantity, ' ', 0);
+
                                         rowDetail = rowDetail + '<tr class="'+classColor+'">'+
                                                                     '<td style="text-align: center;">' + order + '</td>'+
-                                                                    '<td>' + recordDetail.productName + '</td>'+
+                                                                    '<td>' + recordDetailNo.productName + '</td>'+
                                                                     '<td style="text-align: right;">' + forQuantity + '</td>'+
-                                                                    '<td>' + recordDetail.unitName + '</td>'+
+                                                                    '<td>' + recordDetailNo.unitName + '</td>'+
+                                                                    '<td style="text-align: right;">' + forPrice + '</td>'+
+                                                                    '<td style="text-align: right;">' + forAmount + '</td>'+
+                                                                '</tr>';
+
+                                        if (order % numRowDetail == 0) {
+                                            pageBreak = '<br><br><br><br>';
+                                            if (order % (numRowDetail * 2) == 0) {
+                                                pageBreak = pageBreak + '<div class="page-break"></div>';
+                                                breakP = true;
+                                            }
+
+                                            dataGrids = getDataGrids(rowDetail, total);
+                                            contentNew = contentNew + dataForms + dataGrids + listSign + pageBreak;
+
+                                            rowDetail = "";
+                                            numOfCard = numOfCard + 1;
+                                        }
+
+                                        order++;
+                                    });
+                                }
+
+                                //Array have Liabilities
+                                if (arrHaveLiabilities) {
+
+                                    Ext.each(arrHaveLiabilities, function (recordDetailHave) {
+                                        var classColor  = 'even';
+                                        var forPrice    = Ext.util.Format.currency(recordDetailHave.price, ' ', 0);
+                                        var forAmount   = Ext.util.Format.currency(recordDetailHave.amount, ' ', 0);
+                                        var forQuantity = Ext.util.Format.currency(recordDetailHave.quantity, ' ', 0);
+                                        liabilityArr = recordDetailHave.liab_arr;
+
+                                        total = total + recordDetailHave.amount;
+                                        rowDetail = rowDetail + '<tr class="'+classColor+'">'+
+                                                                    '<td style="text-align: center;">' + order + '</td>'+
+                                                                    '<td>' + recordDetailHave.productName + '</td>'+
+                                                                    '<td style="text-align: right;">' + forQuantity + '</td>'+
+                                                                    '<td>' + recordDetailHave.unitName + '</td>'+
                                                                     '<td style="text-align: right;">' + forPrice + '</td>'+
                                                                     '<td style="text-align: right;">' + forAmount + '</td>'+
                                                                 '</tr>';
@@ -726,8 +712,8 @@ Ext.define("MyUx.grid.Printer", {
                                                 '</table>';
                                     }
 
-                                    pageBreak = '';
-                                    if ((liabilityArr.length + numRowOdd) >= numRowDetail || differenceId != record.data.id) {
+                                    pageBreak = '<br><br><br><br>';
+                                    if (!breakP && numInvoice != 0 && ((numOfCard + numInvoice +1) % 2 == 0)) {
                                         pageBreak = pageBreak + '<div class="page-break"></div>';
                                     }
 
@@ -736,7 +722,7 @@ Ext.define("MyUx.grid.Printer", {
                             }
                         }
 
-                        differenceId = record.data.id;
+                        numInvoice++;
                     });
                 } else {
                     MyUtil.Message.MessageInfo('please chose invoice'.Translator('Liabilities'));
