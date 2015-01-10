@@ -8,23 +8,10 @@ var readerJson = {
     totalProperty: 'total'
 };
 
-var objectField = [{name: 'id',       type: 'int'},
-                   {name: 'userName', type: 'string'},
-                   {name: 'name',     type: 'string'},
-                   {name: 'email',    type: 'string'}
-];
-
-MyUtil.Object.defineModel('User', objectField);
-
-var storeLoadUser = new Ext.data.JsonStore({
-    model: 'User',
-    proxy: new Ext.data.HttpProxy({
-        url: MyUtil.Path.getPathAction("User_Load"),
-        reader: readerJson
-    }),
-    pageSize: pageSizeDefault,
-    autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
-});
+var objectField = [{name: 'id',        type: 'int'},
+                     {name: 'userName', type: 'string'},
+                     {name: 'name',      type: 'string'},
+                     {name: 'email',     type: 'string'}];
 
 Ext.define('SrcPageUrl.User.List', {
     extend: 'Ext.ux.desktop.Module',
@@ -42,9 +29,23 @@ Ext.define('SrcPageUrl.User.List', {
             text: 'user management'.Translator('Module'),
             iconCls:'icon-grid'
         };
+
+        MyUtil.Object.defineModel('User', objectField);
     },
 
     createWindow : function(){
+
+
+        var storeLoadUser = new Ext.data.JsonStore({
+            model: 'User',
+            proxy: new Ext.data.HttpProxy({
+                url: MyUtil.Path.getPathAction("User_Load"),
+                reader: readerJson
+            }),
+            pageSize: pageSizeDefault,
+            autoLoad: ({params:{limit: limitDefault, page: pageDefault, start: startDefault}}, false)
+        });
+
         var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
