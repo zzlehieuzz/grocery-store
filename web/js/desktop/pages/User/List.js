@@ -13,6 +13,8 @@ var objectField = [{name: 'id',        type: 'int'},
                      {name: 'name',      type: 'string'},
                      {name: 'email',     type: 'string'}];
 
+MyUtil.Object.defineModel('User', objectField);
+
 Ext.define('SrcPageUrl.User.List', {
     extend: 'Ext.ux.desktop.Module',
     requires: [
@@ -29,13 +31,9 @@ Ext.define('SrcPageUrl.User.List', {
             text: 'user management'.Translator('Module'),
             iconCls:'icon-grid'
         };
-
-        MyUtil.Object.defineModel('User', objectField);
     },
 
     createWindow : function(){
-
-
         var storeLoadUser = new Ext.data.JsonStore({
             model: 'User',
             proxy: new Ext.data.HttpProxy({
