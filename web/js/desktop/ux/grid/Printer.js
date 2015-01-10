@@ -685,29 +685,29 @@ Ext.define("MyUx.grid.Printer", {
                                             '<table border="0" cellpadding="0" cellspacing="0">' +
                                                     '<tr><th colspan="4">' + 'previous debit'.Translator('Liabilities') + '</th></tr>' +
                                                     '<tr>' +
-                                                    '<th style="text-align: center; " width="30">' + 'order'.Translator('Invoice') + '</th>' +
-                                                    '<th style="text-align: center;">' + 'product name'.Translator('Report') + '</th>' +
-                                                    '<th style="text-align: center;" width="120">' + 'quantity'.Translator('Invoice') + '</th>' +
-                                                    '<th style="text-align: center;" width="160">' + 'money'.Translator('Liabilities') + '</th>' +
+                                                        '<th style="text-align: center; " width="30">' + 'order'.Translator('Invoice') + '</th>' +
+                                                        '<th style="text-align: center;">' + 'product name'.Translator('Report') + '</th>' +
+                                                        '<th style="text-align: center;" width="120">' + 'quantity'.Translator('Invoice') + '</th>' +
+                                                        '<th style="text-align: center;" width="160">' + 'money'.Translator('Liabilities') + '</th>' +
                                                     '</tr>' + rowLiabDetail +
                                                     '<tr>' +
-                                                    '<td colspan="3" style="text-align: right;" >' +
-                                                    '<span class="font-bold">' + 'debit'.Translator('Liabilities') + '</span>' +
-                                                    '</td>' +
-                                                    '<td style="text-align: right;">' +
-                                                    'currency'.Translator('Invoice') + ' ' +
-                                                    Ext.util.Format.currency((totalLiab), ' ', decimalPrecision) +
-                                                    '</td>' +
+                                                        '<td colspan="3" style="text-align: right;" >' +
+                                                        '<span class="font-bold">' + 'debit'.Translator('Liabilities') + '</span>' +
+                                                        '</td>' +
+                                                        '<td style="text-align: right;">' +
+                                                        'currency'.Translator('Invoice') + ' ' +
+                                                        Ext.util.Format.currency((totalLiab), ' ', decimalPrecision) +
+                                                        '</td>' +
                                                     '</tr>' +
 
                                                     '<tr>' +
-                                                    '<td colspan="3" style="text-align: right;" >' +
-                                                    '<span class="font-bold">' + 'total debit before and after'.Translator('Liabilities') + '</span>' +
-                                                    '</td>' +
+                                                        '<td colspan="3" style="text-align: right;" >' +
+                                                        '<span class="font-bold">' + 'total debit before and after'.Translator('Liabilities') + '</span>' +
+                                                        '</td>' +
 
-                                                    '<td style="text-align: right;">' +
-                                                    'currency'.Translator('Invoice') + ' ' + Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision) +
-                                                    '</td>' +
+                                                        '<td style="text-align: right;">' +
+                                                        'currency'.Translator('Invoice') + ' ' + Ext.util.Format.currency((total + totalLiab), ' ', decimalPrecision) +
+                                                        '</td>' +
                                                     '</tr>' +
                                                 '</table>';
                                     }
