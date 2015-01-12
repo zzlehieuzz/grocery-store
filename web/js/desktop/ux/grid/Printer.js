@@ -522,7 +522,6 @@ Ext.define("MyUx.grid.Printer", {
                                 '</table>';
 
             if (extData) {
-
                 var arrHaveNoLiabilitiesAll = [];
                 var numInvoice = 0;
                 var numOfCard = 0;
@@ -537,21 +536,19 @@ Ext.define("MyUx.grid.Printer", {
                             dataForms = dataForms +
                             '<table class="no-border" border="0px" style="width: 100%">'+
                                 '<tr>'+
-                                    '<td class="font-bold" width="80">' + 'customer name'.Translator('Invoice') + ':</td>'+
-                                    '<td width="250">Anh/Chị ' + record.data.customerName + '</td>'+
-                                    '<td class="font-bold" width="80">' + 'phone number'.Translator('Invoice') + ':</td>'+
+                                    '<td class="font-bold" width="70">' + 'customer name'.Translator('Invoice') + ':</td>'+
+                                    '<td width="170">Anh/Chị ' + record.data.customerName + '</td>'+
+                                    '<td class="font-bold" width="50">' + 'phone number'.Translator('Invoice') + ':</td>'+
                                     '<td>' + record.data.phoneNumber + '</td>'+
                                 '</tr>'+
                                 '<tr>'+
-                                    '<td class="font-bold" width="80">' + 'invoice number'.Translator('Invoice') + ':</td>'+
+                                    '<td class="font-bold" width="70">' + 'invoice number'.Translator('Invoice') + ':</td>'+
                                     '<td>' + record.data.invoiceNumber + '</td>'+
+                                    '<td class="font-bold" width="50">' + 'address'.Translator('Invoice') + ':</td>'+
+                                    '<td>' + record.data.address + '</td>'+
                                 '</tr>'+
                                 '<tr>'+
-                                    '<td class="font-bold" width="80">' + 'address'.Translator('Invoice') + ':</td>'+
-                                    '<td colspan="3">' + record.data.address + '</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td class="font-bold" width="80">' + 'description'.Translator('Invoice') + ':</td>'+
+                                    '<td class="font-bold" width="70">' + 'description'.Translator('Invoice') + ':</td>'+
                                     '<td colspan="3">' + record.data.description + '</td>'+
                                 '</tr>'+
                             '</table>';
@@ -560,7 +557,6 @@ Ext.define("MyUx.grid.Printer", {
                             var arrHaveLiabilities = [], arrHaveNoLiabilities = [];
 
                             if (record.data.invoiceId.length > 0) {
-
                                 if (record.data.invoiceId.length >= numRowDetail) {
                                     numRowOdd = record.data.invoiceId.length % numRowDetail;
 
@@ -737,7 +733,7 @@ Ext.define("MyUx.grid.Printer", {
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
                 '<html class="' + Ext.baseCSSPrefix + 'ux-grid-printer">',
                 '<head>',
-                '<title>Print</title>',
+                '<title>',new Date().getTime(),'</title>',
                 '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />',
                 '<link href="' + this.stylesheetPath + '" rel="stylesheet" type="text/css" />',
                 '<style type="text/css">'+

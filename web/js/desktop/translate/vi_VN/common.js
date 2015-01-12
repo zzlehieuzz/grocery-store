@@ -146,7 +146,7 @@ Locale.module('Invoice', {
     'create invoice date': 'Ngày lập phiếu',
     'create invoice man': 'Người lập',
     'address': 'Địa chỉ',
-    'phone number': 'Số điện thoại',
+    'phone number': 'Sđt',
     'payment status': 'Thanh toán',
     'delivery status': 'Giao hàng',
     'all': 'Tất cả',
