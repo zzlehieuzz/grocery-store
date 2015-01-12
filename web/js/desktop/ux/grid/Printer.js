@@ -671,12 +671,12 @@ Ext.define("MyUx.grid.Printer", {
                                             rowLiabDetail =
                                                 rowLiabDetail +
                                                     '<tr>'+
-                                                    '<td style="text-align: center; ">' + stt + '</td>'+
-                                                    '<td>' + liability.name + '</td>' +
-                                                    '<td style="text-align: right;">' + liability.amount + '</td>'+
-                                                    '<td style="text-align: right;">'+
-                                                    Ext.util.Format.currency((parseInt(liability.amount) * parseInt(liability.price)), ' ', decimalPrecision) +
-                                                    '</td>'+
+                                                        '<td style="text-align: center; ">' + stt + '</td>'+
+                                                        '<td>' + liability.name + '</td>' +
+                                                        '<td style="text-align: right;">' + liability.amount + '</td>'+
+                                                        '<td style="text-align: right;">'+
+                                                            Ext.util.Format.currency((parseInt(liability.amount) * parseInt(liability.price)), ' ', decimalPrecision) +
+                                                        '</td>'+
                                                     '</tr>';
                                             stt++;
                                         });
@@ -729,6 +729,9 @@ Ext.define("MyUx.grid.Printer", {
                     return false;
                 }
             }
+
+            var index= contentNew.lastIndexOf("</table>");
+            contentNew = contentNew.substring(0, index + 8);
 
             var htmlMarkupCustom = [
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
