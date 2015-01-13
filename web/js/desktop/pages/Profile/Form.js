@@ -20,8 +20,8 @@ Ext.define('SrcPageUrl.Profile.Form', {
         Ext.apply(Ext.form.VTypes, {
             password: function(val, field) {
                 if (field.initialPassField) {
-                    var pwd = field.up('form').down('#' + field.initialPassField);
-                    return (val == pwd.getValue());
+                    var pwd = field.up('form').down('[name='+field.initialPassField+']');
+                    return (val == pwd[0].getValue());
                 }
                 return true;
             },
@@ -41,7 +41,7 @@ Ext.define('SrcPageUrl.Profile.Form', {
                 iconCls: 'notepad',
                 animCollapse: false,
                 constrainHeader: false,
-                id: 'profileForm',
+                name: 'profileForm',
                 items: [{
                             xtype: 'form',
                             bodyPadding: 5,
@@ -50,26 +50,22 @@ Ext.define('SrcPageUrl.Profile.Form', {
                             items: [{
                             xtype: 'hidden',
                             name: 'userId',
-                            id: 'userId',
                             value: userLoginData.id,
                             allowBlank: false
                         }, {
                             fieldLabel: 'name'.Translator('Common'),
-                            name: 'name',
-                            id: 'profileName',
+                            name: 'profileName',
                             value: userLoginData.name,
                             allowBlank: false
                         }, {
                             fieldLabel: 'new-pass'.Translator('Profile'),
                             inputType: 'password',
-                            name: 'newPass',
-                            id: 'profileNewPass'
+                            name: 'profileNewPass'
                         }, {
                             fieldLabel: 'confirm-pass'.Translator('Profile'),
                             inputType: 'password',
-                            name: 'confirm',
+                            name: 'profileConfirm',
                             vtype: 'password',
-                            id: 'profileConfirm',
                             initialPassField: 'profileNewPass'
                         }],
                     buttons: [{
@@ -78,9 +74,9 @@ Ext.define('SrcPageUrl.Profile.Form', {
                             var isValid = this.up('form').getForm().isValid();
                             if (isValid) {
                                 var changeProfile = {
-                                    userId         : Ext.getCmp('userId').value,
-                                    profileName    : Ext.getCmp('profileName').value,
-                                    profileNewPass : Ext.getCmp('profileNewPass').value
+                                    userId         : Ext.ComponentQuery.query('[name=userId]')[0].getValue(),
+                                    profileName    : Ext.ComponentQuery.query('[name=profileName]')[0].getValue(),
+                                    profileNewPass : Ext.ComponentQuery.query('[name=profileNewPass]')[0].getValue()
                                 };
                                 if (changeProfile) {
                                     Ext.Ajax.request({
@@ -96,8 +92,8 @@ Ext.define('SrcPageUrl.Profile.Form', {
                                                 var data     = Ext.JSON.decode(msg.responseText).data,
                                                     dataJson = Ext.JSON.encode(data[0]);
 
-                                                Ext.getCmp('userId').setValue(data[0].id);
-                                                Ext.getCmp('profileName').setValue(data[0].name);
+                                                Ext.ComponentQuery.query('[name=userId]')[0].setValue(data[0].id);
+                                                Ext.ComponentQuery.query('[name=profileName]')[0].setValue(data[0].name);
 
                                                 var attrData = {'data': dataJson};
                                                 Ext.get('UserLoginJson').set(attrData);
