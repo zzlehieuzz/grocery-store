@@ -487,7 +487,7 @@ Ext.define("MyUx.grid.Printer", {
                 return tableDetail;
             };
 
-            var contentNew = "", numRowDetail = 5;
+            var contentNew = "", numRowDetail = 8;
             var dataForms = "";
             var dataGrids = "", pageBreak = '<br><br><br><br>';
             var liabilityArr = [];
@@ -615,17 +615,17 @@ Ext.define("MyUx.grid.Printer", {
                                                                 '</tr>';
 
                                         if (order % numRowDetail == 0) {
-                                            pageBreak = '<br><br><br><br>';
+                                            pageBreak = '';
                                             if (order % (numRowDetail * 2) == 0) {
                                                 pageBreak = pageBreak + '<div class="page-break"></div>';
                                                 breakP = true;
+                                                numOfCard = numOfCard + 1;
                                             }
 
                                             dataGrids = getDataGrids(rowDetail, total);
-                                            contentNew = contentNew + dataForms + dataGrids + listSign + pageBreak;
+                                            contentNew = contentNew + '<div style="height: 500px;">' +dataForms + dataGrids + listSign + '</div>' + pageBreak ;
 
                                             rowDetail = "";
-                                            numOfCard = numOfCard + 1;
                                         }
 
                                         order++;
@@ -633,7 +633,7 @@ Ext.define("MyUx.grid.Printer", {
                                 }
 
                                 //Array have Liabilities
-                                if (arrHaveLiabilities) {
+                                if (arrHaveLiabilities.length) {
 
                                     Ext.each(arrHaveLiabilities, function (recordDetailHave) {
                                         var classColor  = 'even';
@@ -659,7 +659,7 @@ Ext.define("MyUx.grid.Printer", {
 
                                     //Allow add Liability
                                     var rowLiabDetail = '', totalLiab = 0, stt = 1, debit = '';
-                                    if (liabilityArr) {
+                                    if (liabilityArr.length) {
 
                                         Ext.each(liabilityArr, function (liability) {
                                             totalLiab = totalLiab + (parseInt(liability.amount) * parseInt(liability.price));
@@ -708,12 +708,13 @@ Ext.define("MyUx.grid.Printer", {
                                                 '</table>';
                                     }
 
-                                    pageBreak = '<br><br><br><br>';
-                                    if (!breakP && numInvoice != 0 && ((numOfCard + numInvoice +1) % 2 == 0)) {
+                                    pageBreak = '';
+//                                    if (!breakP && numInvoice != 0 && ((numOfCard + numInvoice +1) % 2 == 0)) {
+                                    if (((numOfCard + numInvoice +1) % 2 == 0)) {
                                         pageBreak = pageBreak + '<div class="page-break"></div>';
                                     }
 
-                                    contentNew = contentNew + dataForms + dataGrids + debit + listSign + pageBreak;
+                                    contentNew = contentNew  + '<div style="height: 500px;">' + dataForms + dataGrids + debit + listSign + '</div>' + pageBreak;
                                 }
                             }
                         }
