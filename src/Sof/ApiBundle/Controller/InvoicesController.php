@@ -254,7 +254,6 @@ class InvoicesController extends BaseController
     public function Input_UpdateAction()
     {
         $entityService = $this->getEntityService();
-
         $params            =  $this->get('request')->getContent();
         $params            = json_decode($params);
         $formParent        = (array)$params->form_fields_value;
