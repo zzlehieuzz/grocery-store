@@ -8,7 +8,7 @@ Ext.define('MyUtil.Path', {
                 alert('Error image');
             }
 
-            return 'js/desktop/wallpapers/' + img;
+            return 'web/js/desktop/wallpapers/' + img;
         },
 
         getPathAction: function (id) {
