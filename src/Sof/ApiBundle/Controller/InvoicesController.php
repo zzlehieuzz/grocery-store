@@ -224,7 +224,7 @@ class InvoicesController extends BaseController
                     'conditions' => array('invoiceId' => $invoiceId)
                 ));
 
-            $arrLiab = [];
+            $arrLiab = array();
             if (count($arrLiabilities)) {
                 foreach ($arrLiabilities as $key=>$liability) {
                     $arrLiab[$key]['name'] =  $liability['name'];
@@ -531,7 +531,7 @@ class InvoicesController extends BaseController
                             'conditions' => array('invoiceId' => $item['id'])
                         ));
 
-                    $arrLiab = [];
+                    $arrLiab = array();
                     if (count($arrLiabilities)) {
                         foreach ($arrLiabilities as $key1=>$liability) {
                             $arrLiab[$key1]['name'] =  $liability['name'];
@@ -550,8 +550,6 @@ class InvoicesController extends BaseController
                     $listInvoice[$key]['invoiceId'][$keyDetail]['amount'] = $itemDetail['amount'];
                     $listInvoice[$key]['invoiceId'][$keyDetail]['liab_arr'] = $arrLiab;
                 }
-
-
             }
         }
 
