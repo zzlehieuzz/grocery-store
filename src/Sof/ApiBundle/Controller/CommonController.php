@@ -30,4 +30,43 @@ class CommonController extends BaseController
         return array('moduleJson' => json_encode($module),
                      'userJson'   => json_encode($userData));
     }
+
+    /**
+     * @Route("/Common_Backup", name="Common_Backup")
+     * @Method("GET")
+     */
+    public function Common_BackupAction()
+    {
+        $entityService = $this->getEntityService();
+
+        $params = $this->getJsonParams();
+
+        $path = $this->getRequest()->server->get('DOCUMENT_ROOT') . '/' . $this->getRequest()->getBasePath() . '/database/';
+
+        $command = '';
+        $error   = '';
+        try {
+            $db     = "chincchi_store";
+            $dbpass = "admin123";
+            $dbname = "chincchi_store";
+
+            $filename = $path . date("YmdHis");
+//            $command = "mysqldump -u $dbname -p $dbpass $db | gzip > $filename.sql.gz";
+            $command = "mysqldump -u $dbname -p $dbpass --routines --complete-insert --opt $db > db_$filename.sql";
+            system($command);
+        } catch (\Exception $e) {
+            $error = 'mysqldump-php error: ' . $e->getMessage();
+        }
+
+        return $this->jsonResponse(array('data' => array($command, $error)));
+    }
+
+    /**
+     * @Route("/Common_Restore", name="Common_Restore")
+     * @Method("GET")
+     */
+    public function Common_RestoreAction()
+    {
+
+    }
 }

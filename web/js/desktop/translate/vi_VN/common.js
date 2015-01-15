@@ -63,7 +63,12 @@ Locale.module('Logout', {
 
 Locale.module('Settings', {
     'settings': 'Cấu hình',
-    'change settings': 'Đổi cấu hình'
+    'change settings': 'Đổi cấu hình',
+    'backup': 'Sao lưu',
+    'restore': 'Khôi phục',
+    //mess
+    'are you sure you want to backup': 'Bạn có chắc muốn sao lưu ?',
+    'are you sure you want to restore': 'Bạn có chắc muốn khôi phục ?'
 });
 
 Locale.module('User', {

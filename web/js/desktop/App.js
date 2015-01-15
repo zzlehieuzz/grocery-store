@@ -114,6 +114,16 @@ Ext.define('MyDesktop.App', {
                         iconCls:'settings',
                         handler: me.onSettings,
                         scope: me
+                    }, {
+                        text:'backup'.Translator('Settings'),
+                        iconCls:'settings',
+                        handler: me.onBackup,
+                        scope: me
+                    }, {
+                        text:'restore'.Translator('Settings'),
+                        iconCls:'settings',
+                        handler: me.onRestore,
+                        scope: me
                     }, '-', {
                         text:'logout'.Translator('Logout'),
                         iconCls:'logout',
@@ -138,18 +148,49 @@ Ext.define('MyDesktop.App', {
     },
 
     onLogout: function () {
-      Ext.MessageBox.confirm('logout'.Translator('Logout'), 'are you sure you want to logout'.Translator('Logout'), function(btn){
-        if (btn === 'yes'){
-          Ext.Ajax.request({
-            url: MyUtil.Path.getPathAction("user_logout")
-            , params: null
-            , method: 'POST'
-            , success: function (data) {
-                location.reload();
+        Ext.MessageBox.confirm('logout'.Translator('Logout'), 'are you sure you want to logout'.Translator('Logout'), function(btn){
+            if (btn === 'yes'){
+                Ext.Ajax.request({
+                    url: MyUtil.Path.getPathAction("user_logout")
+                    , params: null
+                    , method: 'POST'
+                    , success: function (data) {
+                        location.reload();
+                    }
+                });
             }
-          });
-        }
-      });
+        });
+    },
+
+    onBackup: function () {
+        Ext.MessageBox.confirm('backup'.Translator('Settings'), 'are you sure you want to backup'.Translator('Settings'), function(btn){
+            if (btn === 'yes'){
+                Ext.Ajax.request({
+                    url: MyUtil.Path.getPathAction("Common_Backup"),
+                    masked: { xtype: 'loadmask',message: 'loading' }
+                    , params: null
+                    , method: 'GET'
+                    , success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        });
+    },
+
+    onRestore: function () {
+        Ext.MessageBox.confirm('restore'.Translator('Settings'), 'are you sure you want to restore'.Translator('Settings'), function(btn){
+            if (btn === 'yes'){
+                Ext.Ajax.request({
+                    url: MyUtil.Path.getPathAction("Common_Restore")
+                    , params: null
+                    , method: 'GET'
+                    , success: function (data) {
+
+                    }
+                });
+            }
+        });
     },
 
     onSettings: function () {

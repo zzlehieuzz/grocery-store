@@ -19,7 +19,8 @@
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
-        "beberlei/DoctrineExtensions": "v0.1"
+        "beberlei/DoctrineExtensions": "v0.1",
+        "ifsnop/mysqldump-php":"1.*"
     },
     "require-dev": {
       "phpunit/phpunit": "3.7.*",

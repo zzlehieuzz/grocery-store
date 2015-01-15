@@ -89,3 +89,8 @@ password: thanhdp123456
 db:
 chincchi_store
 admin123
+
+SSH Key Generator
+118.69.55.244
+chincchi
+thanhdp123456
