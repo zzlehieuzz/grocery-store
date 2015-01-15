@@ -260,6 +260,9 @@ class InvoicesController extends BaseController
         $formParent        = (array)$params->form_fields_value;
         $form_fields_value = (array)$formParent[0];
         $grid_value        = (array)$params->grid_value;
+        $invoiceType       = $form_fields_value['invoiceType'];
+        $arrProductPriceNew = array();
+        $arrProductId = array();
 
         $amount = 0;
         if ($grid_value){
@@ -326,7 +329,7 @@ class InvoicesController extends BaseController
             $arrDelete = array();
             $arrNewId  = array();
 
-            foreach ($grid_value as $rowValue) {
+            foreach ($grid_value as $key=>$rowValue) {
                 $arrData = (array)$rowValue;
 
                 if ($arrData['id'] == 0) {
@@ -344,6 +347,12 @@ class InvoicesController extends BaseController
                             $arrUpdate[] = $arrData;
                         }
                     }
+                }
+
+                if ($invoiceType == 2) {
+                    $arrProductId[]                         = $arrData['productId'];
+                    $arrProductPriceNew[$key]['product_id'] = $arrData['productId'];
+                    $arrProductPriceNew[$key]['price']      = $arrData['price'];
                 }
             }
 
@@ -382,6 +391,35 @@ class InvoicesController extends BaseController
             if (count($arrDelete)) {
                 foreach ($arrDelete as $itemDel){
                     $entityService->delete('InvoiceDetail', $itemDel);
+                }
+            }
+
+            //Update price of product
+            $arrProductUpdate = array();
+            if ($arrProductId) {
+                foreach ($arrProductId as $proId) {
+                    $listProduct = $this->getEntityService()->getFirstData(
+                        'Product',
+                        array(
+                            'conditions' => array('id' => $proId)
+                        ));
+
+                    foreach ($arrProductPriceNew as $priceNew) {
+                        if ($priceNew['product_id'] == $proId && $priceNew['price'] != $listProduct['salePrice']) {
+                            $arrProductUpdate[] = $priceNew;
+                        }
+                    }
+                }
+
+                if (count($arrProductUpdate)) {
+                    foreach ($arrProductUpdate as $proUpdate) {
+                        $entityService->dqlUpdate(
+                            'Product',
+                            array('update'     => array('salePrice' => $proUpdate['price']),
+                                    'conditions' => array('id' => $proUpdate['product_id'])
+                            )
+                        );
+                    }
                 }
             }
 
