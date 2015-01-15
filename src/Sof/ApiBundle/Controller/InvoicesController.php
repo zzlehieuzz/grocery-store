@@ -262,7 +262,7 @@ class InvoicesController extends BaseController
         $grid_value        = (array)$params->grid_value;
         $invoiceType       = $form_fields_value['invoiceType'];
         $arrProductPriceNew = array();
-        $arrProductId = array();
+        $arrProductId       = array();
 
         $amount = 0;
         if ($grid_value){
