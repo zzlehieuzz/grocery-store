@@ -5,15 +5,15 @@
         <meta http-equiv="Content-Language" content="vi"/>
         <title>{% block title %}Admin Grocery Store{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('image/store.ico') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('web/image/store.ico') }}" />
 
-        {% set extUrl          = asset('js/ext-js') %}
-        {% set desktopUrl      = asset('js/desktop/js') %}
-        {% set utilUrl         = asset('js/desktop/util') %}
-        {% set uxUrl           = asset('js/desktop/ux') %}
-        {% set myDesktopUrl    = asset('js/desktop') %}
-        {% set srcPageUrl      = asset('js/desktop/pages') %}
-        {% set srcTranslateUrl = asset('js/desktop/translate') %}
+        {% set extUrl          = asset('web/js/ext-js') %}
+        {% set desktopUrl      = asset('web/js/desktop/js') %}
+        {% set utilUrl         = asset('web/js/desktop/util') %}
+        {% set uxUrl           = asset('web/js/desktop/ux') %}
+        {% set myDesktopUrl    = asset('web/js/desktop') %}
+        {% set srcPageUrl      = asset('web/js/desktop/pages') %}
+        {% set srcTranslateUrl = asset('web/js/desktop/translate') %}
 
         <link rel="stylesheet" href="{{ asset(extUrl) ~ '/resources/ext-theme-classic/ext-theme-classic-all-debug.css' }}" />
         <link rel="stylesheet" href="{{ asset(myDesktopUrl) ~ '/css/desktop.css' }}" />
