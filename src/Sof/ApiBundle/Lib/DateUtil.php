@@ -11,6 +11,7 @@ class DateUtil
 
     const FORMAT_DATE_HIS     = 'H:i:s';
     const FORMAT_DATE_N       = 'N';
+    const FORMAT_DATE_Y       = 'Y';
     const FORMAT_DATE_YM_NOT  = 'Ym';
     const FORMAT_DATE_YMD_NOT = 'Ymd';
     const FORMAT_DATE_YMD     = 'Y-m-d';

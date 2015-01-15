@@ -87,13 +87,14 @@ class CustomerController extends BaseController
     public function Customer_LoadLastCodeAction()
     {
         $dateCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_YMD_NOT);
+        $yearCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_Y);
         $code = 'KH';
         $arrCustomer = $this->getEntityService()->getFirstData(
             'Customer',
             array(
                 'selects'    => array('code'),
                 'orderBy'    => array('id' => 'DESC'),
-                'conditions' => array('code' => array('LIKE' => "$code/%"))
+                'conditions' => array('code' => array('LIKE' => "$code/$yearCurrent%"))
             ));
         if ($arrCustomer) {
             $oldCode = $arrCustomer;

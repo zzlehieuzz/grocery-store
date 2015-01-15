@@ -87,13 +87,14 @@ class DistributorController extends BaseController
     public function Distributor_LoadLastCodeAction()
     {
         $dateCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_YMD_NOT);
+        $yearCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_Y);
         $code = 'PP';
         $arrDistributor = $this->getEntityService()->getFirstData(
             'Distributor',
             array(
                 'selects'    => array('code'),
                 'orderBy'    => array('id' => 'DESC'),
-                'conditions' => array('code' => array('LIKE' => "$code/%"))
+                'conditions' => array('code' => array('LIKE' => "$code/$yearCurrent%"))
             ));
         if ($arrDistributor) {
             $oldCode = $arrDistributor;

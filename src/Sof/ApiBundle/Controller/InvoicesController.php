@@ -196,9 +196,10 @@ class InvoicesController extends BaseController
         $invoiceId = $request->get('id');
         $arrInvoiceDetail = array();
         $entityInvoice = array();
+        $entityService = $this->getEntityService();
 
         if ($invoiceId) {
-            $entityInvoice = $this->getEntityService()->getFirstData(
+            $entityInvoice = $entityService->getFirstData(
                 'Invoice',
                 array('orderBy'    => array('id' => 'DESC'),
                       'conditions' => array('id' => $invoiceId)));
@@ -209,7 +210,7 @@ class InvoicesController extends BaseController
                 $entityInvoice['createInvoiceDate'] = null;
             }
 
-            $arrInvoiceDetail = $this->getEntityService()->getAllData(
+            $arrInvoiceDetail = $entityService->getAllData(
                 'InvoiceDetail',
                 array(
                     'orderBy'    => array('id' => 'DESC'),
@@ -218,7 +219,7 @@ class InvoicesController extends BaseController
                     'maxResults' => $request->get('limit')
                 ));
 
-            $arrLiabilities = $this->getEntityService()->getAllData(
+            $arrLiabilities = $entityService->getAllData(
                 'Liabilities',
                 array(
                     'conditions' => array('invoiceId' => $invoiceId)
@@ -462,6 +463,7 @@ class InvoicesController extends BaseController
 
     private function generatingInvoiceNumber($invoiceType){
         $dateCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_YMD_NOT);
+        $yearCurrent = DateUtil::getCurrentDate(DateUtil::FORMAT_DATE_Y);
 
         if ($invoiceType == 1) {
             $invoiceNumber = 'PN';
@@ -473,7 +475,10 @@ class InvoicesController extends BaseController
             'Invoice',
             array(
                 'orderBy'     => array('id' => 'DESC'),
-                'conditions'  => array('invoiceType' => $invoiceType)
+                'conditions'  => array(
+                  'invoiceType' => $invoiceType,
+                  'invoiceNumber' => array('LIKE' => "$invoiceNumber/$yearCurrent%")
+                )
             ));
 
         if ($entityInvoice) {
