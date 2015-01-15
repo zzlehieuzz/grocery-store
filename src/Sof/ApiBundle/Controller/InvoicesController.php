@@ -253,7 +253,7 @@ class InvoicesController extends BaseController
      */
     public function Input_UpdateAction()
     {
-        $entityService = $this->getEntityService();
+        $entityService     = $this->getEntityService();
         $params            =  $this->get('request')->getContent();
         $params            = json_decode($params);
         $formParent        = (array)$params->form_fields_value;
@@ -273,7 +273,7 @@ class InvoicesController extends BaseController
         $form_fields_value['amount'] = $amount;
 
         if ($form_fields_value['invoiceNumber'] != "") {
-            $arrCheckInvoice = $this->getEntityService()->getFirstData(
+            $arrCheckInvoice = $entityService->getFirstData(
                 'Invoice',
                 array(
                     'conditions' => array('invoiceNumber' => $form_fields_value['invoiceNumber'])
@@ -315,7 +315,7 @@ class InvoicesController extends BaseController
         }
 
         //Update Invoice Detail
-        $arrInvoiceDetail = $this->getEntityService()->getAllData(
+        $arrInvoiceDetail = $entityService->getAllData(
             'InvoiceDetail',
             array(
                 'orderBy'    => array('id' => 'DESC'),
@@ -397,7 +397,7 @@ class InvoicesController extends BaseController
             $arrProductUpdate = array();
             if ($arrProductId) {
                 foreach ($arrProductId as $proId) {
-                    $listProduct = $this->getEntityService()->getFirstData(
+                    $listProduct = $entityService->getFirstData(
                         'Product',
                         array(
                             'conditions' => array('id' => $proId)
