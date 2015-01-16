@@ -85,5 +85,8 @@ input:focus {
     text-align: center;
     font-size: small; }
 
-.login-error{
-    color: red; }
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    margin-bottom: 10px}
