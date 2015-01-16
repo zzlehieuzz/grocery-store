@@ -18,18 +18,18 @@
 
                     <form action="{{ path("user_auth") }}" method="post" id="login">
                         <div class="control-group">
-                            <input type="text" class="login-field" value="{{ lastUsername }}" placeholder="username" id="username"  name="login_username">
+                            <input type="text" class="login-field username" value="{{ lastUsername }}" placeholder="username" id="username"  name="login_username">
                             <label class="login-field-icon fui-user" for="login-name"></label>
                         </div>
                         <div class="control-group">
-                            <input type="password" class="login-field" value="" placeholder="password" id="password" name="login_password">
+                            <input type="password" class="login-field password" value="" placeholder="password" id="password" name="login_password">
                             <label class="login-field-icon fui-lock" for="login-pass"></label>
                         </div>
                         <input class="btn btn-primary btn-large btn-block" type="submit" value="LOGIN" />
                         {#<a class="login-link" href="#">Lost your password?</a>#}
                     </form>
                 </div>
-                {#<div class="designer">Design By HieuNLD</div>#}
+                <div class="designer">Design By HieuNLD</div>
             </div>
         </div>
     </body>
