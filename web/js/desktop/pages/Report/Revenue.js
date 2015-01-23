@@ -110,18 +110,25 @@ Ext.define('SrcPageUrl.Report.Revenue', {
                 labelWidth: 30,
                 fieldLabel: 'year'.Translator('Invoice'),
                 xtype: 'datefield',
-                width: 90,
+                width: 100,
                 padding: '0 0 0 10px;',
                 format: dateFormatY,
                 submitFormat: dateFormatY,
-                value: Ext.Date.format(new Date(), dateFormatY)
+                value: Ext.Date.format(new Date(), dateFormatY),
+                listeners: {
+                    specialkey: function (s, e) {
+                        if (e.getKey() == Ext.EventObject.ENTER) {
+                            storeReportRevenueLoadJson.reload();
+                        }
+                    }
+                }
             }, '->', {
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
                 iconCls: 'find',
                 listeners: {
                     click: function () {
-                        storeReportRevenueLoadJson.load();
+                        storeReportRevenueLoadJson.reload();
                     }
                 }
             }]

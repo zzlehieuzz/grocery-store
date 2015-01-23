@@ -52,7 +52,7 @@ HELP:
   Call function in repository:
   $this->get('entity_service')->process('EntityName:functionName', args,...);
 ########################################################
-
+http://cpanel.byethost.com/
 Cpanel Username:     b15_15455114
 Cpanel Password:     ngusaocho10489
 Your URL:            http://grocery-store.byethost15.com or http://www.grocery-store.byethost15.com
@@ -64,7 +64,7 @@ MySQL Username :     b15_15455114
 MySQL Password :     ngusaocho10489
 MySQL Server:        SEE THE CPANEL
 b15_15455114_grocery_store
-
+  
 ########################################################
 Cpanel URL: http://103.18.5.67:2222/
 URL:  http://adorzhang.com 

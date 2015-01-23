@@ -137,7 +137,7 @@ Ext.define('SrcPageUrl.Driver.List', {
                         storeLoadDriver.insert(0, r);
                         rowEditing.startEdit(0, 0);
                     }
-                }, '-', {
+                }, {
                     text: 'remove'.Translator('Common'),
                     tooltip: 'remove'.Translator('Common'),
                     iconCls: 'remove',

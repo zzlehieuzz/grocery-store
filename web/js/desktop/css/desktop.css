@@ -251,6 +251,14 @@ div.ux-taskbar div.x-toolbar {
     background-image: url( ../images/gears.gif ) !important;
 }
 
+.backup {
+    background-image: url( ../images/backup16x16.png ) !important;
+}
+
+.restore {
+    background-image: url( ../images/restore16x16.png ) !important;
+}
+
 /*----------------------------------------------------
  * icon in grid
  */

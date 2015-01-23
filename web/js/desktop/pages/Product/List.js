@@ -231,7 +231,7 @@ Ext.define('SrcPageUrl.Product.List', {
                         storeLoadProduct.insert(0, r);
                         rowEditing.startEdit(0, 0);
                     }
-                }, '-',{
+                } ,{
                     text: 'remove'.Translator('Common'),
                     tooltip: 'remove'.Translator('Common'),
                     iconCls: 'remove',

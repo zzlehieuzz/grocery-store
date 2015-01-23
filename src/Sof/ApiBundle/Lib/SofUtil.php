@@ -12,81 +12,6 @@ class SofUtil
 {
 
     /**
-     * @param array $params
-     * @return string
-     *
-     * @author Hieunld 2014/01/11
-     */
-    public static function createSpotCode($params = array())
-    {
-        $spotIdCode = '';
-        if (isset($params['worldId']) && isset($params['areaId'])) {
-            $spotIdCode = ($params['worldId']*10000) + ($params['areaId']*100);
-        }
-
-        return $spotIdCode;
-    }
-
-    /**
-     * @param $spotCode
-     * @param $status
-     * @return string
-     *
-     * @author Hieunld 2014/01/11
-     */
-    public static function recoveryAreaCode($spotCode, $status = 'world')
-    {
-        if ($status == 'area') {
-
-            return substr_replace($spotCode, '00', -2);
-        }
-
-        return substr_replace($spotCode, '0000', -4);
-    }
-
-    /**
-     * @param $spotCode
-     * @throws \Sof\ApiBundle\Exception\SofApiException
-     * @return mixed
-     *
-     * @author datdvq 2014/04/22
-     */
-    public static function getSpotParts($spotCode)
-    {
-        if (strlen($spotCode) < 5) {
-            throw new SofApiException;
-        }
-
-        $result = array();
-        $result['areaCode']    = (int)substr_replace($spotCode, '00',   -2);
-        $result['worldCode']   = (int)substr_replace($spotCode, '0000', -4);
-        $result['spotNum']     = (int)substr($spotCode, -2);
-        $result['areaNum']     = (int)substr($spotCode, -4, 2);
-        $result['worldNum']    = $spotCode % 10000;
-        $result['nextAreaCode']      = (int)$result['areaCode'] + 100;
-        $result['nextAreaworldCode'] = (int)$result['areaCode'] + 10000;
-
-        return $result;
-    }
-
-    /**
-     * @param $spotProgress
-     * @return boolean
-     *
-     * @author datdvq 2014/04/22
-     */
-    public static function isClearSpot($spotProgress)
-    {
-        $spotProgressParts = explode('/', $spotProgress);
-
-        if (count($spotProgressParts) == 2 && $spotProgressParts[0] == $spotProgressParts[1]) {
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-
-    /**
      * Remove alias of key in Scalar Array
      * @param $arrayScalar
      * @throws \Exception
@@ -179,5 +104,14 @@ class SofUtil
         }
 
         return $output;
+    }
+
+    /**
+     * @return string
+     */
+    public static function createFileName() {
+        $time = microtime(true);
+
+        return sprintf("%s%03d", date('YmdHis', $time), ($time - floor($time)) * 1000);
     }
 }

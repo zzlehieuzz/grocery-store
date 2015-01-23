@@ -116,12 +116,12 @@ Ext.define('MyDesktop.App', {
                         scope: me
                     }, {
                         text:'backup'.Translator('Settings'),
-                        iconCls:'settings',
+                        iconCls:'backup',
                         handler: me.onBackup,
                         scope: me
                     }, {
                         text:'restore'.Translator('Settings'),
-                        iconCls:'settings',
+                        iconCls:'restore',
                         handler: me.onRestore,
                         scope: me
                     }, '-', {

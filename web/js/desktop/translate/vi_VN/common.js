@@ -37,7 +37,8 @@ Locale.module('Common', {
     'preview': 'Xem lại',
     'name': 'Tên',
     'amount': 'Số lượng',
-    'price': 'Giá'
+    'price': 'Giá',
+    'phone': 'Sđđ'
 });
 
 Locale.module('Module', {
@@ -200,7 +201,8 @@ Locale.module('Invoice', {
 Locale.module('Distributor', {
     'distributor address': 'Địa chỉ nhà PP',
     'distributor code': 'Mã nhà PP',
-    'distributor phone': 'Điện thoại nhà PP'
+    'distributor phone': 'Điện thoại nhà PP',
+    'item': 'Mặt hàng'
 });
 
 Locale.module('Delivery', {

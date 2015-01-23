@@ -175,7 +175,7 @@ Ext.define('SrcPageUrl.Customer.List', {
                             }
                         });
                     }
-                }, '-',{
+                },{
                     text:'remove'.Translator('Common'),
                     tooltip:'remove'.Translator('Common'),
                     iconCls:'remove',
@@ -219,6 +219,12 @@ Ext.define('SrcPageUrl.Customer.List', {
                 }],
                 bbar: new Ext.PagingToolbar({
                     store: storeLoadCustomer,
+                    pageSize: limitDefault,
+                    emptyMsg : 'no records found'.Translator('Common'),
+                    beforePageText : 'page'.Translator('Common'),
+                    afterPageText : 'of'.Translator('Common') + ' {0}',
+                    refreshText : 'refresh'.Translator('Common'),
+                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
                     displayInfo:true
                 })
             });

@@ -98,30 +98,51 @@ Ext.define('SrcPageUrl.Report.Inventory', {
         return new Ext.Toolbar({
             items: [{
                 name: 'reportInventoryFromDate',
-                labelWidth: 50,
+                labelWidth: 60,
                 fieldLabel: 'from date'.Translator('Invoice'),
                 xtype: 'datefield',
                 width: 165,
                 padding: '0 0 0 10px;',
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), firstDateFormat)
+                value: Ext.Date.format(new Date(), firstDateFormat),
+                listeners: {
+                    specialkey: function (s, e) {
+                        if (e.getKey() == Ext.EventObject.ENTER) {
+                            storeReportInventoryLoad.reload();
+                        }
+                    }
+                }
             }, {
                 name: 'reportInventoryToDate',
                 fieldLabel: '~',
                 labelWidth: 5,
                 labelSeparator: '',
                 xtype: 'datefield',
-                width: 120,
+                width: 110,
                 format: dateFormat,
                 submitFormat: dateSubmitFormat,
-                value: Ext.Date.format(new Date(), lastDateFormat)
+                value: Ext.Date.format(new Date(), lastDateFormat),
+                listeners: {
+                    specialkey: function (s, e) {
+                        if (e.getKey() == Ext.EventObject.ENTER) {
+                            storeReportInventoryLoad.reload();
+                        }
+                    }
+                }
             }, '-',{
                 name: 'reportInventoryProductName',
                 width: 200,
                 labelWidth: 50,
                 emptyText: 'product name'.Translator('Report'),
-                xtype: 'textfield'
+                xtype: 'textfield',
+                listeners: {
+                    specialkey: function (s, e) {
+                        if (e.getKey() == Ext.EventObject.ENTER) {
+                            storeReportInventoryLoad.reload();
+                        }
+                    }
+                }
             }, '->',{
                 text: 'find'.Translator('Common'),
                 tooltip: 'find'.Translator('Common'),
