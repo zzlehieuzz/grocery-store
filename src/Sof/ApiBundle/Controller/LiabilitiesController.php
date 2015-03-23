@@ -61,17 +61,21 @@ class LiabilitiesController extends BaseController
         $params        = $this->getJsonParams();
         $entityService = $this->getEntityService();
         if (isset($params['id']) && ($id = $params['id'])) {
-            unset($params['id']);
-
+            if (isset($params['id'])) unset($params['id']);
+            if (isset($params['deliveryStatus'])) unset($params['deliveryStatus']);
+            if (isset($params['invoiceNumber']))  unset($params['invoiceNumber']);
+            if (isset($params['paymentStatus']))  unset($params['paymentStatus']);
             $entityService->dqlUpdate(
                 'Liabilities',
                 array('update' => $params,
-                    'conditions' => array('id' => $id)
+                      'conditions' => array('id' => $id)
                 )
             );
         } else {
             if (isset($params['id'])) unset($params['id']);
+            if (isset($params['deliveryStatus']))  unset($params['deliveryStatus']);
             if (isset($params['invoiceNumber']))  unset($params['invoiceNumber']);
+            if (isset($params['paymentStatus']))  unset($params['paymentStatus']);
             $id = $entityService->rawSqlInsert('Liabilities', array('insert' => $params));
         }
         $entityService->completeTransaction();
