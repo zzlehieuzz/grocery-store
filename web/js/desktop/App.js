@@ -116,12 +116,12 @@ Ext.define('MyDesktop.App', {
                         scope: me
                     }, {
                         text:'backup'.Translator('Settings'),
-                        iconCls:'backup',
+                        iconCls:'settings',
                         handler: me.onBackup,
                         scope: me
                     }, {
                         text:'restore'.Translator('Settings'),
-                        iconCls:'restore',
+                        iconCls:'settings',
                         handler: me.onRestore,
                         scope: me
                     }, '-', {
@@ -166,8 +166,7 @@ Ext.define('MyDesktop.App', {
         Ext.MessageBox.confirm('backup'.Translator('Settings'), 'are you sure you want to backup'.Translator('Settings'), function(btn){
             if (btn === 'yes'){
                 Ext.Ajax.request({
-                    url: MyUtil.Path.getPathAction("Common_Backup"),
-                    masked: { xtype: 'loadmask',message: 'loading' }
+                    url: MyUtil.Path.getPathAction("Common_Backup")
                     , params: null
                     , method: 'GET'
                     , success: function (data) {

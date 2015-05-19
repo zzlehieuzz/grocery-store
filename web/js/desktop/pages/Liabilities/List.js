@@ -379,7 +379,7 @@ Ext.define('SrcPageUrl.Liabilities.List', {
                                 MyUtil.Message.MessageWarning('please choice a invoice'.Translator('Liabilities'));
                             }
                         }
-                    }, {
+                    }, '-',{
                         text:'remove'.Translator('Common'),
                         tooltip:'remove'.Translator('Common'),
                         iconCls:'remove',

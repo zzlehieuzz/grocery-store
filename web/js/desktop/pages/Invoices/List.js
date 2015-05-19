@@ -247,7 +247,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
             labelWidth: 150,
             style: 'margin: 5px 5px 0 5px;',
             defaultType: 'textfield',
-            //collapsible: true,
+            collapsible: true,
             defaults: {
                 anchor: '100%'
             },
@@ -256,7 +256,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 xtype: 'radiogroup',
                 style: 'margin-left: 5px;',
                 anchor: '60%',
-                labelWidth: 80,
                 fieldLabel: 'invoice type'.Translator('Invoice'),
                 columns: 3,
                 name: 'invoiceTypeRadio',
@@ -289,13 +288,11 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 layout: 'hbox',
                 vertical: true,
                 items: [{
-                        labelWidth: 80,
                         fieldLabel: 'from date'.Translator('Invoice'),
                         xtype: 'datefield',
                         padding: '0 5px 0 0;',
                         format: date_format,
                         altFormats: date_format,
-                        width: 190,
                         name: 'fromDate',
                         id: 'fromDate',
                         value: new Date(),
@@ -307,7 +304,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                             }
                         }
                     }, {
-                        labelWidth: 10,
+                        labelWidth: 0,
                         fieldLabel: '~',
                         padding: '0 10px 0 0;',
                         labelSeparator: '',
@@ -316,7 +313,6 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         xtype: 'datefield',
                         format: date_format,
                         altFormats: date_format,
-                        width: 120,
                         value: new Date(),
                         listeners: {
                             specialkey: function (s, e) {
@@ -421,10 +417,10 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 dataIndex: 'createInvoiceDate',
                 style: 'text-align:center;',
                 align: 'center',
-                width: 100
+                width: 70
             }, {
                 text: "invoice number".Translator('Invoice'),
-                width: 120,
+                width: 100,
                 style: 'text-align:center;',
                 dataIndex: 'invoiceNumber'
             }, {
@@ -432,11 +428,11 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 style: 'text-align:center;',
                 align: 'right',
                 dataIndex: 'amount',
-                width: 130,
+                width: 120,
                 renderer:  Ext.util.Format.numberRenderer(moneyFormat)
             }, {
                 text: "payment status".Translator('Invoice'),
-                width: 120,
+                width: 100,
                 style: 'text-align:center;',
                 align: 'center',
                 dataIndex: 'paymentStatus',
@@ -460,7 +456,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 }
             }, {
                 text: "delivery status".Translator('Invoice'),
-                width: 110,
+                width: 100,
                 style: 'text-align:center;',
                 align: 'center',
                 dataIndex: 'deliveryStatus',
@@ -481,7 +477,7 @@ Ext.define('SrcPageUrl.Invoices.List', {
                 }
             }, {
                 text: '',
-                width: 90,
+                width: 80,
                 renderer: function (val, meta, rec) {
                     var id = Ext.id();
                     Ext.defer(function () {
@@ -502,14 +498,12 @@ Ext.define('SrcPageUrl.Invoices.List', {
             }
         ];
 
-        var rowModel = Ext.create('Ext.selection.RowModel', {mode: "MULTI"});
-
         if (!win) {
+            var checkboxModel = Ext.create('Ext.selection.CheckboxModel');
             win = desktop.createWindow({
                 id: 'invoice-list',
                 title: 'invoices management'.Translator('Module'),
-                width: 950,
-                height:500,
+                width: 800,
                 autoHeight: true,
                 iconCls: 'icon-grid',
                 animCollapse: false,
@@ -521,33 +515,21 @@ Ext.define('SrcPageUrl.Invoices.List', {
                         xtype: 'grid',
                         style: 'padding: 5px;',
                         columnLines: true,
-                        minHeight: 600,
-                        maxHeight: 600,
-                        autoScroll: true,
+                        height: 400,
                         store: storeLoadInvoice,
-                        loadMask:true,
-                        layout: 'fit',
-                        animCollapse: false,
-                        constrainHeader: true,
-                        selModel: rowModel,
+                        selModel: checkboxModel,
                         columns: columnsInvoice,
+                        bbar: new Ext.PagingToolbar({
+                            store: storeLoadInvoice,
+                            displayInfo: true
+                        }),
                         listeners: {
                             beforerender: function () {
                                 this.store.load();
                             }
                         }
                     }
-                ],
-                bbar: new Ext.PagingToolbar({
-                    store: storeLoadInvoice,
-                    pageSize: limitDefault,
-                    emptyMsg : 'no records found'.Translator('Common'),
-                    beforePageText : 'page'.Translator('Common'),
-                    afterPageText : 'of'.Translator('Common') + ' {0}',
-                    refreshText : 'refresh'.Translator('Common'),
-                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
-                    displayInfo:true
-                })
+                ]
             });
         }
 
@@ -1039,7 +1021,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                     id: 'grid-input-output',
                     name: 'grid-input-output',
                     xtype: 'grid',
-                    autoHeight: true,
+                    height: 280,
                     style: 'padding: 5px;',
                     store: storeLoadInput,
                     selModel: Ext.create('Ext.selection.RowModel', {mode: "MULTI"}),
@@ -1053,13 +1035,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         }
                     }, bbar: new Ext.PagingToolbar({
                         store: storeLoadInput,
-                        pageSize: limitDefault,
-                        emptyMsg : 'no records found'.Translator('Common'),
-                        beforePageText : 'page'.Translator('Common'),
-                        afterPageText : 'of'.Translator('Common') + ' {0}',
-                        refreshText : 'refresh'.Translator('Common'),
-                        displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
-                        displayInfo:true
+                        displayInfo: true
                     })
                 }]
         }],
@@ -1131,6 +1107,7 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
                         success: function (data) {
                             editWindow.close();
                             storeLoadInvoice.reload();
+                            storeListOutput.reload();
                         }
                     });
                 }
@@ -1168,6 +1145,37 @@ function createPopupInvoiceForm(invoiceId, invoiceType) {
             text: 'print'.Translator('Invoice'),
             width: 30,
             handler: function () {
+                /*var grid = Ext.ComponentQuery.query('[name=grid-input-output]')[0];
+
+                var invoiceNum   = Ext.getCmp('invoice_number').getValue();
+                var subject      = Ext.getCmp('subject').getValue();
+                var address      = Ext.getCmp('address').getValue();
+                var phone_number = Ext.getCmp('phone_number').getValue();
+                var description  = Ext.getCmp('description').getValue();
+                var customerName = storeLoadCustomerCmb.findRecord("id", subject).get('name');
+                var dataForms = '<div style="text-align: center; font-weight: bolder; font-size: x-large;">'
+                + 'PHIẾU XUẤT' +'</div><br/>';
+
+                dataForms += '<table class="no-border" border="0px" style="width: 100%">'+
+                                '<tr>' +
+                                    '<td class="font-bold" width="80">' + 'customer name'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td colspan="3">' + 'Anh/Chị ' + customerName + '</td>'+
+
+                                '</tr>' +
+
+                                '<tr>' +
+                                    '<td class="font-bold" width="80">' + 'invoice number'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td>' + invoiceNum + '</td>'+
+                                    '<td class="font-bold" width="80">' + 'phone number'.Translator('Invoice') + ':' + '</td>'+
+                                    '<td>' + phone_number + '</td>' +
+                                '</tr>' +
+
+                                '<tr>' +
+                                    '<td class="font-bold"  width="80">' + 'address'.Translator('Invoice') + ':' + '</td>' +
+                                    '<td colspan="3">' + address + '</td>' +
+                                '</tr>' +
+                            '</table>';*/
+
                 MyUx.grid.Printer.printAutomatically = false;
                 MyUx.grid.Printer.printExtList(storeListOutput.data.items, Ext.getCmp('invoiceId').getValue());
             }

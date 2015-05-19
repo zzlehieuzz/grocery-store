@@ -89,15 +89,15 @@ Ext.define('SrcPageUrl.Distributor.List', {
                     xtype: 'textfield'
                 }
             }, {
-                text: "phone".Translator("Common"),
+                text: "distributor phone".Translator("Distributor"),
                 width: 100,
                 dataIndex: 'phoneNumber',
                 editor: {
                     xtype: 'textfield'
                 }
             }, {
-                text: "item".Translator("Distributor"),
-                width: 120,
+                text: "Mặt Hàng",
+                width: 100,
                 dataIndex: 'labels',
                 editor: {
                     xtype: 'textfield'
@@ -118,7 +118,7 @@ Ext.define('SrcPageUrl.Distributor.List', {
             win = desktop.createWindow({
                 id: 'distributor-list',
                 title:'distributor management'.Translator('Module'),
-                width:850,
+                width:800,
                 height:480,
                 iconCls: 'icon-grid',
                 animCollapse: false,
@@ -176,8 +176,11 @@ Ext.define('SrcPageUrl.Distributor.List', {
                                 console.log('failure');
                             }
                         });
+
+
+
                     }
-                }, {
+                }, '-',{
                     text:'remove'.Translator('Common'),
                     tooltip:'remove'.Translator('Common'),
                     iconCls:'remove',

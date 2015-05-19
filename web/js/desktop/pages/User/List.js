@@ -168,7 +168,10 @@ Ext.define('SrcPageUrl.User.List', {
         });
 
         var rowModel = Ext.create('Ext.selection.RowModel', {
-            mode : "MULTI"
+            mode : "MULTI",
+            onKeyPress: function(e, t) {
+                console.log(e);
+            }
         });
 
         var columnsUser = [
@@ -247,7 +250,7 @@ Ext.define('SrcPageUrl.User.List', {
                       storeLoadUser.insert(0, r);
                       rowEditing.startEdit(0, 0);
                     }
-                    }, {
+                    }, '-', {
                         text:'change-pass'.Translator('User'),
                         tooltip:'change-pass'.Translator('User'),
                         iconCls:'edit',
@@ -265,7 +268,7 @@ Ext.define('SrcPageUrl.User.List', {
                                 MyUtil.Message.MessageWarning('please choose 1 record to change password'.Translator('User'));
                             }
                         }
-                    }, {
+                    }, '-',{
                     text: 'remove'.Translator('Common'),
                     tooltip: 'remove'.Translator('Common'),
                     iconCls:'remove',
@@ -308,12 +311,6 @@ Ext.define('SrcPageUrl.User.List', {
                 }],
                 bbar: new Ext.PagingToolbar({
                     store: storeLoadUser,
-                    pageSize: limitDefault,
-                    emptyMsg : 'no records found'.Translator('Common'),
-                    beforePageText : 'page'.Translator('Common'),
-                    afterPageText : 'of'.Translator('Common') + ' {0}',
-                    refreshText : 'refresh'.Translator('Common'),
-                    displayMsg : 'displaying'.Translator('Common') + ' {0} - {1} ' + 'of'.Translator('Common') + ' {2}',
                     displayInfo:true
                 })
             });

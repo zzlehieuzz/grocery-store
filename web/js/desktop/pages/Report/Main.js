@@ -24,8 +24,16 @@ Ext.define('SrcPageUrl.Report.Main', {
     createWindow : function (){
         var tabPanel = Ext.widget('tabpanel', {
             activeTab: 0,
+            width: 950,
+            height: 550,
             plain: true,
             animCollapse: false,
+            defaults :{
+                layout: 'fit',
+                autoScroll: true,
+                autoWidth: true,
+                autoHeight: true
+            },
             layoutConfig: {
                 deferredRender: true
             },
@@ -53,9 +61,9 @@ Ext.define('SrcPageUrl.Report.Main', {
                 iconCls: 'icon-grid',
                 animCollapse: false,
                 constrainHeader: true,
-                layout: 'fit',
+                layout: 'border',
                 border: false,
-                items: [tabPanel]
+                items: tabPanel
             });
         }
 
