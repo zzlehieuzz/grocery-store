@@ -283,11 +283,10 @@ Ext.define("MyUx.grid.Printer", {
             if (extData.length) {
                 contentNew = extData;
             }
-            alert(123);
-            console.log(liabilityData);
+
             var debit = '';
             if(liabilityData) {
-                debit = '<br/><span class="font-bold">'+ 'NỢ TRƯỚC 1' + '</span>' +
+                debit = '<br/><span class="font-bold">'+ 'NỢ TRƯỚC' + '</span>' +
                     '<table border="0" cellpadding="0" cellspacing="0">' +
                         '<tr>' +
                             '<th style="text-align: center;" width="30">STT</th>' +
@@ -312,11 +311,7 @@ Ext.define("MyUx.grid.Printer", {
                             '</td>' +
                         '</tr>' +
                     '</table>';
-
-
             }
-
-
 
             var htmlMarkupCustom = [
                 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -514,22 +509,35 @@ Ext.define("MyUx.grid.Printer", {
                                             '<span class="font-bold">'+ 'Người Nhận' + '</span>'+
                                         '</td>'+
                                     '</tr>'+
+
+                                    /*'<tr>'+
+                                        '<td style="text-align: center;" >'+
+                                            '<span class="">'+ 'Ký, ghi rõ họ tên' + '</span>'+
+                                         '</td>'+
+
+                                         '<td style="text-align: center;">'+
+                                            '<span class="">'+ 'Ký, ghi rõ họ tên' + '</span>'+
+                                         '</td>'+
+                                     '</tr>'+*/
+
                                 '</table>';
 
-            var topHeight    = 1024
+            var topHeight    = 512
               , bottomHeight = 512;
 
             if (extData) {
                 var arrHaveNoLiabilitiesAll = [];
                 var numInvoice = 0;
                 var numOfCard  = 0;
-                var ctnNormal  = 0;
 
                 if (ids.length > 0) {
                     Ext.each(extData, function (record, key) {
+                        //console.log(key);
+                        console.log(ids.indexOf(record.data.id));
                         if (ids.indexOf(record.data.id) !== -1) {
-                            var paramHeight = bottomHeight;
-                            dataForms = '<div style="text-align: center; font-weight: bolder; font-size: x-large;">PHIẾU XUẤT</div><br/>';
+                            dataForms =
+                                '<div style="text-align: center; font-weight: bolder; font-size: x-large;">'+
+                                    'PHIẾU XUẤT</div><br/>';
 
                             dataForms = dataForms +
                             '<table class="no-border" border="0" style="width: 100%">'+
@@ -556,43 +564,40 @@ Ext.define("MyUx.grid.Printer", {
 
                             if (record.data.invoiceId.length > 0) {
                                 if (record.data.invoiceId.length >= numRowDetail) {
-                                //    numRowOdd = record.data.invoiceId.length % numRowDetail;
-                                //
-                                //    if (numRowOdd == 0) {
-                                //        Ext.each(record.data.invoiceId, function (recordDetail0) {
-                                //            arrHaveNoLiabilities.push(recordDetail0);
-                                //            arrHaveNoLiabilitiesAll.push(recordDetail0);
-                                //        });
-                                //
-                                //    } else {
-                                //        var lengthRemain = record.data.invoiceId.length - numRowOdd;
-                                //        var countRemain = 1;
-                                //
-                                //        Ext.each(record.data.invoiceId, function (recordDetail1) {
-                                //            if (countRemain <= lengthRemain) {
-                                //                arrHaveNoLiabilities.push(recordDetail1);
-                                //                arrHaveNoLiabilitiesAll.push(recordDetail1);
-                                //            }
-                                //
-                                //            countRemain++;
-                                //        });
-                                //
-                                //        var countRow = 0;
-                                //        Ext.each(record.data.invoiceId.reverse(), function (recordOdd) {
-                                //
-                                //            if (countRow < numRowOdd) {
-                                //                arrHaveLiabilities.push(recordOdd);
-                                //            }
-                                //
-                                //            countRow++;
-                                //        });
-                                //    }
-                                //    paramHeight = topHeight;
-                                } else {
-                                    //ctnNormal++;
-                                }
-                                arrHaveLiabilities = record.data.invoiceId;
+                                    numRowOdd = record.data.invoiceId.length % numRowDetail;
 
+                                    if (numRowOdd == 0) {
+                                        Ext.each(record.data.invoiceId, function (recordDetail0) {
+                                            arrHaveNoLiabilities.push(recordDetail0);
+                                            arrHaveNoLiabilitiesAll.push(recordDetail0);
+                                        });
+
+                                    } else {
+                                        var lengthRemain = record.data.invoiceId.length - numRowOdd;
+                                        var countRemain = 1;
+
+                                        Ext.each(record.data.invoiceId, function (recordDetail1) {
+                                            if (countRemain <= lengthRemain) {
+                                                arrHaveNoLiabilities.push(recordDetail1);
+                                                arrHaveNoLiabilitiesAll.push(recordDetail1);
+                                            }
+
+                                            countRemain++;
+                                        });
+
+                                        var countRow = 0;
+                                        Ext.each(record.data.invoiceId.reverse(), function (recordOdd) {
+
+                                            if (countRow < numRowOdd) {
+                                                arrHaveLiabilities.push(recordOdd);
+                                            }
+
+                                            countRow++;
+                                        });
+                                    }
+                                } else {
+                                    arrHaveLiabilities = record.data.invoiceId;
+                                }
 
                                 //Array have no Liabilities
                                 var breakP = false;
@@ -617,11 +622,11 @@ Ext.define("MyUx.grid.Printer", {
 
                                         if (order % numRowDetail == 0) {
                                             pageBreak = '';
-                                            //if (order % (numRowDetail * 2) == 0) {
-                                            //    pageBreak = pageBreak + '<div class="page-break"></div>';
-                                            //    breakP = true;
-                                            //    numOfCard = numOfCard + 1;
-                                            //}
+                                            if (order % (numRowDetail * 2) == 0) {
+                                                pageBreak = pageBreak + '<div class="page-break"></div>';
+                                                breakP = true;
+                                                numOfCard = numOfCard + 1;
+                                            }
 
                                             dataGrids = getDataGrids(rowDetail, total);
                                             contentNew = contentNew + '<div class="page-'+record.data.id+'" style="min-height: '+topHeight+'px;">' +dataForms + dataGrids + listSign + '</div>' + pageBreak ;
@@ -677,7 +682,8 @@ Ext.define("MyUx.grid.Printer", {
                                             stt++;
                                         });
 
-                                        debit = '<table border="0" cellpadding="0" cellspacing="0">' +
+                                        debit =
+                                            '<table border="0" cellpadding="0" cellspacing="0">' +
                                                     '<tr><th colspan="4">' + 'previous debit'.Translator('Liabilities') + '</th></tr>' +
                                                     '<tr>' +
                                                         '<th style="text-align: center; " width="30">' + 'order'.Translator('Invoice') + '</th>' +
@@ -709,26 +715,11 @@ Ext.define("MyUx.grid.Printer", {
 
                                     pageBreak = '';
 //                                    if (!breakP && numInvoice != 0 && ((numOfCard + numInvoice +1) % 2 == 0)) {
-
-                                    var topPageBreak = '';
-                                    if((liabilityArr.length + order) > 10) {
-                                        paramHeight = topHeight;
-                                        pageBreak = '<div class="page-break"></div>';
-                                        if(ctnNormal%2 != 0) {
-                                            topPageBreak = '<div class="page-break"></div>';
-                                            ctnNormal--;
-                                        }
-                                    } else {
-                                        ctnNormal++;
-                                        if(ctnNormal%2 == 0) {
-                                            pageBreak = '<div class="page-break"></div>';
-                                        }
-                                        //if (((numOfCard + numInvoice - 1)%2 == 0)) {
-                                        //    pageBreak = pageBreak + '<div class="page-break"></div>';
-                                        //}
+                                    if (((numOfCard + numInvoice - 1) % 2 == 0)) {
+                                        pageBreak = pageBreak + '<div class="page-break"></div>';
                                     }
 
-                                    contentNew = contentNew + topPageBreak + '<div class="page-normal '+record.data.id+'" style="min-height: '+paramHeight+'px;">' + dataForms + dataGrids + debit + listSign + '</div>' + pageBreak;
+                                    contentNew = contentNew  + '<div class="page-'+record.data.id+'" style="min-height: '+bottomHeight+'px;">' + dataForms + dataGrids + debit + listSign + '</div>' + pageBreak;
                                 }
                             }
                         }

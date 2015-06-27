@@ -40,7 +40,7 @@ html.x-ux-grid-printer, .x-ux-grid-printer img,.x-ux-grid-printer body {
 }
 
 .x-ux-grid-printer .x-ux-grid-printer-links {
-    padding: 0 0 20px 0;
+    padding: 0 !important;
 }
 
 .x-ux-grid-printer a.x-ux-grid-printer-linkprint {
