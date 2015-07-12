@@ -283,8 +283,6 @@ Ext.define("MyUx.grid.Printer", {
             if (extData.length) {
                 contentNew = extData;
             }
-            alert(123);
-            console.log(liabilityData);
             var debit = '';
             if(liabilityData) {
                 debit = '<br/><span class="font-bold">'+ 'NỢ TRƯỚC 1' + '</span>' +
@@ -516,8 +514,10 @@ Ext.define("MyUx.grid.Printer", {
                                     '</tr>'+
                                 '</table>';
 
-            var topHeight    = 1024
-              , bottomHeight = 512;
+            var topHeight       = 1022
+              , bottomHeight    = 511
+              , bottomHeightOdd = 506
+              , paddingTopOdd   = 5;
 
             if (extData) {
                 var arrHaveNoLiabilitiesAll = [];
@@ -528,7 +528,7 @@ Ext.define("MyUx.grid.Printer", {
                 if (ids.length > 0) {
                     Ext.each(extData, function (record, key) {
                         if (ids.indexOf(record.data.id) !== -1) {
-                            var paramHeight = bottomHeight;
+                            var paramHeight = bottomHeight, paramPaddingTop = '';
                             dataForms = '<div style="text-align: center; font-weight: bolder; font-size: x-large;">PHIẾU XUẤT</div><br/>';
 
                             dataForms = dataForms +
@@ -556,43 +556,9 @@ Ext.define("MyUx.grid.Printer", {
 
                             if (record.data.invoiceId.length > 0) {
                                 if (record.data.invoiceId.length >= numRowDetail) {
-                                //    numRowOdd = record.data.invoiceId.length % numRowDetail;
-                                //
-                                //    if (numRowOdd == 0) {
-                                //        Ext.each(record.data.invoiceId, function (recordDetail0) {
-                                //            arrHaveNoLiabilities.push(recordDetail0);
-                                //            arrHaveNoLiabilitiesAll.push(recordDetail0);
-                                //        });
-                                //
-                                //    } else {
-                                //        var lengthRemain = record.data.invoiceId.length - numRowOdd;
-                                //        var countRemain = 1;
-                                //
-                                //        Ext.each(record.data.invoiceId, function (recordDetail1) {
-                                //            if (countRemain <= lengthRemain) {
-                                //                arrHaveNoLiabilities.push(recordDetail1);
-                                //                arrHaveNoLiabilitiesAll.push(recordDetail1);
-                                //            }
-                                //
-                                //            countRemain++;
-                                //        });
-                                //
-                                //        var countRow = 0;
-                                //        Ext.each(record.data.invoiceId.reverse(), function (recordOdd) {
-                                //
-                                //            if (countRow < numRowOdd) {
-                                //                arrHaveLiabilities.push(recordOdd);
-                                //            }
-                                //
-                                //            countRow++;
-                                //        });
-                                //    }
-                                //    paramHeight = topHeight;
                                 } else {
-                                    //ctnNormal++;
                                 }
                                 arrHaveLiabilities = record.data.invoiceId;
-
 
                                 //Array have no Liabilities
                                 var breakP = false;
@@ -722,13 +688,14 @@ Ext.define("MyUx.grid.Printer", {
                                         ctnNormal++;
                                         if(ctnNormal%2 == 0) {
                                             pageBreak = '<div class="page-break"></div>';
+                                            paramHeight     = bottomHeightOdd;
+                                            paramPaddingTop = 'padding-top: ' + paddingTopOdd + 'px;';
+                                        } else {
+
                                         }
-                                        //if (((numOfCard + numInvoice - 1)%2 == 0)) {
-                                        //    pageBreak = pageBreak + '<div class="page-break"></div>';
-                                        //}
                                     }
 
-                                    contentNew = contentNew + topPageBreak + '<div class="page-normal '+record.data.id+'" style="min-height: '+paramHeight+'px;">' + dataForms + dataGrids + debit + listSign + '</div>' + pageBreak;
+                                    contentNew = contentNew + '<div class="page-normal '+record.data.id+'" style="min-height: '+paramHeight+'px; '+paramPaddingTop+'">' + dataForms + dataGrids + debit + listSign + '</div>';
                                 }
                             }
                         }
